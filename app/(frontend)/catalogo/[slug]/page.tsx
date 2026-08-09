@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCarBySlug, getImageUrl } from "@/lib/payload-client";
+import { getCarBySlug } from "@/lib/payload-client";
+import { getImageUrl, buildCarImageAlt } from "@/lib/images";
 import { ImageGallery } from "@/components/frontend/ImageGallery";
 import { CarHeader } from "@/components/frontend/CarHeader";
 import { FinancingCalculator } from "@/components/frontend/FinancingCalculator";
@@ -122,7 +123,7 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
               images={fallbackImages}
               exteriorImages={car.exteriorImages}
               interiorImages={car.interiorImages}
-              alt={`${brandName} ${car.model} ${car.version} ${car.year}`}
+              alt={buildCarImageAlt(car)}
             />
 
             {/* Características */}

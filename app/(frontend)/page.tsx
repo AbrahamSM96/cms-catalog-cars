@@ -1,4 +1,5 @@
-import { getCars, getFeaturedCars, getBrands, getHomepage, getImageUrl } from "@/lib/payload-client";
+import { getCars, getFeaturedCars, getBrands, getHomepage } from "@/lib/payload-client";
+import { getImageUrl } from "@/lib/images";
 import { Hero, type HeroSlideView } from "@/components/frontend/Hero";
 import { FeaturedCars } from "@/components/frontend/FeaturedCars";
 import { SearchBar } from "@/components/frontend/SearchBar";
@@ -47,7 +48,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       const media = image as Media;
       return {
         url: media.url || getImageUrl(media.filename),
-        alt: media.alt || slide.caption || "Auto en venta",
+        // SEO alt: manual override first, then the slide caption, then a
+        // descriptive, keyword-rich default so the image is never left without
+        // meaningful alt text.
+        alt: media.alt || slide.caption || "Catálogo de autos seminuevos en venta",
         caption: slide.caption,
       };
     })

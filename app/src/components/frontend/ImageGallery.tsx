@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { Media } from "../../types/car";
-import { getImageUrl } from "../../lib/payload-client";
+import { getImageUrl } from "../../lib/images";
 
 interface ImageGalleryProps {
   images?: Media[];

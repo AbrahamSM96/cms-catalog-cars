@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Car } from "../../types/car";
-import { getImageUrl } from "../../lib/payload-client";
+import { getImageUrl, buildCarImageAlt } from "../../lib/images";
 import { buildCarSlug } from "../../lib/car-slug";
 
 interface CarCardProps {
@@ -73,7 +73,7 @@ export function CarCard({ car }: CarCardProps) {
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
           <Image
             src={imgSrc}
-            alt={`${brandName} ${car.model} ${car.version}`}
+            alt={buildCarImageAlt(car)}
             fill
             className="object-cover transition-all duration-500 group-hover:scale-110"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

@@ -38,7 +38,8 @@ export const Homepage: GlobalConfig = {
           label: "Caption",
           type: "text",
           admin: {
-            description: "Texto opcional que aparece sobre la imagen.",
+            description:
+              "Texto opcional que aparece sobre la imagen. También se usa como texto alternativo (SEO) del slide si la imagen no tiene uno propio.",
           },
         },
       ],

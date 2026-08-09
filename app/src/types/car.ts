@@ -17,7 +17,9 @@ export interface Color {
 export interface Media {
   id: string | number;
   filename: string;
-  alt: string;
+  // Optional: the CMS no longer forces alt text; the frontend generates a
+  // descriptive fallback when it's empty.
+  alt?: string;
   mimeType: string;
   filesize: number;
   width?: number;

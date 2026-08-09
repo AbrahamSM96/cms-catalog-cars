@@ -1,52 +1,68 @@
+import "server-only";
+
+import { getPayload } from "payload";
+import type { Payload, Where } from "payload";
+import config from "@payload-config";
 import type { Car, CarsResponse, CarFilters, Brand, Homepage } from "../types/car";
 import { parseCarSlug } from "./car-slug";
-import { filenameToPublicId } from "./cloudinary-path";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
 
 /**
- * Fetch all cars with optional filters
+ * Payload Local API client.
+ *
+ * These functions run only on the server (Server Components / route handlers)
+ * and talk to Payload in-process — no HTTP round-trip to our own /api routes
+ * (no "fetch-to-self"). getPayload memoizes the instance internally, so calling
+ * it per request is cheap.
+ *
+ * For building image URLs from a media filename, use getImageUrl from
+ * "@/lib/images" (client-safe, importable from Client Components).
+ */
+function payloadClient(): Promise<Payload> {
+  return getPayload({ config });
+}
+
+/**
+ * Fetch all cars with optional filters.
  */
 export async function getCars(filters?: CarFilters): Promise<CarsResponse> {
   try {
-    const params = new URLSearchParams();
+    const payload = await payloadClient();
 
-    // Add filters to query params.
+    const and: Where[] = [];
+
     // Brand can be either a numeric id (legacy) or a slug (e.g. "kia").
     if (filters?.brand) {
       if (/^\d+$/.test(filters.brand)) {
-        params.append("where[brand][equals]", filters.brand);
+        and.push({ brand: { equals: filters.brand } });
       } else {
-        params.append("where[brand.slug][equals]", filters.brand);
+        and.push({ "brand.slug": { equals: filters.brand } });
       }
     }
-    if (filters?.status) params.append("where[status][equals]", filters.status);
-    if (filters?.minPrice) params.append("where[price][greater_than_equal]", filters.minPrice.toString());
-    if (filters?.maxPrice) params.append("where[price][less_than_equal]", filters.maxPrice.toString());
-    if (filters?.minYear) params.append("where[year][greater_than_equal]", filters.minYear.toString());
-    if (filters?.maxYear) params.append("where[year][less_than_equal]", filters.maxYear.toString());
-    if (filters?.transmission) params.append("where[transmission][equals]", filters.transmission);
+    if (filters?.status) and.push({ status: { equals: filters.status } });
+    if (filters?.minPrice) and.push({ price: { greater_than_equal: filters.minPrice } });
+    if (filters?.maxPrice) and.push({ price: { less_than_equal: filters.maxPrice } });
+    if (filters?.minYear) and.push({ year: { greater_than_equal: filters.minYear } });
+    if (filters?.maxYear) and.push({ year: { less_than_equal: filters.maxYear } });
+    if (filters?.transmission) and.push({ transmission: { equals: filters.transmission } });
 
     // Search across multiple fields (model, version, brand name)
     if (filters?.search) {
-      params.append("where[or][0][model][contains]", filters.search);
-      params.append("where[or][1][version][contains]", filters.search);
-      params.append("where[or][2][brand.name][contains]", filters.search);
+      and.push({
+        or: [
+          { model: { contains: filters.search } },
+          { version: { contains: filters.search } },
+          { "brand.name": { contains: filters.search } },
+        ],
+      });
     }
 
-    // Always populate brand and images
-    params.append("depth", "2");
-
-    const url = `${API_URL}/cars?${params.toString()}`;
-    const response = await fetch(url, {
-      next: { revalidate: 60 }, // Revalidate every 60 seconds
+    const result = await payload.find({
+      collection: "cars",
+      where: and.length ? { and } : undefined,
+      depth: 2,
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch cars: ${response.statusText}`);
-    }
-
-    return response.json();
+    return result as unknown as CarsResponse;
   } catch (error) {
     console.error("Error fetching cars:", error);
     throw error;
@@ -54,27 +70,22 @@ export async function getCars(filters?: CarFilters): Promise<CarsResponse> {
 }
 
 /**
- * Fetch featured cars (featured = true)
+ * Fetch featured cars (featured = true).
  */
 export async function getFeaturedCars(): Promise<Car[]> {
   try {
-    const params = new URLSearchParams({
-      "where[featured][equals]": "true",
-      "where[status][equals]": "available",
-      depth: "2",
-      limit: "6",
+    const payload = await payloadClient();
+
+    const result = await payload.find({
+      collection: "cars",
+      where: {
+        and: [{ featured: { equals: true } }, { status: { equals: "available" } }],
+      },
+      depth: 2,
+      limit: 6,
     });
 
-    const response = await fetch(`${API_URL}/cars?${params.toString()}`, {
-      next: { revalidate: 60 },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch featured cars: ${response.statusText}`);
-    }
-
-    const data: CarsResponse = await response.json();
-    return data.docs;
+    return result.docs as unknown as Car[];
   } catch (error) {
     console.error("Error fetching featured cars:", error);
     return [];
@@ -82,19 +93,19 @@ export async function getFeaturedCars(): Promise<Car[]> {
 }
 
 /**
- * Fetch a single car by ID
+ * Fetch a single car by ID.
  */
 export async function getCarById(id: string): Promise<Car> {
   try {
-    const response = await fetch(`${API_URL}/cars/${id}?depth=2`, {
-      next: { revalidate: 60 },
+    const payload = await payloadClient();
+
+    const car = await payload.findByID({
+      collection: "cars",
+      id,
+      depth: 2,
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch car: ${response.statusText}`);
-    }
-
-    return response.json();
+    return car as unknown as Car;
   } catch (error) {
     console.error("Error fetching car:", error);
     throw error;
@@ -114,20 +125,18 @@ export async function getCarBySlug(slug: string): Promise<Car> {
 }
 
 /**
- * Fetch all brands
+ * Fetch all brands.
  */
 export async function getBrands(): Promise<Brand[]> {
   try {
-    const response = await fetch(`${API_URL}/brands?limit=100`, {
-      next: { revalidate: 3600 }, // Revalidate every hour
+    const payload = await payloadClient();
+
+    const result = await payload.find({
+      collection: "brands",
+      limit: 100,
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch brands: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.docs;
+    return result.docs as unknown as Brand[];
   } catch (error) {
     console.error("Error fetching brands:", error);
     return [];
@@ -140,32 +149,16 @@ export async function getBrands(): Promise<Brand[]> {
  */
 export async function getHomepage(): Promise<Homepage | null> {
   try {
-    const response = await fetch(`${API_URL}/globals/homepage?depth=1`, {
-      next: { revalidate: 60 },
+    const payload = await payloadClient();
+
+    const homepage = await payload.findGlobal({
+      slug: "homepage",
+      depth: 1,
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch homepage: ${response.statusText}`);
-    }
-
-    return response.json();
+    return homepage as unknown as Homepage;
   } catch (error) {
     console.error("Error fetching homepage:", error);
     return null;
   }
-}
-
-/**
- * Get image URL from Cloudinary.
- * Uses the same filename→public_id mapping as the storage adapter so the URL
- * always points to where the file actually lives.
- */
-export function getImageUrl(filename: string | undefined): string {
-  if (!filename) return "/placeholder-car.svg";
-
-  // If it's already a full URL, return it
-  if (filename.startsWith("http")) return filename;
-
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dchfrwaei";
-  return `https://res.cloudinary.com/${cloudName}/image/upload/${filenameToPublicId(filename)}`;
 }
