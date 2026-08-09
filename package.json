@@ -6,6 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f db",
+    "db:reset": "docker compose down -v && docker compose up -d db",
+    "docker:app": "docker compose --profile app up --build",
+    "migrate:create": "payload migrate:create",
+    "migrate": "NODE_ENV=production payload migrate",
     "lint": "npm run lint:eslint && npm run lint:ox",
     "lint:eslint": "eslint .",
     "lint:ox": "oxlint .",
@@ -14,7 +21,7 @@
     "format:check": "oxfmt . --check"
   },
   "dependencies": {
-    "@payloadcms/db-sqlite": "^3.78.0",
+    "@payloadcms/db-postgres": "3.78.0",
     "@payloadcms/next": "^3.78.0",
     "@payloadcms/plugin-cloud-storage": "^3.78.0",
     "@payloadcms/richtext-lexical": "^3.78.0",

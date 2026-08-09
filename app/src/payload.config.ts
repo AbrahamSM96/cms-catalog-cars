@@ -1,4 +1,4 @@
-import { sqliteAdapter } from "@payloadcms/db-sqlite";
+import { postgresAdapter } from "@payloadcms/db-postgres";
 import { cloudStoragePlugin } from "@payloadcms/plugin-cloud-storage";
 import type { HandleDelete, HandleUpload } from "@payloadcms/plugin-cloud-storage/types";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
@@ -87,10 +87,13 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
-  db: sqliteAdapter({
-    client: {
-      url: process.env.DATABASE_URL || "file:./payload.db",
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URI,
     },
+    // In dev, Payload pushes schema changes automatically (no migration files).
+    // In production, run `payload migrate` from versioned migrations instead.
+    push: process.env.NODE_ENV !== "production",
   }),
   plugins: [
     cloudStoragePlugin({

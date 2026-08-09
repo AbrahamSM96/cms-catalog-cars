@@ -52,3 +52,6 @@ payload.db-shm
 .db-backups/
 payload-types.ts
 .payload/
+
+# Stray Redis dump artifact
+dump.rdb

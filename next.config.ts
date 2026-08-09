@@ -2,7 +2,8 @@ import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["payload", "@payloadcms/db-sqlite"],
+  output: "standalone",
+  serverExternalPackages: ["payload", "@payloadcms/db-postgres"],
   images: {
     remotePatterns: [
       {

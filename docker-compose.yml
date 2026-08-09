@@ -1,0 +1,53 @@
+# Local development stack.
+#
+#   docker compose up -d db          -> just Postgres (recommended for dev:
+#                                       run `bun dev` on the host for hot reload)
+#   docker compose --profile app up  -> Postgres + the app in a container
+#                                       (production-like build, for parity tests)
+#
+# Data lives in the named volume `pgdata` so it survives container restarts.
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: cms-cars-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-payload}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-payload}
+      POSTGRES_DB: ${POSTGRES_DB:-cms_catalog_cars}
+    ports:
+      # host:container — expose 5432 so `bun dev` on the host can connect.
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-payload} -d ${POSTGRES_DB:-cms_catalog_cars}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    profiles: ["app"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cms-cars-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      # Inside the compose network the DB host is the service name `db`.
+      DATABASE_URI: postgres://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD:-payload}@db:5432/${POSTGRES_DB:-cms_catalog_cars}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
