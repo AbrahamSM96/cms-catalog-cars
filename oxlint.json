@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "correctness": "warn",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "ignorePatterns": ["node_modules", ".next", "dist", "build", "*.config.js", "*.config.ts"]
+}

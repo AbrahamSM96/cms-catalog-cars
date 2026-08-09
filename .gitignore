@@ -10,6 +10,11 @@
 !.yarn/releases
 !.yarn/versions
 
+# lock files (keeping bun.lockb only)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
 # testing
 /coverage
 
@@ -39,3 +44,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Payload CMS
+payload.db
+payload.db-wal
+payload.db-shm
+.db-backups/
+payload-types.ts
+.payload/

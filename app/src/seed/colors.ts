@@ -1,0 +1,15 @@
+export const colorsList = [
+  { name: "Negro", hex: "#000000" },
+  { name: "Blanco", hex: "#ffffff" },
+  { name: "Gris", hex: "#808080" },
+  { name: "Plata", hex: "#c0c0c0" },
+  { name: "Rojo", hex: "#c1121f" },
+  { name: "Azul", hex: "#1d4ed8" },
+  { name: "Café", hex: "#6b4226" },
+  { name: "Beige", hex: "#d9c6a5" },
+  { name: "Verde", hex: "#166534" },
+  { name: "Amarillo", hex: "#f59e0b" },
+  { name: "Naranja", hex: "#ea580c" },
+  { name: "Dorado", hex: "#b8860b" },
+  { name: "Vino", hex: "#7b1e2b" },
+];

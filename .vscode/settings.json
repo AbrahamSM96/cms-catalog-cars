@@ -1,0 +1,21 @@
+{
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "oxc-project.oxc-vscode",
+	"[typescript]": {
+		"editor.defaultFormatter": "oxc-project.oxc-vscode",
+		"editor.formatOnSave": true
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "oxc-project.oxc-vscode",
+		"editor.formatOnSave": true
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "oxc-project.oxc-vscode",
+		"editor.formatOnSave": true
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "oxc-project.oxc-vscode",
+		"editor.formatOnSave": true
+	},
+	"eslint.format.enable": false
+}
