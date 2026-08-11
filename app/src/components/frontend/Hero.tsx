@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useState } from 'react';
-import Image from 'next/image';
+import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
+import { SearchBar } from "./SearchBar";
 
 export interface HeroSlideView {
   url: string;
@@ -22,219 +23,194 @@ interface HeroProps {
 }
 
 const DEFAULT_TEXT: Required<HeroText> = {
-  badge: 'Nuevos modelos disponibles',
-  heading: 'Encuentra Tu Auto',
-  headingHighlight: 'Seminuevo Ideal',
+  badge: "Nuevos modelos disponibles",
+  heading: "Encuentra Tu Auto",
+  headingHighlight: "Seminuevo Ideal",
   subheading:
-    'La mejor selección de autos premium con garantía de calidad. Financiamiento disponible y facilidades de pago.',
+    "La mejor selección de autos premium con garantía de calidad. Financiamiento disponible y facilidades de pago.",
 };
 
 const AUTOPLAY_MS = 5000;
 
+const TRUST = [
+  {
+    label: "Garantía de calidad",
+    path: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+  },
+  {
+    label: "Financiamiento disponible",
+    path: "M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z",
+  },
+  {
+    label: "Inspección certificada",
+    path: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+  },
+];
+
 export function Hero({ slides = [], text }: HeroProps) {
-  const [isVisible, setIsVisible] = useState(false);
   const [current, setCurrent] = useState(0);
 
   const t = { ...DEFAULT_TEXT, ...text };
   const hasSlides = slides.length > 0;
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
 
   const goTo = useCallback(
     (index: number) => setCurrent((index + slides.length) % slides.length),
     [slides.length],
   );
 
-  // Autoplay: advance while there is more than one slide
   useEffect(() => {
     if (slides.length <= 1) return;
-    const id = setInterval(() => {
-      setCurrent((c) => (c + 1) % slides.length);
-    }, AUTOPLAY_MS);
+    const id = setInterval(() => setCurrent((c) => (c + 1) % slides.length), AUTOPLAY_MS);
     return () => clearInterval(id);
   }, [slides.length]);
 
   return (
-    <section className="relative min-h-[85vh] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Carousel background */}
-      {hasSlides ? (
-        <div className="absolute inset-0">
-          {slides.map((slide, i) => (
-            <div
-              key={i}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                i === current ? 'opacity-100' : 'opacity-0'
-              }`}
-              aria-hidden={i !== current}
-            >
-              <Image
-                src={slide.url}
-                alt={slide.alt}
-                fill
-                priority={i === 0}
-                sizes="100vw"
-                className="object-cover"
-              />
-            </div>
-          ))}
-          {/* Darkening overlay so the text stays readable over any photo */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/70 to-slate-900/40" />
-        </div>
-      ) : (
-        <>
-          {/* Fallback background pattern (no slides configured) */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
-        </>
-      )}
+    <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white">
+      {/* Soft ambient glow */}
+      <div className="pointer-events-none absolute -top-24 left-1/2 h-[32rem] w-[52rem] -translate-x-1/2 rounded-full bg-red-500/10 blur-3xl" />
+      <div className="bg-grid pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
 
-      {/* Hero Content */}
-      <div className="relative mx-auto max-w-7xl px-4 py-32 sm:px-6 lg:px-8">
-        <div className="text-center">
-          {/* Badge */}
-          <div
-            className={`mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm transition-all duration-700 ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-            }`}
-          >
+      <div className="relative mx-auto max-w-7xl px-4 pt-28 pb-16 sm:px-6 sm:pt-32 lg:px-8">
+        {/* Copy block */}
+        <div className="mx-auto max-w-3xl text-center">
+          <div className="animate-rise inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-soft">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
             </span>
-            <span className="text-sm font-medium text-white/90">{t.badge}</span>
+            <span className="text-sm font-medium text-slate-700">{t.badge}</span>
           </div>
 
-          {/* Heading */}
           <h1
-            className={`text-5xl font-bold tracking-tight text-white transition-all duration-700 delay-100 sm:text-6xl lg:text-7xl ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-            }`}
+            className="animate-rise mt-6 text-4xl font-bold tracking-tight text-slate-900 sm:text-6xl lg:text-7xl"
+            style={{ animationDelay: "80ms" }}
           >
             {t.heading}
             {t.headingHighlight && (
-              <span className="mt-2 block bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">
+              <span className="mt-2 block bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">
                 {t.headingHighlight}
               </span>
             )}
           </h1>
 
-          {/* Description */}
           <p
-            className={`mx-auto mt-6 max-w-2xl text-xl text-slate-300 transition-all duration-700 delay-200 ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-            }`}
+            className="animate-rise mx-auto mt-6 max-w-2xl text-lg text-slate-600 sm:text-xl"
+            style={{ animationDelay: "160ms" }}
           >
             {t.subheading}
           </p>
 
-          {/* CTA Buttons */}
+          {/* Integrated search */}
           <div
-            className={`mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row transition-all duration-700 delay-300 ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-            }`}
+            className="animate-rise mt-8 flex justify-center"
+            style={{ animationDelay: "240ms" }}
           >
-            <a
-              href="#cars"
-              className="group relative inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-red-600 px-8 py-4 font-semibold text-white shadow-2xl transition-all duration-300 hover:bg-red-700 hover:shadow-red-500/50"
-            >
-              <span className="absolute inset-0 h-full w-full bg-gradient-to-br from-red-500 to-red-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
-              <span className="relative flex items-center gap-2">
-                Ver Inventario
-                <svg
-                  className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </span>
-            </a>
-
-            <a
-              href="#contact"
-              className="group cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/20 bg-white/5 px-8 py-4 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/40 hover:bg-white/10"
-            >
-              Contactar
-              <svg
-                className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </a>
+            <SearchBar />
           </div>
 
-          {/* Stats */}
+          {/* Trust chips */}
           <div
-            className={`mx-auto mt-16 grid max-w-4xl grid-cols-1 gap-8 sm:grid-cols-3 transition-all duration-700 delay-500 ${
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-            }`}
+            className="animate-rise mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2"
+            style={{ animationDelay: "320ms" }}
           >
-            {[
-              { value: '500+', label: 'Autos Disponibles' },
-              { value: '98%', label: 'Clientes Satisfechos' },
-              { value: '5★', label: 'Calificación' },
-            ].map((stat, index) => (
-              <div
-                key={index}
-                className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
-              >
-                <div className="text-3xl font-bold text-white">{stat.value}</div>
-                <div className="mt-2 text-sm text-slate-400">{stat.label}</div>
+            {TRUST.map((item) => (
+              <div key={item.label} className="flex items-center gap-2 text-sm font-medium text-slate-600">
+                <svg className="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d={item.path} />
+                </svg>
+                {item.label}
               </div>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Carousel controls (only with 2+ slides) */}
-      {slides.length > 1 && (
-        <>
-          <button
-            type="button"
-            onClick={() => goTo(current - 1)}
-            aria-label="Slide anterior"
-            className="absolute left-4 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
-          >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={() => goTo(current + 1)}
-            aria-label="Slide siguiente"
-            className="absolute right-4 top-1/2 z-10 -translate-y-1/2 rounded-full border border-white/20 bg-white/10 p-3 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
-          >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+        {/* Cinematic image showcase */}
+        <div
+          className="animate-rise relative mx-auto mt-14 max-w-6xl"
+          style={{ animationDelay: "400ms" }}
+        >
+          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-float sm:aspect-[21/9]">
+            {hasSlides ? (
+              slides.map((slide, i) => (
+                <div
+                  key={i}
+                  className={`absolute inset-0 transition-opacity duration-1000 ${
+                    i === current ? "opacity-100" : "opacity-0"
+                  }`}
+                  aria-hidden={i !== current}
+                >
+                  <Image
+                    src={slide.url}
+                    alt={slide.alt}
+                    fill
+                    priority={i === 0}
+                    sizes="(max-width: 1152px) 100vw, 1152px"
+                    className="object-cover"
+                  />
+                  {slide.caption && (
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-6 pt-16">
+                      <p className="text-lg font-semibold text-white drop-shadow sm:text-xl">
+                        {slide.caption}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-100 via-white to-slate-100">
+                <svg className="h-24 w-24 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M8 17H6a2 2 0 01-2-2v-3.28a2 2 0 01.12-.68l1.7-4.53A2 2 0 017.7 5.2h8.6a2 2 0 011.88 1.31l1.7 4.53a2 2 0 01.12.68V15a2 2 0 01-2 2h-2M9 17h6M9 17a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm9 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
+                  />
+                </svg>
+              </div>
+            )}
 
-          {/* Dots */}
-          <div className="absolute bottom-40 left-1/2 z-10 flex -translate-x-1/2 gap-2">
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => goTo(i)}
-                aria-label={`Ir al slide ${i + 1}`}
-                className={`h-2 rounded-full transition-all ${
-                  i === current ? 'w-8 bg-red-500' : 'w-2 bg-white/50 hover:bg-white/80'
-                }`}
-              />
-            ))}
+            {/* Controls */}
+            {slides.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => goTo(current - 1)}
+                  aria-label="Slide anterior"
+                  className="absolute left-4 top-1/2 z-10 -translate-y-1/2 cursor-pointer rounded-full border border-white/40 bg-white/70 p-2.5 text-slate-800 backdrop-blur-md transition-colors hover:bg-white"
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goTo(current + 1)}
+                  aria-label="Slide siguiente"
+                  className="absolute right-4 top-1/2 z-10 -translate-y-1/2 cursor-pointer rounded-full border border-white/40 bg-white/70 p-2.5 text-slate-800 backdrop-blur-md transition-colors hover:bg-white"
+                >
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+                  {slides.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => goTo(i)}
+                      aria-label={`Ir al slide ${i + 1}`}
+                      className={`h-2 cursor-pointer rounded-full transition-all ${
+                        i === current ? "w-8 bg-red-500" : "w-2 bg-white/70 hover:bg-white"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
-        </>
-      )}
-
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent dark:from-black" />
+        </div>
+      </div>
     </section>
   );
 }

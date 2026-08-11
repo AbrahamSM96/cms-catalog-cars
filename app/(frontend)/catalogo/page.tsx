@@ -7,7 +7,8 @@ import type { CarFilters } from "@/types/car";
 
 export const metadata: Metadata = {
   title: "Catálogo de autos seminuevos",
-  description: "Explora nuestro catálogo de autos seminuevos. Filtra por marca, año, precio y transmisión.",
+  description:
+    "Explora nuestro catálogo de autos seminuevos. Filtra por marca, año, precio y transmisión.",
 };
 
 interface CatalogoPageProps {
@@ -26,7 +27,6 @@ interface CatalogoPageProps {
 export default async function CatalogoPage({ searchParams }: CatalogoPageProps) {
   const params = await searchParams;
 
-  // Build filters from search params
   const filters: CarFilters = {
     brand: params.brand,
     status: params.status,
@@ -38,50 +38,47 @@ export default async function CatalogoPage({ searchParams }: CatalogoPageProps) 
     search: params.search,
   };
 
-  // Fetch data in parallel
   const [carsData, brands] = await Promise.all([getCars(filters), getBrands()]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-white dark:from-black dark:via-slate-950 dark:to-black">
-      <section className="py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="mb-10 text-center">
-            <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-50 sm:text-5xl">
-              Catálogo
-            </h1>
-            <p className="mx-auto mt-3 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
-              Encuentra el auto seminuevo ideal para ti.
-            </p>
-          </div>
+    <div className="min-h-screen bg-slate-50">
+      {/* Header band */}
+      <section className="relative overflow-hidden bg-white pt-28 pb-12 sm:pt-32">
+        <div className="pointer-events-none absolute -top-24 left-1/2 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-red-500/10 blur-3xl" />
+        <div className="bg-grid pointer-events-none absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
 
-          {/* Search Bar */}
-          <div className="mb-12 flex justify-center">
+        <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">Catálogo</h1>
+          <p className="mx-auto mt-3 max-w-2xl text-lg text-slate-600">
+            Encuentra el auto seminuevo ideal para ti.
+          </p>
+          <div className="mt-8 flex justify-center">
             <SearchBar />
           </div>
+        </div>
+      </section>
 
-          {/* Filter Bar */}
-          <div className="mb-12">
+      {/* Results */}
+      <section className="py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
             <FilterBar brands={brands} />
           </div>
 
-          {/* Results Count */}
-          <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-50">
-              {params.search ? `Resultados para "${params.search}"` : "Todos los Autos"}
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-xl font-bold text-slate-900">
+              {params.search ? `Resultados para "${params.search}"` : "Todos los autos"}
             </h2>
-            <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 dark:bg-slate-900 dark:text-slate-300">
-              {carsData.totalDocs} {carsData.totalDocs === 1 ? "auto" : "autos"} encontrados
+            <span className="text-sm font-medium text-slate-500">
+              {carsData.totalDocs} {carsData.totalDocs === 1 ? "auto" : "autos"}
             </span>
           </div>
 
-          {/* Cars Grid */}
           <CarGrid cars={carsData.docs} />
 
-          {/* Pagination */}
           {carsData.totalPages > 1 && (
-            <div className="mt-16 text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+            <div className="mt-14 text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-600 shadow-soft">
                 Página {carsData.page} de {carsData.totalPages}
               </div>
             </div>

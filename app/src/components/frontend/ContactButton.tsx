@@ -4,14 +4,15 @@ import type { Car, Brand } from "../../types/car";
 
 interface ContactButtonProps {
   car: Car;
+  /** WhatsApp number (digits with country code). Falls back to a default. */
+  whatsapp?: string;
 }
 
-export function ContactButton({ car }: ContactButtonProps) {
+export function ContactButton({ car, whatsapp }: ContactButtonProps) {
   const brandName = typeof car.brand === "object" ? car.brand.name : "Unknown";
 
   const handleWhatsAppClick = () => {
-    // Replace with your WhatsApp number
-    const phoneNumber = "525512345678"; // Example: 52 (Mexico) + 55 1234 5678
+    const phoneNumber = (whatsapp || "525512345678").replace(/\D/g, "");
     const message = `Hola! Estoy interesado en el ${brandName} ${car.model} ${car.version} ${car.year}. ¿Podrías darme más información?`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
@@ -24,7 +25,7 @@ export function ContactButton({ car }: ContactButtonProps) {
     return (
       <button
         disabled
-        className="w-full cursor-not-allowed rounded-lg bg-zinc-300 px-6 py-4 text-center text-lg font-semibold text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400"
+        className="w-full cursor-not-allowed rounded-xl bg-slate-100 px-6 py-4 text-center text-lg font-semibold text-slate-400"
       >
         Vehículo Vendido
       </button>
@@ -34,7 +35,7 @@ export function ContactButton({ car }: ContactButtonProps) {
   return (
     <button
       onClick={handleWhatsAppClick}
-      className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-6 py-4 text-lg font-semibold text-white shadow-lg transition hover:bg-green-700"
+      className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-green-600 px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:bg-green-700 hover:shadow-green-600/30"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

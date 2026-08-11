@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { poppins } from '@/commons/poppins';
 import { inter } from '@/commons/inter';
 import NextTopLoader from 'nextjs-toploader';
+import { getContact } from "@/lib/payload-client";
+import { Navbar } from "@/components/frontend/Navbar";
+import { Footer } from "@/components/frontend/Footer";
 import "../globals.css";
 
 
@@ -26,11 +29,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const contact = await getContact();
+
   return (
     <html lang="es" className={`${poppins.variable} ${inter.variable} antialiased`}>
       <body>
@@ -42,7 +47,9 @@ export default function RootLayout({
           shadow="0 0 10px #DC2626,0 0 5px #DC2626"
           zIndex={9999}
         />
+        <Navbar whatsapp={contact?.whatsapp} />
         {children}
+        <Footer contact={contact} />
       </body>
     </html>
   );

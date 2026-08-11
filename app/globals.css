@@ -1,39 +1,42 @@
 @import "tailwindcss";
 
-/* Premium Color System */
+/* Light-first, cinematic design. Dark utilities are opt-in (require a `.dark`
+   ancestor) so the site renders as an intentional light theme regardless of the
+   OS color scheme. Existing `dark:` classes stay dormant until we opt in. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  /* Base Colors */
-  --background: #F8FAFC;
-  --foreground: #0F172A;
+  /* Surfaces */
+  --background: #ffffff;
+  --surface: #f8fafc;
+  --surface-2: #f1f5f9;
+  --foreground: #0f172a;
+  --muted: #475569;
+  --border: #e2e8f0;
 
-  /* Premium Palette */
-  --primary: #1E293B;
-  --secondary: #334155;
-  --accent: #DC2626;
-  --muted: #64748B;
-
-  /* Glass Effect */
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  /* Brand */
+  --primary: #0f172a;
+  --accent: #dc2626;
+  --accent-strong: #b91c1c;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
   --color-accent: var(--accent);
+
+  /* Neutral tokens consumed by the mapcn map component (controls, popups). */
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0f172a;
+  --color-border: #e2e8f0;
+  --color-ring: #94a3b8;
+
   --font-sans: var(--font-poppins);
   --font-mono: var(--font-inter);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #F8FAFC;
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-  }
 }
 
 /* Respect Reduced Motion */
@@ -51,31 +54,35 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth Scrolling */
+/* Smooth Scrolling + offset so anchored sections clear the sticky navbar */
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
   }
 }
 
-/* Custom Scrollbar - Premium Style */
+html {
+  scroll-padding-top: 5.5rem;
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background);
+  background: var(--surface);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--secondary);
+  background: #cbd5e1;
   border-radius: 6px;
-  border: 3px solid var(--background);
+  border: 3px solid var(--surface);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -94,44 +101,40 @@ body {
   color: white;
 }
 
-/* Glassmorphism Utility Classes */
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-}
-
-/* Premium Shadow Layers */
-.shadow-premium {
+/* Cinematic soft shadows tuned for light surfaces */
+.shadow-soft {
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.05),
-    0 4px 8px rgba(0, 0, 0, 0.05),
-    0 12px 24px rgba(0, 0, 0, 0.05);
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
-.shadow-premium-lg {
+.shadow-float {
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.06),
-    0 8px 16px rgba(0, 0, 0, 0.06),
-    0 24px 48px rgba(0, 0, 0, 0.08),
-    0 48px 96px rgba(0, 0, 0, 0.08);
+    0 2px 6px rgba(15, 23, 42, 0.05),
+    0 18px 40px rgba(15, 23, 42, 0.1),
+    0 40px 80px rgba(15, 23, 42, 0.06);
 }
 
-/* Dark mode shadow adjustments */
-@media (prefers-color-scheme: dark) {
-  .shadow-premium {
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.2),
-      0 4px 8px rgba(0, 0, 0, 0.2),
-      0 12px 24px rgba(0, 0, 0, 0.2);
+/* Entrance animation used across the home page */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  .shadow-premium-lg {
-    box-shadow:
-      0 2px 4px rgba(0, 0, 0, 0.3),
-      0 8px 16px rgba(0, 0, 0, 0.3),
-      0 24px 48px rgba(0, 0, 0, 0.4),
-      0 48px 96px rgba(0, 0, 0, 0.5);
-  }
+.animate-rise {
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Subtle dotted/grid backdrop for section texture */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+  background-size: 3rem 3rem;
 }

@@ -3,7 +3,7 @@ import "server-only";
 import { getPayload } from "payload";
 import type { Payload, Where } from "payload";
 import config from "@payload-config";
-import type { Car, CarsResponse, CarFilters, Brand, Homepage } from "../types/car";
+import type { Car, CarsResponse, CarFilters, Brand, Homepage, Dealership, Contact } from "../types/car";
 import { parseCarSlug } from "./car-slug";
 
 /**
@@ -134,11 +134,33 @@ export async function getBrands(): Promise<Brand[]> {
     const result = await payload.find({
       collection: "brands",
       limit: 100,
+      sort: "name", // A→Z alphabetical
     });
 
     return result.docs as unknown as Brand[];
   } catch (error) {
     console.error("Error fetching brands:", error);
+    return [];
+  }
+}
+
+/**
+ * Fetch all dealerships (concesionarios) for the locations page.
+ */
+export async function getDealerships(): Promise<Dealership[]> {
+  try {
+    const payload = await payloadClient();
+
+    const result = await payload.find({
+      collection: "dealerships",
+      limit: 100,
+      depth: 1, // populate the image relation
+      sort: "name",
+    });
+
+    return result.docs as unknown as Dealership[];
+  } catch (error) {
+    console.error("Error fetching dealerships:", error);
     return [];
   }
 }
@@ -159,6 +181,25 @@ export async function getHomepage(): Promise<Homepage | null> {
     return homepage as unknown as Homepage;
   } catch (error) {
     console.error("Error fetching homepage:", error);
+    return null;
+  }
+}
+
+/**
+ * Fetch the Contact global (phone, WhatsApp, email, address, social links).
+ */
+export async function getContact(): Promise<Contact | null> {
+  try {
+    const payload = await payloadClient();
+
+    const contact = await payload.findGlobal({
+      slug: "contact",
+      depth: 0,
+    });
+
+    return contact as unknown as Contact;
+  } catch (error) {
+    console.error("Error fetching contact:", error);
     return null;
   }
 }

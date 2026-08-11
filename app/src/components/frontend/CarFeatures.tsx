@@ -70,20 +70,18 @@ export function CarFeatures({ car }: CarFeaturesProps) {
   if (rows.length === 0) return null;
 
   return (
-    <section className="rounded-2xl border border-zinc-200 bg-zinc-50/60 p-6 dark:border-zinc-800 dark:bg-zinc-900/40 sm:p-8">
-      <h2 className="mb-8 text-2xl font-bold text-zinc-900 dark:text-zinc-50">Características</h2>
+    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
+      <h2 className="mb-8 text-2xl font-bold text-slate-900">Características</h2>
 
       <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
         {rows.map(({ icon: Icon, label, value }) => (
           <div key={label} className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-zinc-100 dark:bg-zinc-800 dark:ring-zinc-700">
-              <Icon className="h-5 w-5 text-red-500" strokeWidth={1.5} aria-hidden="true" />
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-50 ring-1 ring-red-100">
+              <Icon className="h-5 w-5 text-red-600" strokeWidth={1.5} aria-hidden="true" />
             </div>
             <div className="min-w-0">
-              <div className="text-sm text-zinc-500 dark:text-zinc-400">{label}</div>
-              <div className="truncate text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                {value}
-              </div>
+              <div className="text-sm text-slate-500">{label}</div>
+              <div className="truncate text-lg font-semibold text-slate-900">{value}</div>
             </div>
           </div>
         ))}

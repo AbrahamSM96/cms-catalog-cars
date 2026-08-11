@@ -4,6 +4,7 @@ export const Brands: CollectionConfig = {
   slug: "brands",
   admin: {
     useAsTitle: "name",
+    group: "Settings",
   },
   access: {
     read: () => true, // Public read access for frontend

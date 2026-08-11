@@ -11,8 +11,10 @@ import { fileURLToPath } from "url";
 import { Brands } from "./collections/Brands";
 import { Cars } from "./collections/Cars";
 import { Colors } from "./collections/Colors";
+import { Dealerships } from "./collections/Dealerships";
 import { Media } from "./collections/Media";
 import { Users } from "./collections/Users";
+import { Contact } from "./globals/Contact";
 import { Homepage } from "./globals/Homepage";
 import { filenameToPublicId } from "./lib/cloudinary-path";
 import { brandsList } from "./seed/brands";
@@ -79,8 +81,8 @@ export default buildConfig({
     user: "users",
     importMap,
   },
-  collections: [Brands, Cars, Colors, Media, Users],
-  globals: [Homepage],
+  collections: [Brands, Cars, Colors, Dealerships, Media, Users],
+  globals: [Homepage, Contact],
   editor: lexicalEditor(),
   sharp,
   secret: process.env.PAYLOAD_SECRET || "your-secret-key-here",

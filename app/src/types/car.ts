@@ -116,8 +116,10 @@ export interface Car {
 
   // Ubicación
   location?: Location;
+  dealership?: Dealership | string | number;
 
   // Financiamiento
+  showFinancing?: boolean;
   financing?: Financing;
 
   // Colores (relación con la colección "colors")
@@ -156,4 +158,72 @@ export interface CarFilters {
   maxYear?: number;
   transmission?: string;
   search?: string;
+}
+
+// ============================================================
+// Dealerships (concesionarios)
+// ============================================================
+
+export interface DayHours {
+  closed?: boolean;
+  open?: string; // "09:00" (24h)
+  close?: string; // "19:00" (24h)
+}
+
+export type WeekdayKey =
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday";
+
+export type WeeklyHours = Partial<Record<WeekdayKey, DayHours>>;
+
+export interface Contact {
+  phone?: string;
+  whatsapp?: string;
+  email?: string;
+  address?: {
+    line1?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+    googleMapsUrl?: string;
+  };
+  hoursNote?: string;
+  social?: {
+    facebook?: string;
+    instagram?: string;
+    tiktok?: string;
+    youtube?: string;
+  };
+}
+
+export interface DealershipAddress {
+  line1?: string;
+  neighborhood?: string;
+  postalCode?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+}
+
+export interface Dealership {
+  id: string | number;
+  name: string;
+  image?: Media | string | number;
+  phone?: string;
+  whatsapp?: string;
+  address?: DealershipAddress;
+  coordinates?: {
+    latitude?: number;
+    longitude?: number;
+  };
+  googleMapsUrl?: string;
+  hours?: WeeklyHours;
+  createdAt: string;
+  updatedAt: string;
 }
