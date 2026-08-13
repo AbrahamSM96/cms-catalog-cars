@@ -1,27 +1,31 @@
-"use client";
+/* eslint-disable import/no-extraneous-dependencies */
+'use client'
 
-import { useField } from "@payloadcms/ui";
+import { useField } from '@payloadcms/ui'
 
-export const MileageDescription = () => {
-  const { value } = useField<number>();
+/**
+ * MileageDescription
+ */
+export function MileageDescription(): React.JSX.Element | null {
+  const { value } = useField<number>()
 
-  if (!value || value === 0) return null;
+  if (!value || value === 0) return null
 
-  const formatted = new Intl.NumberFormat("en-US").format(value);
+  const formatted = new Intl.NumberFormat('en-US').format(value)
 
   return (
     <div
       style={{
-        marginTop: "0.5rem",
-        padding: "0.75rem",
-        backgroundColor: "#f0fdf4",
-        borderLeft: "3px solid #22c55e",
-        borderRadius: "4px",
+        backgroundColor: '#f0fdf4',
+        borderLeft: '3px solid #22c55e',
+        borderRadius: '4px',
+        marginTop: '0.5rem',
+        padding: '0.75rem',
       }}
     >
-      <strong style={{ color: "#15803d", fontSize: "1.1rem" }}>
+      <strong style={{ color: '#15803d', fontSize: '1.1rem' }}>
         {formatted} km
       </strong>
     </div>
-  );
-};
+  )
+}

@@ -1,86 +1,89 @@
-import type { GlobalConfig } from "payload";
+import type { GlobalConfig } from 'payload'
 
 export const Homepage: GlobalConfig = {
-  slug: "homepage",
-  label: "Homepage",
-  admin: {
-    group: "Content",
-  },
   access: {
+    /**
+     * read
+     */
     read: () => true, // Público: el frontend lo consume sin auth
+  },
+  admin: {
+    group: 'Content',
   },
   fields: [
     {
-      name: "heroSlides",
-      label: "Hero slides",
-      type: "array",
-      minRows: 0,
-      maxRows: 8,
-      labels: {
-        singular: "Slide",
-        plural: "Slides",
-      },
       admin: {
         description:
-          "Imágenes del carrusel principal (header). Se muestran en el orden de la lista.",
+          'Imágenes del carrusel principal (header). Se muestran en el orden de la lista.',
         initCollapsed: true,
       },
       fields: [
         {
-          name: "image",
-          label: "Image",
-          type: "upload",
-          relationTo: "media",
+          label: 'Image',
+          name: 'image',
+          relationTo: 'media',
           required: true,
+          type: 'upload',
         },
         {
-          name: "caption",
-          label: "Caption",
-          type: "text",
           admin: {
             description:
-              "Texto opcional que aparece sobre la imagen. También se usa como texto alternativo (SEO) del slide si la imagen no tiene uno propio.",
+              'Texto opcional que aparece sobre la imagen. También se usa como texto alternativo (SEO) del slide si la imagen no tiene uno propio.',
           },
+          label: 'Caption',
+          name: 'caption',
+          type: 'text',
         },
       ],
+      label: 'Hero slides',
+      labels: {
+        plural: 'Slides',
+        singular: 'Slide',
+      },
+      maxRows: 8,
+      minRows: 0,
+      name: 'heroSlides',
+      type: 'array',
     },
     {
-      name: "hero",
-      label: "Hero text",
-      type: "group",
       admin: {
-        description: "Título y textos del encabezado principal.",
+        description: 'Título y textos del encabezado principal.',
       },
       fields: [
         {
-          name: "badge",
-          label: "Badge",
-          type: "text",
-          defaultValue: "Nuevos modelos disponibles",
+          defaultValue: 'Nuevos modelos disponibles',
+          label: 'Badge',
+          name: 'badge',
+          type: 'text',
         },
         {
-          name: "heading",
-          label: "Heading",
-          type: "text",
-          defaultValue: "Encuentra Tu Auto",
+          defaultValue: 'Encuentra Tu Auto',
+          label: 'Heading',
+          name: 'heading',
+          type: 'text',
         },
         {
-          name: "headingHighlight",
-          label: "Heading highlight",
-          type: "text",
-          defaultValue: "Seminuevo Ideal",
           admin: {
-            description: "Parte resaltada en rojo del título.",
+            description: 'Parte resaltada en rojo del título.',
           },
+          defaultValue: 'Seminuevo Ideal',
+          label: 'Heading highlight',
+          name: 'headingHighlight',
+          type: 'text',
         },
         {
-          name: "subheading",
-          label: "Subheading",
-          type: "textarea",
           defaultValue:
-            "La mejor selección de autos premium con garantía de calidad. Financiamiento disponible y facilidades de pago.",
+            'La mejor selección de autos premium con garantía de calidad. Financiamiento disponible y facilidades de pago.',
+          label: 'Subheading',
+          name: 'subheading',
+          type: 'textarea',
         },
       ],
+      label: 'Hero text',
+      name: 'hero',
+      type: 'group',
     },
   ],
-};
+  label: 'Homepage',
+  slug: 'homepage',
+}

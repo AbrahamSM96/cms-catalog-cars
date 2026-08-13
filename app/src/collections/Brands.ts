@@ -1,29 +1,32 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionConfig } from 'payload'
 
 export const Brands: CollectionConfig = {
-  slug: "brands",
-  admin: {
-    useAsTitle: "name",
-    group: "Settings",
-  },
   access: {
+    /**
+     * read
+     */
     read: () => true, // Public read access for frontend
+  },
+  admin: {
+    group: 'Settings',
+    useAsTitle: 'name',
   },
   fields: [
     {
-      name: "name",
-      type: "text",
+      name: 'name',
       required: true,
+      type: 'text',
       unique: true,
     },
     {
-      name: "slug",
-      type: "text",
-      required: true,
-      unique: true,
       admin: {
-        description: "URL-friendly version of the brand name",
+        description: 'URL-friendly version of the brand name',
       },
+      name: 'slug',
+      required: true,
+      type: 'text',
+      unique: true,
     },
   ],
-};
+  slug: 'brands',
+}

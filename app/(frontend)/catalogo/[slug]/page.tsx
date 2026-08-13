@@ -1,128 +1,168 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import type { Metadata } from "next";
-import { getCarBySlug, getContact } from "@/lib/payload-client";
-import { getImageUrl, buildCarImageAlt } from "@/lib/images";
-import { ImageGallery } from "@/components/frontend/ImageGallery";
-import { CarHeader } from "@/components/frontend/CarHeader";
-import { FinancingCalculator } from "@/components/frontend/FinancingCalculator";
-import { ContactButton } from "@/components/frontend/ContactButton";
-import { CarFeatures } from "@/components/frontend/CarFeatures";
-import { CarHistory } from "@/components/frontend/CarHistory";
-import { CarLocation } from "@/components/frontend/CarLocation";
-import type { Media, Dealership } from "@/types/car";
+/* eslint-disable react/no-danger */
+import Link from 'next/link'
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+
+import { buildCarImageAlt, getImageUrl } from '@/lib/images'
+import type { Dealership, Media } from '@/types/car'
+import { getCarBySlug, getContact } from '@/lib/payload-client'
+import { CarFeatures } from '@/components/frontend/CarFeatures'
+import { CarHeader } from '@/components/frontend/CarHeader'
+import { CarHistory } from '@/components/frontend/CarHistory'
+import { CarLocation } from '@/components/frontend/CarLocation'
+import { ContactButton } from '@/components/frontend/ContactButton'
+import { FinancingCalculator } from '@/components/frontend/FinancingCalculator'
+import { ImageGallery } from '@/components/frontend/ImageGallery'
 
 interface CarDetailPageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>
 }
 
-export async function generateMetadata({ params }: CarDetailPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const car = await getCarBySlug(slug).catch(() => null);
+/**
+ * generateMetadata
+ *
+ * @param props - component props
+ * @param props.params  - parameters from the URL
+ */
+export async function generateMetadata({
+  params,
+}: CarDetailPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const car = await getCarBySlug(slug).catch(() => null)
 
   if (!car || !car.id) {
     return {
-      title: "Auto no encontrado",
-    };
+      title: 'Auto no encontrado',
+    }
   }
 
-  const brandName = typeof car.brand === "object" ? car.brand.name : "Unknown";
-  const title = `${brandName} ${car.model} ${car.version} ${car.year}`;
+  const brandName = typeof car.brand === 'object' ? car.brand.name : 'Unknown'
+  const title = `${brandName} ${car.model} ${car.version} ${car.year}`
 
   return {
-    title,
     description: car.description || `${title} - Autos seminuevos de calidad`,
-  };
+    title,
+  }
 }
 
-export default async function CarDetailPage({ params }: CarDetailPageProps) {
-  const { slug } = await params;
+/**
+ * CarDetailPage
+ *
+ * @param props - component props
+ * @param props.params - parameters from the URL
+ */
+export default async function CarDetailPage({
+  params,
+}: CarDetailPageProps): Promise<React.JSX.Element> {
+  const { slug } = await params
 
-  const car = await getCarBySlug(slug).catch(() => null);
+  const car = await getCarBySlug(slug).catch(() => null)
   if (!car || !car.id) {
-    notFound();
+    notFound()
   }
 
-  const contact = await getContact();
+  const contact = await getContact()
 
-  const brandName = typeof car.brand === "object" ? car.brand.name : "Unknown";
+  const brandName = typeof car.brand === 'object' ? car.brand.name : 'Unknown'
 
   // Fallback image shown only if there are no exterior/interior photos yet.
   const fallbackImages: Media[] =
-    car.featuredImage && typeof car.featuredImage === "object" ? [car.featuredImage] : [];
+    car.featuredImage && typeof car.featuredImage === 'object'
+      ? [car.featuredImage]
+      : []
 
-  const formattedPrice = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
+  const formattedPrice = new Intl.NumberFormat('en-US', {
+    currency: 'USD',
     minimumFractionDigits: 0,
-  }).format(car.price);
+    style: 'currency',
+  }).format(car.price)
 
   // JSON-LD structured data for SEO (Vehicle / Product)
   const featuredFilename =
-    typeof car.featuredImage === "object" ? car.featuredImage?.filename : undefined;
+    typeof car.featuredImage === 'object'
+      ? car.featuredImage?.filename
+      : undefined
   const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Car",
-    name: `${brandName} ${car.model} ${car.version} ${car.year}`,
-    brand: { "@type": "Brand", name: brandName },
+    '@context': 'https://schema.org',
+    '@type': 'Car',
+    brand: { '@type': 'Brand', name: brandName },
     model: car.model,
+    name: `${brandName} ${car.model} ${car.version} ${car.year}`,
     vehicleModelDate: String(car.year),
     ...(car.mileage
       ? {
-          mileageFromOdometer: {
-            "@type": "QuantitativeValue",
-            value: car.mileage,
-            unitCode: "KMT",
-          },
-        }
+        mileageFromOdometer: {
+          '@type': 'QuantitativeValue',
+          unitCode: 'KMT',
+          value: car.mileage,
+        },
+      }
       : {}),
     ...(car.fuelType ? { fuelType: car.fuelType } : {}),
     ...(car.horsepower
       ? {
-          vehicleEngine: {
-            "@type": "EngineSpecification",
-            enginePower: { "@type": "QuantitativeValue", value: car.horsepower, unitCode: "HP" },
+        vehicleEngine: {
+          '@type': 'EngineSpecification',
+          enginePower: {
+            '@type': 'QuantitativeValue',
+            unitCode: 'HP',
+            value: car.horsepower,
           },
-        }
+        },
+      }
       : {}),
     ...(featuredFilename ? { image: getImageUrl(featuredFilename) } : {}),
     offers: {
-      "@type": "Offer",
-      price: car.price,
-      priceCurrency: "MXN",
+      '@type': 'Offer',
       availability:
-        car.status === "available"
-          ? "https://schema.org/InStock"
-          : "https://schema.org/OutOfStock",
+        car.status === 'available'
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/OutOfStock',
+      price: car.price,
+      priceCurrency: 'MXN',
     },
-  };
+  }
 
   const statusConfig = {
-    available: { label: "Disponible", colorClass: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-    reserved: { label: "Reservado", colorClass: "bg-amber-50 text-amber-700 border-amber-200" },
-    sold: { label: "Vendido", colorClass: "bg-slate-100 text-slate-600 border-slate-200" },
-  };
-  const status = statusConfig[car.status];
+    available: {
+      colorClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      label: 'Disponible',
+    },
+    reserved: {
+      colorClass: 'bg-amber-50 text-amber-700 border-amber-200',
+      label: 'Reservado',
+    },
+    sold: {
+      colorClass: 'bg-slate-100 text-slate-600 border-slate-200',
+      label: 'Vendido',
+    },
+  }
+  const status = statusConfig[car.status]
 
   const dealership =
-    car.dealership && typeof car.dealership === "object" ? (car.dealership as Dealership) : null;
+    car.dealership && typeof car.dealership === 'object'
+      ? (car.dealership as Dealership)
+      : null
 
   return (
     <div className="min-h-screen bg-slate-50">
       {/* SEO structured data */}
       <script
-        type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        type="application/ld+json"
       />
 
       <div className="mx-auto max-w-7xl px-4 pt-24 pb-16 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm text-slate-500">
-          <Link href="/" className="transition-colors hover:text-red-600">
+          <Link className="transition-colors hover:text-red-600" href="/">
             Inicio
           </Link>
           <span className="mx-2 text-slate-300">/</span>
-          <Link href="/catalogo" className="transition-colors hover:text-red-600">
+          <Link
+            className="transition-colors hover:text-red-600"
+            href="/catalogo"
+          >
             Catálogo
           </Link>
           <span className="mx-2 text-slate-300">/</span>
@@ -139,10 +179,10 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
           {/* Left Column - Gallery + details */}
           <div className="lg:col-span-8">
             <ImageGallery
-              images={fallbackImages}
-              exteriorImages={car.exteriorImages}
-              interiorImages={car.interiorImages}
               alt={buildCarImageAlt(car)}
+              exteriorImages={car.exteriorImages}
+              images={fallbackImages}
+              interiorImages={car.interiorImages}
             />
 
             {/* Características */}
@@ -159,9 +199,13 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
 
             {/* Description */}
             {car.description && (
-              <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft sm:p-8">
-                <h3 className="mb-4 text-xl font-bold text-slate-900">Descripción</h3>
-                <p className="leading-relaxed text-slate-700">{car.description}</p>
+              <div className="shadow-soft mt-8 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+                <h3 className="mb-4 text-xl font-bold text-slate-900">
+                  Descripción
+                </h3>
+                <p className="leading-relaxed text-slate-700">
+                  {car.description}
+                </p>
               </div>
             )}
           </div>
@@ -170,10 +214,14 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
           <div className="lg:col-span-4">
             <div className="sticky top-24 space-y-4">
               {/* Price card */}
-              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+              <div className="shadow-soft rounded-2xl border border-slate-200 bg-white p-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-slate-500">Precio</span>
-                  <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${status.colorClass}`}>
+                  <span className="text-sm font-medium text-slate-500">
+                    Precio
+                  </span>
+                  <span
+                    className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${status.colorClass}`}
+                  >
                     {status.label}
                   </span>
                 </div>
@@ -190,7 +238,10 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
 
               {/* Financing (optional — hidden for cash-only cars) */}
               {car.showFinancing !== false && (
-                <FinancingCalculator price={car.price} financing={car.financing} />
+                <FinancingCalculator
+                  financing={car.financing}
+                  price={car.price}
+                />
               )}
             </div>
           </div>
@@ -199,5 +250,5 @@ export default async function CarDetailPage({ params }: CarDetailPageProps) {
         {dealership && <CarLocation dealership={dealership} />}
       </div>
     </div>
-  );
+  )
 }

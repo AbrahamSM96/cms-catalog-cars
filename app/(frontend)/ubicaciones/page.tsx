@@ -1,15 +1,19 @@
-import type { Metadata } from "next";
-import { getDealerships } from "@/lib/payload-client";
-import { Locations } from "@/components/frontend/Locations";
+import type { Metadata } from 'next'
+
+import { getDealerships } from '@/lib/payload-client'
+import { Locations } from '@/components/frontend/Locations'
 
 export const metadata: Metadata = {
-  title: "Nuestras ubicaciones",
   description:
-    "Encuentra nuestros concesionarios: dirección, horario y teléfono. Visítanos y encuentra tu próximo auto seminuevo.",
-};
+    'Encuentra nuestros concesionarios: dirección, horario y teléfono. Visítanos y encuentra tu próximo auto seminuevo.',
+  title: 'Nuestras ubicaciones',
+}
 
-export default async function UbicacionesPage() {
-  const dealerships = await getDealerships();
+/**
+ * UbicacionesPage
+ */
+export default async function UbicacionesPage(): Promise<React.JSX.Element> {
+  const dealerships = await getDealerships()
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -19,12 +23,13 @@ export default async function UbicacionesPage() {
             Nuestras ubicaciones
           </h1>
           <p className="mt-2 max-w-2xl text-slate-600">
-            Visítanos en cualquiera de nuestros concesionarios. Consulta dirección, horario y teléfono.
+            Visítanos en cualquiera de nuestros concesionarios. Consulta
+            dirección, horario y teléfono.
           </p>
         </div>
 
         <Locations dealerships={dealerships} />
       </div>
     </div>
-  );
+  )
 }

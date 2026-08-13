@@ -1,4 +1,28 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "ignorePatterns": []
+  "printWidth": 80,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "semi": false,
+  "experimentalTailwindcss": {
+    "stylesheet": "./app/globals.css",
+    "attributes": ["className", "class"],
+    "functions": ["clsx", "cn", "cva"],
+    "preserveDuplicates": false,
+    "preserveWhitespace": false
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/.git/**",
+    "**/.agents/**",
+    "**/.claude/**",
+    "**/.vscode/**",
+    "**/generated/**",
+    "**/next-env.d.ts",
+    "**/*.min.js"
+  ]
 }

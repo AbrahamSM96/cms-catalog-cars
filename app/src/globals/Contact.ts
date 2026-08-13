@@ -1,96 +1,146 @@
-import type { GlobalConfig } from "payload";
+import type { GlobalConfig } from 'payload'
 
 export const Contact: GlobalConfig = {
-  slug: "contact",
-  label: "Contacto",
-  admin: {
-    group: "Content",
-    description: "Datos de contacto que se muestran en el footer y en la página de contacto.",
-  },
   access: {
+    /**
+     * read
+     */
     read: () => true, // Público: el frontend lo consume sin auth
+  },
+  admin: {
+    description: 'Datos de contacto que se muestran en el footer y en la página de contacto.',
+    group: 'Content',
   },
   fields: [
     {
-      type: "row",
       fields: [
         {
-          name: "phone",
-          type: "text",
-          label: "Teléfono",
-          admin: { width: "50%", placeholder: "+52 55 5001 0000" },
+          admin: { placeholder: '+52 55 5001 0000', width: '50%', },
+          label: 'Teléfono',
+          name: 'phone',
+          type: 'text',
         },
         {
-          name: "whatsapp",
-          type: "text",
-          label: "WhatsApp",
           admin: {
-            width: "50%",
-            placeholder: "525550010000",
-            description: "Solo dígitos con lada país (ej. 5255...). Se usa para el enlace de WhatsApp.",
+            description:
+              'Solo dígitos con lada país (ej. 5255...). Se usa para el enlace de WhatsApp.',
+            placeholder: '525550010000',
+            width: '50%',
           },
+          label: 'WhatsApp',
+          name: 'whatsapp',
+          type: 'text',
         },
       ],
+      type: 'row',
     },
     {
-      name: "email",
-      type: "email",
-      label: "Correo electrónico",
-      admin: { placeholder: "contacto@tu-negocio.com" },
+      admin: { placeholder: 'contacto@tu-negocio.com' },
+      label: 'Correo electrónico',
+      name: 'email',
+      type: 'email',
     },
     {
-      name: "address",
-      type: "group",
-      label: "Dirección",
       fields: [
         {
-          name: "line1",
-          type: "text",
-          label: "Calle y número",
-          admin: { placeholder: "Av. Universidad 2060, Copilco Universidad" },
+          admin: { placeholder: 'Av. Universidad 2060, Copilco Universidad' },
+          label: 'Calle y número',
+          name: 'line1',
+          type: 'text',
         },
         {
-          type: "row",
           fields: [
-            { name: "city", type: "text", label: "Ciudad", admin: { width: "50%", placeholder: "Ciudad de México" } },
-            { name: "state", type: "text", label: "Estado", admin: { width: "50%", placeholder: "CDMX" } },
+            {
+              admin: { placeholder: 'Ciudad de México', width: '50%', },
+              label: 'Ciudad',
+              name: 'city',
+              type: 'text',
+            },
+            {
+              admin: { placeholder: 'CDMX', width: '50%', },
+              label: 'Estado',
+              name: 'state',
+              type: 'text',
+            },
           ],
+          type: 'row',
         },
         {
-          type: "row",
           fields: [
-            { name: "postalCode", type: "text", label: "Código postal", admin: { width: "50%", placeholder: "04360" } },
-            { name: "country", type: "text", label: "País", defaultValue: "México", admin: { width: "50%" } },
+            {
+              admin: { placeholder: '04360', width: '50%', },
+              label: 'Código postal',
+              name: 'postalCode',
+              type: 'text',
+            },
+            {
+              admin: { width: '50%' },
+              defaultValue: 'México',
+              label: 'País',
+              name: 'country',
+              type: 'text',
+            },
           ],
+          type: 'row',
         },
         {
-          name: "googleMapsUrl",
-          type: "text",
-          label: "Enlace de Google Maps (opcional)",
-          admin: { placeholder: "https://maps.app.goo.gl/..." },
+          admin: { placeholder: 'https://maps.app.goo.gl/...' },
+          label: 'Enlace de Google Maps (opcional)',
+          name: 'googleMapsUrl',
+          type: 'text',
         },
       ],
+      label: 'Dirección',
+      name: 'address',
+      type: 'group',
     },
     {
-      name: "hoursNote",
-      type: "textarea",
-      label: "Horario (texto)",
       admin: {
-        placeholder: "Lun a Vie 9:00 a.m. – 7:00 p.m. · Sáb 9:00 a.m. – 2:00 p.m.",
-        description: "Horario general que se muestra en la página de contacto (opcional).",
+        description:
+          'Horario general que se muestra en la página de contacto (opcional).',
+        placeholder:
+          'Lun a Vie 9:00 a.m. – 7:00 p.m. · Sáb 9:00 a.m. – 2:00 p.m.',
       },
+      label: 'Horario (texto)',
+      name: 'hoursNote',
+      type: 'textarea',
     },
     {
-      name: "social",
-      type: "group",
-      label: "Redes sociales",
-      admin: { description: "Enlaces completos (https://...). Deja vacío lo que no uses." },
+      admin: {
+        description:
+          'Enlaces completos (https://...). Deja vacío lo que no uses.',
+      },
       fields: [
-        { name: "facebook", type: "text", label: "Facebook", admin: { placeholder: "https://facebook.com/..." } },
-        { name: "instagram", type: "text", label: "Instagram", admin: { placeholder: "https://instagram.com/..." } },
-        { name: "tiktok", type: "text", label: "TikTok", admin: { placeholder: "https://tiktok.com/@..." } },
-        { name: "youtube", type: "text", label: "YouTube", admin: { placeholder: "https://youtube.com/@..." } },
+        {
+          admin: { placeholder: 'https://facebook.com/...' },
+          label: 'Facebook',
+          name: 'facebook',
+          type: 'text',
+        },
+        {
+          admin: { placeholder: 'https://instagram.com/...' },
+          label: 'Instagram',
+          name: 'instagram',
+          type: 'text',
+        },
+        {
+          admin: { placeholder: 'https://tiktok.com/@...' },
+          label: 'TikTok',
+          name: 'tiktok',
+          type: 'text',
+        },
+        {
+          admin: { placeholder: 'https://youtube.com/@...' },
+          label: 'YouTube',
+          name: 'youtube',
+          type: 'text',
+        },
       ],
+      label: 'Redes sociales',
+      name: 'social',
+      type: 'group',
     },
   ],
-};
+  label: 'Contacto',
+  slug: 'contact',
+}

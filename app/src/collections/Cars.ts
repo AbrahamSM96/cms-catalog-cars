@@ -1,745 +1,817 @@
-import type { CollectionConfig } from "payload";
+import type { CollectionConfig } from 'payload'
+
 import {
-  VEHICLE_TYPE_OPTIONS,
   BODY_TYPE_OPTIONS,
   CONDITION_OPTIONS,
-} from "../lib/marketplace";
+  VEHICLE_TYPE_OPTIONS,
+} from '../lib/marketplace'
 
 export const Cars: CollectionConfig = {
-  slug: "cars",
-  admin: {
-    useAsTitle: "title",
-    defaultColumns: ["title", "brand", "year", "status"],
-    group: "Content",
-  },
   access: {
+    /**
+     * read
+     */
     read: () => true, // Public read access for frontend
   },
-  hooks: {
-    beforeChange: [
-      async ({ data, req, originalDoc }) => {
-        // Format text fields to Title Case (Capital Letter)
-        if (data.model) {
-          data.model = data.model
-            .toLowerCase()
-            .split(" ")
-            .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
-        }
-
-        if (data.version) {
-          data.version = data.version
-            .toLowerCase()
-            .split(" ")
-            .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
-        }
-
-        // Build the display title used across the admin: "Marca Modelo Año"
-        const brandRef = data.brand ?? originalDoc?.brand;
-        const model = data.model ?? originalDoc?.model;
-        const year = data.year ?? originalDoc?.year;
-
-        let brandName = "";
-        if (brandRef) {
-          if (typeof brandRef === "object" && brandRef?.name) {
-            brandName = brandRef.name;
-          } else {
-            try {
-              const brand = await req.payload.findByID({
-                collection: "brands",
-                id: brandRef,
-                depth: 0,
-              });
-              brandName = brand?.name ?? "";
-            } catch {
-              // brand not found yet; leave blank
-            }
-          }
-        }
-
-        data.title = [brandName, model, year].filter(Boolean).join(" ");
-
-        return data;
-      },
-    ],
+  admin: {
+    defaultColumns: ['title', 'brand', 'year', 'status'],
+    group: 'Content',
+    useAsTitle: 'title',
   },
   fields: [
     {
-      name: "title",
-      type: "text",
       admin: {
         // Auto-generated ("Marca Modelo Año"); hidden from the form.
         hidden: true,
       },
       hooks: {
-        // Fallback so records saved before this field existed still show a
-        // proper title (computed on read) instead of falling back to the id.
+        /**
+         * Fallback so records saved before this field existed still show a
+         * proper title (computed on read) instead of falling back to the id.
+         *
+         * @param props - The hook parameters
+         * @param props.data - The car document data
+         * @param props.req - The Payload request object
+         * @param props.value - The current title value
+         * @returns The computed title
+         */
         afterRead: [
-          async ({ value, data, req }) => {
-            if (value) return value;
-            if (!data) return value;
+          async ({ data, req, value }): Promise<string> => {
+            if (value) return value
+            if (!data) return value
 
-            const brandRef = data.brand;
-            let brandName = "";
+            const brandRef = data.brand
+            let brandName = ''
             if (brandRef) {
-              if (typeof brandRef === "object" && brandRef?.name) {
-                brandName = brandRef.name;
+              if (typeof brandRef === 'object' && brandRef?.name) {
+                brandName = brandRef.name
               } else {
                 try {
                   const brand = await req.payload.findByID({
-                    collection: "brands",
-                    id: brandRef,
+                    collection: 'brands',
                     depth: 0,
-                  });
-                  brandName = brand?.name ?? "";
+                    id: brandRef,
+                  })
+                  brandName = brand?.name ?? ''
                 } catch {
                   // ignore
                 }
               }
             }
 
-            const computed = [brandName, data.model, data.year].filter(Boolean).join(" ");
-            return computed || value;
+            const computed = [brandName, data.model, data.year]
+              .filter(Boolean)
+              .join(' ')
+            return computed || value
           },
         ],
       },
+      name: 'title',
+      type: 'text',
     },
     {
-      type: "tabs",
       tabs: [
         // ========================================
         // GENERAL — lo esencial, siempre visible
         // ========================================
         {
-          label: "General",
-          description: "Datos básicos del vehículo.",
+          description: 'Datos básicos del vehículo.',
           fields: [
             {
-              type: "row",
               fields: [
                 {
-                  name: "brand",
-                  type: "relationship",
-                  relationTo: "brands",
-                  required: true,
+                  admin: { width: '50%' },
                   hasMany: false,
-                  admin: { width: "50%" },
-                },
-                { name: "model", type: "text", required: true, admin: { width: "50%" } },
-              ],
-            },
-            {
-              type: "row",
-              fields: [
-                { name: "version", type: "text", required: true, admin: { width: "50%" } },
-                { name: "year", type: "number", required: true, admin: { width: "50%" } },
-              ],
-            },
-            {
-              type: "row",
-              fields: [
-                {
-                  name: "transmission",
-                  type: "select",
+                  name: 'brand',
+                  relationTo: 'brands',
                   required: true,
-                  options: [
-                    {
-                      label: "Automática",
-                      value: "automatic",
-                    },
-                    {
-                      label: "Manual",
-                      value: "manual",
-                    },
-                  ],
-                  defaultValue: "manual",
-                  admin: { width: "50%" },
+                  type: 'relationship',
                 },
                 {
-                  name: "fuelType",
-                  type: "select",
-                  options: [
-                    { label: "Gasolina", value: "gasoline" },
-                    { label: "Diésel", value: "diesel" },
-                    { label: "Eléctrico", value: "electric" },
-                    { label: "Híbrido", value: "hybrid" },
-                    { label: "Híbrido Enchufable", value: "plug-in-hybrid" },
-                  ],
-                  admin: {
-                    width: "50%",
-                    description: "Tipo de combustible",
-                  },
+                  admin: { width: '50%' },
+                  name: 'model',
+                  required: true,
+                  type: 'text',
                 },
               ],
+              type: 'row',
             },
             {
-              type: "row",
               fields: [
                 {
-                  name: "status",
-                  type: "select",
+                  admin: { width: '50%' },
+                  name: 'version',
                   required: true,
-                  options: [
-                    {
-                      label: "🟢 Available",
-                      value: "available",
-                    },
-                    {
-                      label: "🟡 Reserved",
-                      value: "reserved",
-                    },
-                    {
-                      label: "🔴 Sold",
-                      value: "sold",
-                    },
-                  ],
-                  defaultValue: "available",
-                  admin: {
-                    width: "50%",
-                    description: "Current availability status of the vehicle",
-                  },
+                  type: 'text',
                 },
                 {
-                  name: "featured",
-                  type: "checkbox",
-                  label: "Featured",
-                  admin: { width: "50%" },
+                  admin: { width: '50%' },
+                  name: 'year',
+                  required: true,
+                  type: 'number',
                 },
               ],
+              type: 'row',
             },
-            { name: "description", type: "textarea" },
+            {
+              fields: [
+                {
+                  admin: { width: '50%' },
+                  defaultValue: 'manual',
+                  name: 'transmission',
+                  options: [
+                    {
+                      label: 'Automática',
+                      value: 'automatic',
+                    },
+                    {
+                      label: 'Manual',
+                      value: 'manual',
+                    },
+                  ],
+                  required: true,
+                  type: 'select',
+                },
+                {
+                  admin: {
+                    description: 'Tipo de combustible',
+                    width: '50%',
+                  },
+                  name: 'fuelType',
+                  options: [
+                    { label: 'Gasolina', value: 'gasoline' },
+                    { label: 'Diésel', value: 'diesel' },
+                    { label: 'Eléctrico', value: 'electric' },
+                    { label: 'Híbrido', value: 'hybrid' },
+                    { label: 'Híbrido Enchufable', value: 'plug-in-hybrid' },
+                  ],
+                  type: 'select',
+                },
+              ],
+              type: 'row',
+            },
+            {
+              fields: [
+                {
+                  admin: {
+                    description: 'Current availability status of the vehicle',
+                    width: '50%',
+                  },
+                  defaultValue: 'available',
+                  name: 'status',
+                  options: [
+                    {
+                      label: '🟢 Available',
+                      value: 'available',
+                    },
+                    {
+                      label: '🟡 Reserved',
+                      value: 'reserved',
+                    },
+                    {
+                      label: '🔴 Sold',
+                      value: 'sold',
+                    },
+                  ],
+                  required: true,
+                  type: 'select',
+                },
+                {
+                  admin: { width: '50%' },
+                  label: 'Featured',
+                  name: 'featured',
+                  type: 'checkbox',
+                },
+              ],
+              type: 'row',
+            },
+            { name: 'description', type: 'textarea' },
           ],
+          label: 'General',
         },
 
         // ========================================
         // FOTOS
         // ========================================
         {
-          label: "Fotos",
-          description: "Imagen principal y galerías del vehículo.",
+          description: 'Imagen principal y galerías del vehículo.',
           fields: [
             {
-              name: "featuredImage",
-              type: "upload",
-              relationTo: "media",
-              label: "Imagen principal",
               admin: {
-                description: "Imagen que se mostrará en la vista previa",
+                description: 'Imagen que se mostrará en la vista previa',
               },
+              label: 'Imagen principal',
+              name: 'featuredImage',
+              relationTo: 'media',
+              type: 'upload',
             },
             {
-              name: "exteriorImages",
-              type: "upload",
-              relationTo: "media",
-              hasMany: true,
-              label: "Imágenes exteriores",
               admin: {
-                description: "Fotos del exterior del vehículo (carrocería, frente, laterales)",
+                description:
+                  'Fotos del exterior del vehículo (carrocería, frente, laterales)',
               },
+              hasMany: true,
+              label: 'Imágenes exteriores',
+              name: 'exteriorImages',
+              relationTo: 'media',
+              type: 'upload',
             },
             {
-              name: "interiorImages",
-              type: "upload",
-              relationTo: "media",
-              hasMany: true,
-              label: "Imágenes interiores",
               admin: {
-                description: "Fotos del interior del vehículo (cabina, asientos, tablero)",
+                description:
+                  'Fotos del interior del vehículo (cabina, asientos, tablero)',
               },
+              hasMany: true,
+              label: 'Imágenes interiores',
+              name: 'interiorImages',
+              relationTo: 'media',
+              type: 'upload',
             },
           ],
+          label: 'Fotos',
         },
 
         // ========================================
         // PRECIO Y FINANCIAMIENTO
         // ========================================
         {
-          label: "Precio",
-          description: "Precio de venta y opciones de financiamiento.",
+          description: 'Precio de venta y opciones de financiamiento.',
           fields: [
             {
-              type: "row",
               fields: [
                 {
-                  name: "price",
-                  type: "number",
-                  required: true,
                   admin: {
-                    width: "50%",
-                    description: "Enter price in dollars (e.g., 25000)",
-                    placeholder: "e.g., 25000",
                     components: {
-                      Description: "/components/PriceDescription#PriceDescription",
+                      Description:
+                        '/components/PriceDescription#PriceDescription',
                     },
+                    description: 'Enter price in dollars (e.g., 25000)',
+                    placeholder: 'e.g., 25000',
+                    width: '50%',
                   },
+                  name: 'price',
+                  required: true,
+                  type: 'number',
                 },
                 {
-                  name: "hasVAT",
-                  type: "checkbox",
-                  label: "IVA",
-                  defaultValue: false,
                   admin: {
-                    width: "50%",
-                    description: "¿El precio incluye/factura IVA? (se muestra como Sí/No)",
+                    description:
+                      '¿El precio incluye/factura IVA? (se muestra como Sí/No)',
+                    width: '50%',
                   },
+                  defaultValue: false,
+                  label: 'IVA',
+                  name: 'hasVAT',
+                  type: 'checkbox',
                 },
               ],
+              type: 'row',
             },
             {
-              name: "showFinancing",
-              type: "checkbox",
-              label: "Mostrar calculadora de financiamiento",
-              defaultValue: true,
               admin: {
                 description:
-                  "Desactívalo para autos de solo contado; oculta la calculadora en el detalle del vehículo.",
+                  'Desactívalo para autos de solo contado; oculta la calculadora en el detalle del vehículo.',
               },
+              defaultValue: true,
+              label: 'Mostrar calculadora de financiamiento',
+              name: 'showFinancing',
+              type: 'checkbox',
             },
             {
-              type: "collapsible",
-              label: "Opciones de financiamiento",
               admin: {
+                /**
+                 * Condition to show financing section
+                 *
+                 * @param data - The car document data
+                 * @returns Whether to show the financing section
+                 */
+                condition: (data): boolean => data?.showFinancing !== false,
                 initCollapsed: true,
-                condition: (data) => data?.showFinancing !== false,
               },
               fields: [
                 {
-                  name: "financing",
-                  type: "group",
-                  label: false,
                   fields: [
                     {
-                      type: "row",
                       fields: [
                         {
-                          name: "minDownPaymentPercentage",
-                          type: "number",
-                          defaultValue: 20,
                           admin: {
-                            width: "50%",
-                            description: "Porcentaje mínimo de enganche (ej: 20%)",
-                          },
-                        },
-                        {
-                          name: "maxDownPaymentPercentage",
-                          type: "number",
-                          defaultValue: 80,
-                          admin: {
-                            width: "50%",
-                            description: "Porcentaje máximo de enganche (ej: 80%)",
-                          },
-                        },
-                      ],
-                    },
-                    {
-                      name: "defaultDownPaymentPercentage",
-                      type: "number",
-                      defaultValue: 20,
-                      admin: {
-                        description: "Porcentaje de enganche sugerido por defecto",
-                      },
-                    },
-                    {
-                      name: "availableLoanTerms",
-                      type: "array",
-                      label: "Plazos disponibles (meses)",
-                      admin: {
-                        description: "Lista de plazos en meses que ofreces (ej: 6, 12, 24, 36, 48, 60)",
-                      },
-                      fields: [
-                        {
-                          name: "months",
-                          type: "number",
-                          required: true,
-                          admin: {
-                            placeholder: "36",
-                          },
-                        },
-                      ],
-                    },
-                    {
-                      type: "row",
-                      fields: [
-                        {
-                          name: "defaultLoanTerm",
-                          type: "number",
-                          defaultValue: 36,
-                          admin: {
-                            width: "50%",
                             description:
-                              "Plazo sugerido por defecto en meses (debe estar en la lista de disponibles)",
+                              'Porcentaje mínimo de enganche (ej: 20%)',
+                            width: '50%',
                           },
+                          defaultValue: 20,
+                          name: 'minDownPaymentPercentage',
+                          type: 'number',
                         },
                         {
-                          name: "interestRate",
-                          type: "number",
-                          defaultValue: 8.5,
                           admin: {
-                            width: "50%",
-                            description: "Tasa de interés anual (%)",
-                            placeholder: "8.5",
+                            description:
+                              'Porcentaje máximo de enganche (ej: 80%)',
+                            width: '50%',
                           },
+                          defaultValue: 80,
+                          name: 'maxDownPaymentPercentage',
+                          type: 'number',
                         },
                       ],
+                      type: 'row',
+                    },
+                    {
+                      admin: {
+                        description:
+                          'Porcentaje de enganche sugerido por defecto',
+                      },
+                      defaultValue: 20,
+                      name: 'defaultDownPaymentPercentage',
+                      type: 'number',
+                    },
+                    {
+                      admin: {
+                        description:
+                          'Lista de plazos en meses que ofreces (ej: 6, 12, 24, 36, 48, 60)',
+                      },
+                      fields: [
+                        {
+                          admin: {
+                            placeholder: '36',
+                          },
+                          name: 'months',
+                          required: true,
+                          type: 'number',
+                        },
+                      ],
+                      label: 'Plazos disponibles (meses)',
+                      name: 'availableLoanTerms',
+                      type: 'array',
+                    },
+                    {
+                      fields: [
+                        {
+                          admin: {
+                            description:
+                              'Plazo sugerido por defecto en meses (debe estar en la lista de disponibles)',
+                            width: '50%',
+                          },
+                          defaultValue: 36,
+                          name: 'defaultLoanTerm',
+                          type: 'number',
+                        },
+                        {
+                          admin: {
+                            description: 'Tasa de interés anual (%)',
+                            placeholder: '8.5',
+                            width: '50%',
+                          },
+                          defaultValue: 8.5,
+                          name: 'interestRate',
+                          type: 'number',
+                        },
+                      ],
+                      type: 'row',
                     },
                   ],
+                  label: false,
+                  name: 'financing',
+                  type: 'group',
                 },
               ],
+              label: 'Opciones de financiamiento',
+              type: 'collapsible',
             },
           ],
+          label: 'Precio',
         },
 
         // ========================================
         // ESPECIFICACIONES TÉCNICAS
         // ========================================
         {
-          label: "Especificaciones",
-          description: "Ficha técnica del vehículo.",
+          description: 'Ficha técnica del vehículo.',
           fields: [
             {
-              type: "collapsible",
-              label: "Motor y desempeño",
               admin: { initCollapsed: false },
               fields: [
                 {
-                  type: "row",
                   fields: [
                     {
-                      name: "engine",
-                      type: "text",
                       admin: {
-                        width: "50%",
-                        description: "Especificación del motor (ej: L4 2.0t, V6 3.5L)",
-                        placeholder: "L4 2.0t",
+                        description:
+                          'Especificación del motor (ej: L4 2.0t, V6 3.5L)',
+                        placeholder: 'L4 2.0t',
+                        width: '50%',
                       },
+                      name: 'engine',
+                      type: 'text',
                     },
                     {
-                      name: "horsepower",
-                      type: "number",
                       admin: {
-                        width: "50%",
-                        description: "Caballos de fuerza (HP)",
-                        placeholder: "184",
+                        description: 'Caballos de fuerza (HP)',
+                        placeholder: '184',
+                        width: '50%',
                       },
+                      name: 'horsepower',
+                      type: 'number',
                     },
                   ],
+                  type: 'row',
                 },
-                { name: "cylinders", type: "number" },
+                { name: 'cylinders', type: 'number' },
               ],
+              label: 'Motor y desempeño',
+              type: 'collapsible',
             },
             {
-              type: "collapsible",
-              label: "Carrocería y capacidad",
               admin: { initCollapsed: true },
               fields: [
                 {
-                  type: "row",
                   fields: [
                     {
-                      name: "vehicleType",
-                      type: "select",
-                      label: "Tipo de vehículo",
+                      admin: {
+                        description: 'Auto o camioneta (Facebook Marketplace)',
+                        width: '50%',
+                      },
+                      label: 'Tipo de vehículo',
+                      name: 'vehicleType',
                       options: VEHICLE_TYPE_OPTIONS,
-                      admin: {
-                        width: "50%",
-                        description: "Auto o camioneta (Facebook Marketplace)",
-                      },
+                      type: 'select',
                     },
                     {
-                      name: "bodyType",
-                      type: "select",
-                      label: "Carrocería",
+                      admin: {
+                        description:
+                          'Tipo de carrocería (alineado a Facebook Marketplace)',
+                        width: '50%',
+                      },
+                      label: 'Carrocería',
+                      name: 'bodyType',
                       options: BODY_TYPE_OPTIONS,
-                      admin: {
-                        width: "50%",
-                        description: "Tipo de carrocería (alineado a Facebook Marketplace)",
-                      },
+                      type: 'select',
                     },
                   ],
+                  type: 'row',
                 },
                 {
-                  type: "row",
                   fields: [
                     {
-                      name: "doors",
-                      type: "number",
                       admin: {
-                        width: "50%",
-                        description: "Número de puertas (ej: 4)",
+                        description: 'Número de puertas (ej: 4)',
+                        width: '50%',
                       },
+                      name: 'doors',
+                      type: 'number',
                     },
-                    { name: "passengers", type: "number", admin: { width: "50%" } },
+                    {
+                      admin: { width: '50%' },
+                      name: 'passengers',
+                      type: 'number',
+                    },
                   ],
+                  type: 'row',
                 },
               ],
+              label: 'Carrocería y capacidad',
+              type: 'collapsible',
             },
             {
-              type: "collapsible",
-              label: "Uso y condición",
               admin: { initCollapsed: true },
               fields: [
                 {
-                  name: "mileage",
-                  type: "number",
                   admin: {
-                    description: "Enter mileage in kilometers (e.g., 150000)",
-                    placeholder: "e.g., 150000",
                     components: {
-                      Description: "/components/MileageDescription#MileageDescription",
+                      Description:
+                        '/components/MileageDescription#MileageDescription',
                     },
+                    description: 'Enter mileage in kilometers (e.g., 150000)',
+                    placeholder: 'e.g., 150000',
                   },
+                  name: 'mileage',
+                  type: 'number',
                 },
                 {
-                  name: "condition",
-                  type: "select",
-                  label: "Estado del vehículo",
-                  options: CONDITION_OPTIONS,
                   admin: {
-                    description: "Condición general del vehículo (Facebook Marketplace)",
+                    description:
+                      'Condición general del vehículo (Facebook Marketplace)',
                   },
+                  label: 'Estado del vehículo',
+                  name: 'condition',
+                  options: CONDITION_OPTIONS,
+                  type: 'select',
                 },
               ],
+              label: 'Uso y condición',
+              type: 'collapsible',
             },
             {
-              type: "collapsible",
-              label: "Colores",
               admin: { initCollapsed: true },
               fields: [
                 {
-                  type: "row",
                   fields: [
                     {
-                      name: "exteriorColor",
-                      type: "relationship",
-                      relationTo: "colors",
-                      hasMany: false,
-                      label: "Color exterior",
                       admin: {
-                        width: "50%",
                         description:
-                          "Color de la carrocería. ¿No está en la lista? Agrégalo en la colección Colores.",
+                          'Color de la carrocería. ¿No está en la lista? Agrégalo en la colección Colores.',
+                        width: '50%',
                       },
+                      hasMany: false,
+                      label: 'Color exterior',
+                      name: 'exteriorColor',
+                      relationTo: 'colors',
+                      type: 'relationship',
                     },
                     {
-                      name: "interiorColor",
-                      type: "relationship",
-                      relationTo: "colors",
-                      hasMany: false,
-                      label: "Color interior",
                       admin: {
-                        width: "50%",
                         description:
-                          "Color de la tapicería. ¿No está en la lista? Agrégalo en la colección Colores.",
+                          'Color de la tapicería. ¿No está en la lista? Agrégalo en la colección Colores.',
+                        width: '50%',
                       },
+                      hasMany: false,
+                      label: 'Color interior',
+                      name: 'interiorColor',
+                      relationTo: 'colors',
+                      type: 'relationship',
                     },
                   ],
+                  type: 'row',
                 },
               ],
+              label: 'Colores',
+              type: 'collapsible',
             },
           ],
+          label: 'Especificaciones',
         },
 
         // ========================================
         // DETALLES ADICIONALES — todo colapsado
         // ========================================
         {
-          label: "Detalles adicionales",
-          description: "Equipamiento, historial y ubicación (opcional).",
+          description: 'Equipamiento, historial y ubicación (opcional).',
           fields: [
             {
-              type: "collapsible",
-              label: "Características",
               admin: { initCollapsed: true },
               fields: [
                 {
-                  name: "features",
-                  type: "array",
-                  label: false,
-                  admin: {
-                    description: "Equipamiento y características especiales del vehículo",
-                  },
-                  fields: [
-                    {
-                      name: "feature",
-                      type: "text",
-                      required: true,
-                      admin: {
-                        placeholder: "Bluetooth, Cámara trasera, etc.",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              type: "collapsible",
-              label: "Historial del auto",
-              admin: { initCollapsed: true },
-              fields: [
-                {
-                  name: "history",
-                  type: "group",
-                  label: false,
-                  admin: {
-                    description: "Respaldo e inspección del vehículo",
-                  },
-                  fields: [
-                    {
-                      name: "inspectionPoints",
-                      type: "number",
-                      label: "Puntos de inspección",
-                      defaultValue: 150,
-                      admin: {
-                        description: "Número de puntos inspeccionados (ej: 150 → \"+150 puntos\")",
-                      },
-                    },
-                    {
-                      name: "ownerHistory",
-                      type: "select",
-                      label: "Historial de dueños",
-                      options: [
-                        { label: "Único dueño", value: "single" },
-                        { label: "2 dueños", value: "two" },
-                        { label: "3 o más dueños", value: "multiple" },
-                      ],
-                      defaultValue: "single",
-                    },
-                    {
-                      type: "row",
-                      fields: [
-                        {
-                          name: "duplicateKeys",
-                          type: "checkbox",
-                          label: "Duplicado de llaves",
-                          defaultValue: false,
-                          admin: {
-                            width: "50%",
-                            description: "¿Incluye duplicado de llaves? (Sí/No)",
-                          },
-                        },
-                        {
-                          name: "plates",
-                          type: "checkbox",
-                          label: "Placas",
-                          defaultValue: false,
-                          admin: {
-                            width: "50%",
-                            description: "¿Incluye placas? (Sí/No)",
-                          },
-                        },
-                      ],
-                    },
-                    {
-                      type: "row",
-                      fields: [
-                        {
-                          name: "manuals",
-                          type: "checkbox",
-                          label: "Manuales",
-                          defaultValue: false,
-                          admin: {
-                            width: "50%",
-                            description: "¿Incluye manuales? (Sí/No)",
-                          },
-                        },
-                        {
-                          name: "conditioning",
-                          type: "checkbox",
-                          label: "Acondicionamiento",
-                          defaultValue: false,
-                          admin: {
-                            width: "50%",
-                            description: "¿Recibió acondicionamiento/detallado? (Sí/No)",
-                          },
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              type: "collapsible",
-              label: "Ubicación",
-              admin: { initCollapsed: true },
-              fields: [
-                {
-                  name: "dealership",
-                  type: "relationship",
-                  relationTo: "dealerships",
-                  hasMany: false,
-                  label: "Concesionario",
                   admin: {
                     description:
-                      "Selecciona el concesionario donde está el auto. Se usa para mostrar el mapa en el detalle del vehículo.",
-                  },
-                },
-                {
-                  name: "location",
-                  type: "group",
-                  label: "Ubicación manual (opcional)",
-                  admin: {
-                    description: "Úsala solo si no eliges un concesionario de la lista.",
+                      'Equipamiento y características especiales del vehículo',
                   },
                   fields: [
                     {
-                      name: "dealership",
-                      type: "text",
                       admin: {
-                        description: "Nombre del concesionario (ej: Centro Magno)",
-                        placeholder: "Centro Magno",
+                        placeholder: 'Bluetooth, Cámara trasera, etc.',
                       },
-                    },
-                    {
-                      type: "row",
-                      fields: [
-                        {
-                          name: "city",
-                          type: "text",
-                          admin: {
-                            width: "50%",
-                            description: "Ciudad",
-                            placeholder: "Guadalajara",
-                          },
-                        },
-                        {
-                          name: "state",
-                          type: "text",
-                          admin: {
-                            width: "50%",
-                            description: "Estado",
-                            placeholder: "Jalisco",
-                          },
-                        },
-                      ],
+                      name: 'feature',
+                      required: true,
+                      type: 'text',
                     },
                   ],
+                  label: false,
+                  name: 'features',
+                  type: 'array',
                 },
               ],
+              label: 'Características',
+              type: 'collapsible',
+            },
+            {
+              admin: { initCollapsed: true },
+              fields: [
+                {
+                  admin: {
+                    description: 'Respaldo e inspección del vehículo',
+                  },
+                  fields: [
+                    {
+                      admin: {
+                        description:
+                          'Número de puntos inspeccionados (ej: 150 → "+150 puntos")',
+                      },
+                      defaultValue: 150,
+                      label: 'Puntos de inspección',
+                      name: 'inspectionPoints',
+                      type: 'number',
+                    },
+                    {
+                      defaultValue: 'single',
+                      label: 'Historial de dueños',
+                      name: 'ownerHistory',
+                      options: [
+                        { label: 'Único dueño', value: 'single' },
+                        { label: '2 dueños', value: 'two' },
+                        { label: '3 o más dueños', value: 'multiple' },
+                      ],
+                      type: 'select',
+                    },
+                    {
+                      fields: [
+                        {
+                          admin: {
+                            description:
+                              '¿Incluye duplicado de llaves? (Sí/No)',
+                            width: '50%',
+                          },
+                          defaultValue: false,
+                          label: 'Duplicado de llaves',
+                          name: 'duplicateKeys',
+                          type: 'checkbox',
+                        },
+                        {
+                          admin: {
+                            description: '¿Incluye placas? (Sí/No)',
+                            width: '50%',
+                          },
+                          defaultValue: false,
+                          label: 'Placas',
+                          name: 'plates',
+                          type: 'checkbox',
+                        },
+                      ],
+                      type: 'row',
+                    },
+                    {
+                      fields: [
+                        {
+                          admin: {
+                            description: '¿Incluye manuales? (Sí/No)',
+                            width: '50%',
+                          },
+                          defaultValue: false,
+                          label: 'Manuales',
+                          name: 'manuals',
+                          type: 'checkbox',
+                        },
+                        {
+                          admin: {
+                            description:
+                              '¿Recibió acondicionamiento/detallado? (Sí/No)',
+                            width: '50%',
+                          },
+                          defaultValue: false,
+                          label: 'Acondicionamiento',
+                          name: 'conditioning',
+                          type: 'checkbox',
+                        },
+                      ],
+                      type: 'row',
+                    },
+                  ],
+                  label: false,
+                  name: 'history',
+                  type: 'group',
+                },
+              ],
+              label: 'Historial del auto',
+              type: 'collapsible',
+            },
+            {
+              admin: { initCollapsed: true },
+              fields: [
+                {
+                  admin: {
+                    description:
+                      'Selecciona el concesionario donde está el auto. Se usa para mostrar el mapa en el detalle del vehículo.',
+                  },
+                  hasMany: false,
+                  label: 'Concesionario',
+                  name: 'dealership',
+                  relationTo: 'dealerships',
+                  type: 'relationship',
+                },
+                {
+                  admin: {
+                    description:
+                      'Úsala solo si no eliges un concesionario de la lista.',
+                  },
+                  fields: [
+                    {
+                      admin: {
+                        description:
+                          'Nombre del concesionario (ej: Centro Magno)',
+                        placeholder: 'Centro Magno',
+                      },
+                      name: 'dealership',
+                      type: 'text',
+                    },
+                    {
+                      fields: [
+                        {
+                          admin: {
+                            description: 'Ciudad',
+                            placeholder: 'Guadalajara',
+                            width: '50%',
+                          },
+                          name: 'city',
+                          type: 'text',
+                        },
+                        {
+                          admin: {
+                            description: 'Estado',
+                            placeholder: 'Jalisco',
+                            width: '50%',
+                          },
+                          name: 'state',
+                          type: 'text',
+                        },
+                      ],
+                      type: 'row',
+                    },
+                  ],
+                  label: 'Ubicación manual (opcional)',
+                  name: 'location',
+                  type: 'group',
+                },
+              ],
+              label: 'Ubicación',
+              type: 'collapsible',
             },
           ],
+          label: 'Detalles adicionales',
         },
 
         // ========================================
         // FACEBOOK MARKETPLACE — siempre al final
         // ========================================
         {
-          label: "Facebook Marketplace",
-          description: "Genera la publicación para Facebook Marketplace.",
+          description: 'Genera la publicación para Facebook Marketplace.',
           fields: [
             {
-              name: "fbMarketplace",
-              type: "ui",
               admin: {
                 components: {
-                  Field: "/components/FacebookMarketplacePanel#FacebookMarketplacePanel",
+                  Field:
+                    '/components/FacebookMarketplacePanel#FacebookMarketplacePanel',
                 },
               },
+              name: 'fbMarketplace',
+              type: 'ui',
             },
           ],
+          label: 'Facebook Marketplace',
         },
       ],
+
+      type: 'tabs',
     },
   ],
-};
+  hooks: {
+    beforeChange: [
+      /**
+       * Format text fields and build display title for the car collection.
+       *
+       * @param props - The hook parameters
+       * @param props.data - The car document data being saved
+       * @param props.originalDoc - The original document before changes
+       * @param props.req - The Payload request object
+       * @returns The modified car document data
+       */
+      // oxlint-disable-next-line typescript/no-explicit-any
+      async ({ data, originalDoc, req }): Promise<Partial<any>> => {
+        // Format text fields to Title Case (Capital Letter)
+        const formattedModel = data.model
+          ? data.model
+            .toLowerCase()
+            .split(' ')
+            .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')
+          : data.model
+
+        const formattedVersion = data.version
+          ? data.version
+            .toLowerCase()
+            .split(' ')
+            .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')
+          : data.version
+
+        // Build the display title used across the admin: "Marca Modelo Año"
+        const brandRef = data.brand ?? originalDoc?.brand
+        const model = formattedModel ?? originalDoc?.model
+        const year = data.year ?? originalDoc?.year
+
+        let brandName = ''
+        if (brandRef) {
+          if (typeof brandRef === 'object' && brandRef?.name) {
+            brandName = brandRef.name
+          } else {
+            try {
+              const brand = await req.payload.findByID({
+                collection: 'brands',
+                depth: 0,
+                id: brandRef,
+              })
+              brandName = brand?.name ?? ''
+            } catch {
+              // brand not found yet; leave blank
+            }
+          }
+        }
+
+        return {
+          ...data,
+          model: formattedModel ?? data.model,
+          title: [brandName, model, year].filter(Boolean).join(' '),
+          version: formattedVersion ?? data.version,
+        }
+      },
+    ],
+  },
+  slug: 'cars',
+}

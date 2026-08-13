@@ -1,239 +1,277 @@
-import type { CollectionConfig, Field } from "payload";
+import type { CollectionConfig, Field } from 'payload'
 
-const DAYS: { name: string; label: string }[] = [
-  { name: "monday", label: "Lunes" },
-  { name: "tuesday", label: "Martes" },
-  { name: "wednesday", label: "Miércoles" },
-  { name: "thursday", label: "Jueves" },
-  { name: "friday", label: "Viernes" },
-  { name: "saturday", label: "Sábado" },
-  { name: "sunday", label: "Domingo" },
-];
+const DAYS: { label: string; name: string }[] = [
+  { label: 'Lunes', name: 'monday' },
+  { label: 'Martes', name: 'tuesday' },
+  { label: 'Miércoles', name: 'wednesday' },
+  { label: 'Jueves', name: 'thursday' },
+  { label: 'Viernes', name: 'friday' },
+  { label: 'Sábado', name: 'saturday' },
+  { label: 'Domingo', name: 'sunday' },
+]
 
 // One row per weekday: a "Cerrado" toggle plus opening/closing time (HH:MM, 24h).
 const dayFields: Field[] = DAYS.map((day) => ({
-  type: "group",
-  name: day.name,
-  label: day.label,
   fields: [
     {
-      type: "row",
       fields: [
         {
-          name: "closed",
-          type: "checkbox",
-          label: "Cerrado",
+          admin: { width: '34%' },
           defaultValue: false,
-          admin: { width: "34%" },
+          label: 'Cerrado',
+          name: 'closed',
+          type: 'checkbox',
         },
         {
-          name: "open",
-          type: "text",
-          label: "Abre",
           admin: {
-            width: "33%",
-            placeholder: "09:00",
-            description: "Formato 24h",
+            /**
+             * Condition to show open time field
+             *
+             * @param _ - The field value (unused)
+             * @param siblingData - The sibling field data
+             * @returns Whether to show the field
+             */
             condition: (_, siblingData) => !siblingData?.closed,
+            description: 'Formato 24h',
+            placeholder: '09:00',
+            width: '33%',
           },
+          label: 'Abre',
+          name: 'open',
+          type: 'text',
         },
         {
-          name: "close",
-          type: "text",
-          label: "Cierra",
           admin: {
-            width: "33%",
-            placeholder: "19:00",
-            description: "Formato 24h",
+            /**
+             * Condition to show close time field
+             *
+             * @param _ - The field value (unused)
+             * @param siblingData - The sibling field data
+             * @returns Whether to show the field
+             */
             condition: (_, siblingData) => !siblingData?.closed,
+            description: 'Formato 24h',
+            placeholder: '19:00',
+            width: '33%',
           },
+          label: 'Cierra',
+          name: 'close',
+          type: 'text',
         },
       ],
+      type: 'row',
     },
   ],
-}));
+  label: day.label,
+  name: day.name,
+  type: 'group',
+}))
 
 export const Dealerships: CollectionConfig = {
-  slug: "dealerships",
-  labels: {
-    singular: "Concesionario",
-    plural: "Concesionarios",
+  access: {
+    /**
+     * Allow public read access for the frontend locations page
+     */
+    read: () => true,
   },
   admin: {
-    useAsTitle: "name",
-    defaultColumns: ["name", "phone", "updatedAt"],
-    group: "Content",
-  },
-  access: {
-    read: () => true, // Public read for the frontend locations page
+    defaultColumns: ['name', 'phone', 'updatedAt'],
+    group: 'Content',
+    useAsTitle: 'name',
   },
   fields: [
     {
-      type: "tabs",
       tabs: [
         // GENERAL
         {
-          label: "General",
-          description: "Datos principales del concesionario.",
+          description: 'Datos principales del concesionario.',
           fields: [
             {
-              name: "name",
-              type: "text",
+              admin: { placeholder: 'Seminuevos Centro Magno' },
+              label: 'Nombre',
+              name: 'name',
               required: true,
-              label: "Nombre",
-              admin: { placeholder: "Seminuevos Centro Magno" },
+              type: 'text',
             },
             {
-              name: "image",
-              type: "upload",
-              relationTo: "media",
-              label: "Foto del concesionario",
-              admin: { description: "Imagen que se muestra en la tarjeta de ubicación." },
+              admin: {
+                description:
+                  'Imagen que se muestra en la tarjeta de ubicación.',
+              },
+              label: 'Foto del concesionario',
+              name: 'image',
+              relationTo: 'media',
+              type: 'upload',
             },
             {
-              type: "row",
               fields: [
                 {
-                  name: "phone",
-                  type: "text",
-                  label: "Teléfono",
-                  admin: { width: "50%", placeholder: "+52 33 3002 5050" },
+                  admin: { placeholder: '+52 33 3002 5050', width: '50%' },
+                  label: 'Teléfono',
+                  name: 'phone',
+                  type: 'text',
                 },
                 {
-                  name: "whatsapp",
-                  type: "text",
-                  label: "WhatsApp",
                   admin: {
-                    width: "50%",
-                    placeholder: "5233 3002 5050",
-                    description: "Solo dígitos con lada país (ej. 5233...). Opcional.",
+                    description:
+                      'Solo dígitos con lada país (ej. 5233...). Opcional.',
+                    placeholder: '5233 3002 5050',
+                    width: '50%',
                   },
+                  label: 'WhatsApp',
+                  name: 'whatsapp',
+                  type: 'text',
                 },
               ],
+              type: 'row',
             },
           ],
+          label: 'General',
         },
 
         // UBICACIÓN
         {
-          label: "Ubicación",
-          description: "Dirección y coordenadas para el mapa.",
+          description: 'Dirección y coordenadas para el mapa.',
           fields: [
             {
-              name: "address",
-              type: "group",
-              label: "Dirección",
               fields: [
                 {
-                  name: "line1",
-                  type: "text",
-                  label: "Calle y número",
-                  admin: { placeholder: "Av. Adolfo López Mateos Sur 4247-B" },
+                  admin: { placeholder: 'Av. Adolfo López Mateos Sur 4247-B' },
+                  label: 'Calle y número',
+                  name: 'line1',
+                  type: 'text',
                 },
                 {
-                  type: "row",
                   fields: [
                     {
-                      name: "neighborhood",
-                      type: "text",
-                      label: "Colonia",
-                      admin: { width: "50%", placeholder: "Loma Bonita" },
+                      admin: { placeholder: 'Loma Bonita', width: '50%' },
+                      label: 'Colonia',
+                      name: 'neighborhood',
+                      type: 'text',
                     },
                     {
-                      name: "postalCode",
-                      type: "text",
-                      label: "Código postal",
-                      admin: { width: "50%", placeholder: "45086" },
+                      admin: { placeholder: '45086', width: '50%' },
+                      label: 'Código postal',
+                      name: 'postalCode',
+                      type: 'text',
                     },
                   ],
+                  type: 'row',
                 },
                 {
-                  type: "row",
                   fields: [
                     {
-                      name: "city",
-                      type: "text",
-                      label: "Ciudad",
-                      admin: { width: "50%", placeholder: "Zapopan" },
+                      admin: { placeholder: 'Zapopan', width: '50%' },
+                      label: 'Ciudad',
+                      name: 'city',
+                      type: 'text',
                     },
                     {
-                      name: "state",
-                      type: "text",
-                      label: "Estado",
-                      admin: { width: "50%", placeholder: "Jalisco" },
+                      admin: { placeholder: 'Jalisco', width: '50%' },
+                      label: 'Estado',
+                      name: 'state',
+                      type: 'text',
                     },
                   ],
+                  type: 'row',
                 },
                 {
-                  name: "country",
-                  type: "text",
-                  label: "País",
-                  defaultValue: "México",
+                  defaultValue: 'México',
+                  label: 'País',
+                  name: 'country',
+                  type: 'text',
                 },
               ],
+              label: 'Dirección',
+              name: 'address',
+              type: 'group',
             },
             {
-              name: "coordinates",
-              type: "group",
-              label: "Coordenadas (para el mapa)",
               admin: {
                 description:
-                  "Usa grados DECIMALES (ej. 20.6597 y -103.3496), no grados-minutos-segundos. En Google Maps: clic derecho sobre el lugar → clic en las coordenadas para copiarlas (vienen en decimal).",
+                  'Usa grados DECIMALES (ej. 20.6597 y -103.3496), no grados-minutos-segundos. En Google Maps: clic derecho sobre el lugar → clic en las coordenadas para copiarlas (vienen en decimal).',
               },
               fields: [
                 {
-                  type: "row",
                   fields: [
                     {
-                      name: "latitude",
-                      type: "number",
-                      label: "Latitud",
-                      admin: { width: "50%", placeholder: "20.6597", step: 0.000001 },
+                      admin: {
+                        placeholder: '20.6597',
+                        step: 0.000001,
+                        width: '50%',
+                      },
+                      label: 'Latitud',
+                      name: 'latitude',
+                      type: 'number',
+                      /**
+                       * Validate latitude is between -90 and 90 degrees
+                       *
+                       * @param value - The latitude value in decimal degrees
+                       * @returns Error message if invalid, or true if valid
+                       */
                       validate: (value: number | null | undefined) =>
                         value == null ||
                         (value >= -90 && value <= 90) ||
-                        "La latitud debe estar entre -90 y 90 en grados decimales (ej. 20.6597).",
+                        'La latitud debe estar entre -90 y 90 en grados decimales (ej. 20.6597).',
                     },
                     {
-                      name: "longitude",
-                      type: "number",
-                      label: "Longitud",
-                      admin: { width: "50%", placeholder: "-103.3496", step: 0.000001 },
+                      admin: {
+                        placeholder: '-103.3496',
+                        step: 0.000001,
+                        width: '50%',
+                      },
+                      label: 'Longitud',
+                      name: 'longitude',
+                      type: 'number',
+                      /**
+                       * Validate longitude is between -180 and 180 degrees
+                       *
+                       * @param value - The longitude value in decimal degrees
+                       * @returns Error message if invalid, or true if valid
+                       */
                       validate: (value: number | null | undefined) =>
                         value == null ||
                         (value >= -180 && value <= 180) ||
-                        "La longitud debe estar entre -180 y 180 en grados decimales (ej. -103.3496).",
+                        'La longitud debe estar entre -180 y 180 en grados decimales (ej. -103.3496).',
                     },
                   ],
+                  type: 'row',
                 },
               ],
+              label: 'Coordenadas (para el mapa)',
+              name: 'coordinates',
+              type: 'group',
             },
             {
-              name: "googleMapsUrl",
-              type: "text",
-              label: "Enlace de Google Maps (opcional)",
               admin: {
-                placeholder: "https://maps.app.goo.gl/...",
                 description: "Para el botón 'Cómo llegar'.",
+                placeholder: 'https://maps.app.goo.gl/...',
               },
+              label: 'Enlace de Google Maps (opcional)',
+              name: 'googleMapsUrl',
+              type: 'text',
             },
           ],
+          label: 'Ubicación',
         },
 
         // HORARIO
         {
-          label: "Horario",
-          description: "Horario de atención por día. Se usa para mostrar Abierto/Cerrado.",
+          description:
+            'Horario de atención por día. Se usa para mostrar Abierto/Cerrado.',
           fields: [
             {
-              name: "hours",
-              type: "group",
-              label: false,
               fields: dayFields,
+              label: false,
+              name: 'hours',
+              type: 'group',
             },
           ],
+          label: 'Horario',
         },
       ],
+      type: 'tabs',
     },
   ],
-};
+  slug: 'dealerships',
+}

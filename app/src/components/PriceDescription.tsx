@@ -1,30 +1,36 @@
-"use client";
+'use client'
 
-import { useField } from "@payloadcms/ui";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { useField } from '@payloadcms/ui'
 
-export const PriceDescription = () => {
-  const { value } = useField<number>();
+/**
+ * PriceDescription
+ */
+export function PriceDescription(): React.JSX.Element | null {
+  const { value } = useField<number>()
 
-  if (!value || value === 0) return null;
+  if (!value || value === 0) return null
 
-  const formatted = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
+  const formatted = new Intl.NumberFormat('en-US', {
+    currency: 'USD',
     maximumFractionDigits: 0,
-  }).format(value);
+    minimumFractionDigits: 0,
+    style: 'currency',
+  }).format(value)
 
   return (
     <div
       style={{
-        marginTop: "0.5rem",
-        padding: "0.75rem",
-        backgroundColor: "#f0f9ff",
-        borderLeft: "3px solid #0ea5e9",
-        borderRadius: "4px",
+        backgroundColor: '#f0f9ff',
+        borderLeft: '3px solid #0ea5e9',
+        borderRadius: '4px',
+        marginTop: '0.5rem',
+        padding: '0.75rem',
       }}
     >
-      <strong style={{ color: "#0369a1", fontSize: "1.1rem" }}>{formatted}</strong>
+      <strong style={{ color: '#0369a1', fontSize: '1.1rem' }}>
+        {formatted}
+      </strong>
     </div>
-  );
-};
+  )
+}

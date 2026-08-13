@@ -1,4 +1,7 @@
-export default function Loading() {
+/**
+ * Loading
+ */
+export default function Loading(): React.JSX.Element {
   // La barra de progreso superior maneja el feedback visual.
   // Este loader solo se muestra en casos de SSR muy lentos.
   return (
@@ -21,8 +24,8 @@ export default function Loading() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div
+              className="shadow-soft animate-pulse overflow-hidden rounded-2xl border border-slate-200 bg-white"
               key={i}
-              className="animate-pulse overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft"
               style={{ animationDelay: `${i * 100}ms` }}
             >
               <div className="aspect-[16/10] bg-slate-200" />
@@ -37,5 +40,5 @@ export default function Loading() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Light-first, cinematic design. Dark utilities are opt-in (require a `.dark`
    ancestor) so the site renders as an intentional light theme regardless of the
@@ -54,7 +54,12 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:
+    var(--font-poppins),
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

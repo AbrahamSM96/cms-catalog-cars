@@ -1,10 +1,21 @@
-import "server-only";
+import 'server-only'
 
-import { getPayload } from "payload";
-import type { Payload, Where } from "payload";
-import config from "@payload-config";
-import type { Car, CarsResponse, CarFilters, Brand, Homepage, Dealership, Contact } from "../types/car";
-import { parseCarSlug } from "./car-slug";
+import type { Payload, Where } from 'payload'
+import { getPayload } from 'payload'
+
+import config from '@payload-config'
+
+import type {
+  Brand,
+  Car,
+  CarFilters,
+  CarsResponse,
+  Contact,
+  Dealership,
+  Homepage,
+} from '../types/car'
+
+import { parseCarSlug } from './car-slug'
 
 /**
  * Payload Local API client.
@@ -18,32 +29,39 @@ import { parseCarSlug } from "./car-slug";
  * "@/lib/images" (client-safe, importable from Client Components).
  */
 function payloadClient(): Promise<Payload> {
-  return getPayload({ config });
+  return getPayload({ config })
 }
 
 /**
  * Fetch all cars with optional filters.
+ *
+ * @param filters - optional filters to apply to the query
  */
 export async function getCars(filters?: CarFilters): Promise<CarsResponse> {
   try {
-    const payload = await payloadClient();
+    const payload = await payloadClient()
 
-    const and: Where[] = [];
+    const and: Where[] = []
 
     // Brand can be either a numeric id (legacy) or a slug (e.g. "kia").
     if (filters?.brand) {
       if (/^\d+$/.test(filters.brand)) {
-        and.push({ brand: { equals: filters.brand } });
+        and.push({ brand: { equals: filters.brand } })
       } else {
-        and.push({ "brand.slug": { equals: filters.brand } });
+        and.push({ 'brand.slug': { equals: filters.brand } })
       }
     }
-    if (filters?.status) and.push({ status: { equals: filters.status } });
-    if (filters?.minPrice) and.push({ price: { greater_than_equal: filters.minPrice } });
-    if (filters?.maxPrice) and.push({ price: { less_than_equal: filters.maxPrice } });
-    if (filters?.minYear) and.push({ year: { greater_than_equal: filters.minYear } });
-    if (filters?.maxYear) and.push({ year: { less_than_equal: filters.maxYear } });
-    if (filters?.transmission) and.push({ transmission: { equals: filters.transmission } });
+    if (filters?.status) and.push({ status: { equals: filters.status } })
+    if (filters?.minPrice)
+      and.push({ price: { greater_than_equal: filters.minPrice } })
+    if (filters?.maxPrice)
+      and.push({ price: { less_than_equal: filters.maxPrice } })
+    if (filters?.minYear)
+      and.push({ year: { greater_than_equal: filters.minYear } })
+    if (filters?.maxYear)
+      and.push({ year: { less_than_equal: filters.maxYear } })
+    if (filters?.transmission)
+      and.push({ transmission: { equals: filters.transmission } })
 
     // Search across multiple fields (model, version, brand name)
     if (filters?.search) {
@@ -51,21 +69,22 @@ export async function getCars(filters?: CarFilters): Promise<CarsResponse> {
         or: [
           { model: { contains: filters.search } },
           { version: { contains: filters.search } },
-          { "brand.name": { contains: filters.search } },
+          { 'brand.name': { contains: filters.search } },
         ],
-      });
+      })
     }
 
     const result = await payload.find({
-      collection: "cars",
-      where: and.length ? { and } : undefined,
+      collection: 'cars',
       depth: 2,
-    });
+      where: and.length ? { and } : undefined,
+    })
 
-    return result as unknown as CarsResponse;
+    return result as unknown as CarsResponse
   } catch (error) {
-    console.error("Error fetching cars:", error);
-    throw error;
+    // eslint-disable-next-line no-console
+    console.error('Error fetching cars:', error)
+    throw error
   }
 }
 
@@ -74,54 +93,63 @@ export async function getCars(filters?: CarFilters): Promise<CarsResponse> {
  */
 export async function getFeaturedCars(): Promise<Car[]> {
   try {
-    const payload = await payloadClient();
+    const payload = await payloadClient()
 
     const result = await payload.find({
-      collection: "cars",
-      where: {
-        and: [{ featured: { equals: true } }, { status: { equals: "available" } }],
-      },
+      collection: 'cars',
       depth: 2,
       limit: 6,
-    });
+      where: {
+        and: [
+          { featured: { equals: true } },
+          { status: { equals: 'available' } },
+        ],
+      },
+    })
 
-    return result.docs as unknown as Car[];
+    return result.docs as unknown as Car[]
   } catch (error) {
-    console.error("Error fetching featured cars:", error);
-    return [];
+    // eslint-disable-next-line no-console
+    console.error('Error fetching featured cars:', error)
+    return []
   }
 }
 
 /**
  * Fetch a single car by ID.
+ *
+ * @param id - the car ID to fetch
  */
 export async function getCarById(id: string): Promise<Car> {
   try {
-    const payload = await payloadClient();
+    const payload = await payloadClient()
 
     const car = await payload.findByID({
-      collection: "cars",
-      id,
+      collection: 'cars',
       depth: 2,
-    });
+      id,
+    })
 
-    return car as unknown as Car;
+    return car as unknown as Car
   } catch (error) {
-    console.error("Error fetching car:", error);
-    throw error;
+    // eslint-disable-next-line no-console
+    console.error('Error fetching car:', error)
+    throw error
   }
 }
 
 /**
  * Fetch a single car by its SEO slug (marca-modelo-version-año-id).
  * The id is parsed from the last segment of the slug.
+ *
+ * @param slug - the car slug to fetch
  */
 export async function getCarBySlug(slug: string): Promise<Car> {
-  const id = parseCarSlug(slug);
+  const id = parseCarSlug(slug)
   if (!id) {
-    throw new Error(`Invalid car slug: ${slug}`);
+    throw new Error(`Invalid car slug: ${slug}`)
   }
-  return getCarById(id);
+  return getCarById(id)
 }
 
 /**
@@ -129,18 +157,19 @@ export async function getCarBySlug(slug: string): Promise<Car> {
  */
 export async function getBrands(): Promise<Brand[]> {
   try {
-    const payload = await payloadClient();
+    const payload = await payloadClient()
 
     const result = await payload.find({
-      collection: "brands",
+      collection: 'brands',
       limit: 100,
-      sort: "name", // A→Z alphabetical
-    });
+      sort: 'name', // A→Z alphabetical
+    })
 
-    return result.docs as unknown as Brand[];
+    return result.docs as unknown as Brand[]
   } catch (error) {
-    console.error("Error fetching brands:", error);
-    return [];
+    // eslint-disable-next-line no-console
+    console.error('Error fetching brands:', error)
+    return []
   }
 }
 
@@ -149,19 +178,20 @@ export async function getBrands(): Promise<Brand[]> {
  */
 export async function getDealerships(): Promise<Dealership[]> {
   try {
-    const payload = await payloadClient();
+    const payload = await payloadClient()
 
     const result = await payload.find({
-      collection: "dealerships",
-      limit: 100,
+      collection: 'dealerships',
       depth: 1, // populate the image relation
-      sort: "name",
-    });
+      limit: 100,
+      sort: 'name',
+    })
 
-    return result.docs as unknown as Dealership[];
+    return result.docs as unknown as Dealership[]
   } catch (error) {
-    console.error("Error fetching dealerships:", error);
-    return [];
+    // eslint-disable-next-line no-console
+    console.error('Error fetching dealerships:', error)
+    return []
   }
 }
 
@@ -171,17 +201,18 @@ export async function getDealerships(): Promise<Dealership[]> {
  */
 export async function getHomepage(): Promise<Homepage | null> {
   try {
-    const payload = await payloadClient();
+    const payload = await payloadClient()
 
     const homepage = await payload.findGlobal({
-      slug: "homepage",
       depth: 1,
-    });
+      slug: 'homepage',
+    })
 
-    return homepage as unknown as Homepage;
+    return homepage as unknown as Homepage
   } catch (error) {
-    console.error("Error fetching homepage:", error);
-    return null;
+    // eslint-disable-next-line no-console
+    console.error('Error fetching homepage:', error)
+    return null
   }
 }
 
@@ -190,16 +221,17 @@ export async function getHomepage(): Promise<Homepage | null> {
  */
 export async function getContact(): Promise<Contact | null> {
   try {
-    const payload = await payloadClient();
+    const payload = await payloadClient()
 
     const contact = await payload.findGlobal({
-      slug: "contact",
       depth: 0,
-    });
+      slug: 'contact',
+    })
 
-    return contact as unknown as Contact;
+    return contact as unknown as Contact
   } catch (error) {
-    console.error("Error fetching contact:", error);
-    return null;
+    // eslint-disable-next-line no-console
+    console.error('Error fetching contact:', error)
+    return null
   }
 }

@@ -28,12 +28,14 @@ A modern car catalog CMS built with **Next.js** and **Payload CMS**, featuring c
 ### Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone <your-repo-url>
    cd cms-catalog-cars
    ```
 
 2. **Install dependencies**
+
    ```bash
    bun install
    ```
@@ -41,11 +43,13 @@ A modern car catalog CMS built with **Next.js** and **Payload CMS**, featuring c
 3. **Configure environment variables**
 
    Copy `.env.example` to `.env`:
+
    ```bash
    cp .env.example .env
    ```
 
    Edit `.env` and add your Cloudinary credentials:
+
    ```env
    # Payload CMS Secret Key
    PAYLOAD_SECRET=your-secret-key-here
@@ -60,6 +64,7 @@ A modern car catalog CMS built with **Next.js** and **Payload CMS**, featuring c
    ```
 
 4. **Start development server**
+
    ```bash
    bun dev
    ```
@@ -103,6 +108,7 @@ bun dev
 ```
 
 Payload will:
+
 - ✅ Recreate the database with the new schema
 - ✅ Auto-seed the brands collection (20 brands)
 - ✅ Prompt you to create an admin user
@@ -116,6 +122,7 @@ Payload will:
 - Adding new collections
 
 **Pro tip:** If you have important data, export it before resetting:
+
 ```bash
 # Export data (from admin panel)
 Admin → Settings → Export Collection Data
@@ -132,19 +139,21 @@ bun dev
 For production, switch to **PostgreSQL**:
 
 1. Install PostgreSQL adapter:
+
    ```bash
    bun remove @payloadcms/db-sqlite
    bun add @payloadcms/db-postgres
    ```
 
 2. Update `payload.config.ts`:
+
    ```typescript
    import { postgresAdapter } from '@payloadcms/db-postgres'
 
    db: postgresAdapter({
      pool: {
-       connectionString: process.env.DATABASE_URL
-     }
+       connectionString: process.env.DATABASE_URL,
+     },
    })
    ```
 
@@ -209,9 +218,11 @@ cms-catalog-cars/
 ## 🎨 Collections
 
 ### 🚗 Cars
+
 Main collection for car listings.
 
 **Fields:**
+
 - `brand` (relationship → Brands)
 - `model` (text)
 - `year` (number)
@@ -227,9 +238,11 @@ Main collection for car listings.
 - `sold` (checkbox)
 
 ### 🏷️ Brands
+
 Car manufacturers (auto-seeded on first run).
 
 **Fields:**
+
 - `name` (text, unique)
 - `slug` (text, unique)
 
@@ -237,9 +250,11 @@ Car manufacturers (auto-seeded on first run).
 Audi, BMW, Chevrolet, Cupra, Fiat, Ford, Honda, Hyundai, Kia, Mazda, Mercedes-Benz, Nissan, Peugeot, Renault, Seat, Škoda, Tesla, Toyota, Volkswagen, Volvo
 
 ### 🖼️ Media
+
 Image and video storage via Cloudinary.
 
 **Auto-generated sizes:**
+
 - `thumbnail` (400x300)
 - `card` (768x576)
 - `featured` (1024x768)
@@ -280,13 +295,16 @@ Images are automatically uploaded to Cloudinary and optimized.
 ## 🚀 Performance
 
 **Bun vs npm:**
+
 - Installation: **8.53s** vs ~60s (7x faster)
 - Script execution: **10-20x faster**
 
 **oxlint vs ESLint:**
+
 - Linting: **10ms** vs ~2s (200x faster)
 
 **oxfmt:**
+
 - Formatting: **1.1s** for 96 files (10 threads)
 
 ---
@@ -298,6 +316,7 @@ Images are automatically uploaded to Cloudinary and optimized.
 This means you added a new field but the database schema is outdated.
 
 **Solution:**
+
 ```bash
 rm -f payload.db
 bun dev
