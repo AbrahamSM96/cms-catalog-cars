@@ -16,7 +16,9 @@ import type { UploadApiResponse } from 'cloudinary'
 
 import { Brands } from './collections/Brands'
 import { brandsList } from './seed/brands'
+import { CarModels } from './collections/CarModels'
 import { Cars } from './collections/Cars'
+import { CarVersions } from './collections/CarVersions'
 import { Colors } from './collections/Colors'
 import { colorsList } from './seed/colors'
 import { Contact } from './globals/Contact'
@@ -25,6 +27,7 @@ import { filenameToPublicId } from './lib/cloudinary-path'
 import { Homepage } from './globals/Homepage'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
+import { vehicleCatalog } from './seed/vehicleCatalog'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -109,7 +112,16 @@ export default buildConfig({
     importMap,
     user: 'users',
   },
-  collections: [Brands, Cars, Colors, Dealerships, Media, Users],
+  collections: [
+    Brands,
+    CarModels,
+    CarVersions,
+    Cars,
+    Colors,
+    Dealerships,
+    Media,
+    Users,
+  ],
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI,
@@ -189,6 +201,65 @@ export default buildConfig({
       // eslint-disable-next-line no-console
       console.error('❌ Error seeding colors:', error)
     }
+
+    try {
+      const existingVersions = await payload.count({
+        collection: 'car-versions',
+      })
+
+      if (existingVersions.totalDocs === 0) {
+        // eslint-disable-next-line no-console
+        console.log('🌱 Seeding vehicle catalog (this runs once)...')
+
+        for (const brand of vehicleCatalog) {
+          // Upsert the brand by slug: skip if it already exists.
+          const found = await payload.find({
+            collection: 'brands',
+            depth: 0,
+            limit: 1,
+            where: { slug: { equals: brand.slug } },
+          })
+          const brandDoc =
+            found.docs[0] ??
+            (await payload.create({
+              collection: 'brands',
+              data: { name: brand.name, slug: brand.slug },
+            }))
+
+          for (const model of brand.models) {
+            const modelDoc = await payload.create({
+              collection: 'car-models',
+              data: { brand: brandDoc.id, name: model.name },
+            })
+
+            for (const version of model.versions) {
+              await payload.create({
+                collection: 'car-versions',
+                data: {
+                  clave: version.clave,
+                  description: version.description,
+                  model: modelDoc.id,
+                  years: version.years,
+                },
+              })
+            }
+          }
+          // eslint-disable-next-line no-console
+          console.log(`✅ ${brand.name}: ${brand.models.length} models`)
+        }
+
+        // eslint-disable-next-line no-console
+        console.log('✨ Vehicle catalog seeded successfully!')
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(
+          `ℹ️  Vehicle catalog already seeded (${existingVersions.totalDocs} versions)`
+        )
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('❌ Error seeding vehicle catalog:', error)
+    }
   },
   plugins: [
     cloudStoragePlugin({
@@ -198,7 +269,7 @@ export default buildConfig({
           disableLocalStorage: true,
 
           /**
-           * generateFileURL 
+           * generateFileURL
            *
            * @param props - component props
            * @param props.filename - filename to generate URL for

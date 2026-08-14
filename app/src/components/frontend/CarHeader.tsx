@@ -95,7 +95,7 @@ export function CarHeader({ car }: CarHeaderProps): React.JSX.Element | null {
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
-            {brandName} {car.version} {car.year}
+            {brandName} {car.model} {car.year}
           </h1>
 
           {techSpecs && (
@@ -109,8 +109,8 @@ export function CarHeader({ car }: CarHeaderProps): React.JSX.Element | null {
         </div>
 
         <ShareButton
-          text={`Mira este ${brandName} ${car.version} ${car.year}`}
-          title={`${brandName} ${car.version} ${car.year}`}
+          text={`Mira este ${brandName} ${car.model} ${car.year}`}
+          title={`${brandName} ${car.model} ${car.year}`}
         />
       </div>
 

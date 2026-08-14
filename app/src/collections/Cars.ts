@@ -88,7 +88,12 @@ export const Cars: CollectionConfig = {
                   type: 'relationship',
                 },
                 {
-                  admin: { width: '50%' },
+                  admin: {
+                    components: {
+                      Field: '/components/admin/ModelField#ModelField',
+                    },
+                    width: '50%',
+                  },
                   name: 'model',
                   required: true,
                   type: 'text',
@@ -99,16 +104,26 @@ export const Cars: CollectionConfig = {
             {
               fields: [
                 {
-                  admin: { width: '50%' },
-                  name: 'version',
-                  required: true,
-                  type: 'text',
-                },
-                {
-                  admin: { width: '50%' },
+                  admin: {
+                    components: {
+                      Field: '/components/admin/YearField#YearField',
+                    },
+                    width: '50%',
+                  },
                   name: 'year',
                   required: true,
                   type: 'number',
+                },
+                {
+                  admin: {
+                    components: {
+                      Field: '/components/admin/VersionField#VersionField',
+                    },
+                    width: '50%',
+                  },
+                  name: 'version',
+                  required: true,
+                  type: 'text',
                 },
               ],
               type: 'row',
@@ -767,18 +782,22 @@ export const Cars: CollectionConfig = {
         // Format text fields to Title Case (Capital Letter)
         const formattedModel = data.model
           ? data.model
-            .toLowerCase()
-            .split(' ')
-            .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ')
+              .toLowerCase()
+              .split(' ')
+              .map(
+                (word: string) => word.charAt(0).toUpperCase() + word.slice(1)
+              )
+              .join(' ')
           : data.model
 
         const formattedVersion = data.version
           ? data.version
-            .toLowerCase()
-            .split(' ')
-            .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ')
+              .toLowerCase()
+              .split(' ')
+              .map(
+                (word: string) => word.charAt(0).toUpperCase() + word.slice(1)
+              )
+              .join(' ')
           : data.version
 
         // Build the display title used across the admin: "Marca Modelo Año"
