@@ -15,7 +15,6 @@ import sharp from 'sharp'
 import type { UploadApiResponse } from 'cloudinary'
 
 import { Brands } from './collections/Brands'
-import { brandsList } from './seed/brands'
 import { CarModels } from './collections/CarModels'
 import { Cars } from './collections/Cars'
 import { CarVersions } from './collections/CarVersions'
@@ -138,43 +137,6 @@ export default buildConfig({
    * @param payload - Payload instance
    */
   onInit: async (payload) => {
-    try {
-      // what is payload.count() method does is it will count the number of documents in the specified collection and return an object with totalDocs property which indicates the total number of documents in that collection
-      const existingBrands = await payload.count({
-        collection: 'brands',
-      })
-
-      if (existingBrands.totalDocs === 0) {
-        // eslint-disable-next-line no-console
-        console.log('🌱 Seeding brands...')
-
-        for (const brand of brandsList) {
-          try {
-            await payload.create({
-              collection: 'brands',
-              data: brand,
-            })
-            // eslint-disable-next-line no-console
-            console.log(`✅ Created: ${brand.name}`)
-          } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error(`❌ Error creating ${brand.name}:`, error)
-          }
-        }
-
-        // eslint-disable-next-line no-console
-        console.log('✨ Brands seeded successfully!')
-      } else {
-        // eslint-disable-next-line no-console
-        console.log(
-          `ℹ️  Brands already exist (${existingBrands.totalDocs} brands)`
-        )
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('❌ Error seeding brands:', error)
-    }
-
     try {
       const existingColors = await payload.count({ collection: 'colors' })
 

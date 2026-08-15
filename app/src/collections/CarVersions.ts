@@ -1,11 +1,16 @@
 import type { CollectionConfig } from 'payload'
 
+import { adminsOnly, editorsAndAdmins } from '../access'
+
 export const CarVersions: CollectionConfig = {
   access: {
+    create: editorsAndAdmins,
+    delete: adminsOnly,
     /**
      * read
      */
     read: () => true, // Public read access for frontend
+    update: editorsAndAdmins,
   },
   admin: {
     defaultColumns: ['description', 'model', 'years'],

@@ -1,5 +1,7 @@
 import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
+import { adminsOnly, editorsAndAdmins } from '../access'
+
 /**
  * Reject a model whose referenced brand does not exist, so a model can only be
  * attached to a brand already present in the catalog.
@@ -28,10 +30,13 @@ const ensureBrandExists: CollectionBeforeValidateHook = async (
 
 export const CarModels: CollectionConfig = {
   access: {
+    create: editorsAndAdmins,
+    delete: adminsOnly,
     /**
      * read
      */
     read: () => true, // Public read access for frontend
+    update: editorsAndAdmins,
   },
   admin: {
     defaultColumns: ['name', 'brand'],

@@ -1,11 +1,16 @@
 import type { CollectionConfig } from 'payload'
 
+import { adminsOnly, editorsAndAdmins } from '../access'
+
 export const Media: CollectionConfig = {
   access: {
+    create: editorsAndAdmins,
+    delete: adminsOnly,
     /**
      * read
      */
     read: () => true, // Todos pueden ver las imágenes
+    update: editorsAndAdmins,
   },
   admin: {
     group: 'Content',

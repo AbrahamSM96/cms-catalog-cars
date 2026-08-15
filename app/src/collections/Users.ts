@@ -1,13 +1,13 @@
 import type { CollectionConfig } from 'payload'
 
-import { adminsOnly, adminsOrSelf } from '../access'
+import { adminsOnly, adminsOrSelf, adminsOrSelfFieldRead, editorsAndAdmins } from '../access'
 
 export const Users: CollectionConfig = {
   access: {
-    admin: adminsOnly,
+    admin: editorsAndAdmins,
     create: adminsOnly,
     delete: adminsOnly,
-    read: adminsOnly,
+    read: adminsOrSelf,
     readVersions: adminsOnly,
     unlock: adminsOnly,
     update: adminsOrSelf,
@@ -23,7 +23,7 @@ export const Users: CollectionConfig = {
   fields: [
     {
       access: {
-        read: adminsOnly,
+        read: adminsOrSelfFieldRead,
         update: adminsOnly,
       },
       defaultValue: ['user'],

@@ -1,5 +1,7 @@
 import type { CollectionConfig, Field } from 'payload'
 
+import { adminsOnly, editorsAndAdmins } from '../access'
+
 const DAYS: { label: string; name: string }[] = [
   { label: 'Lunes', name: 'monday' },
   { label: 'Martes', name: 'tuesday' },
@@ -69,10 +71,13 @@ const dayFields: Field[] = DAYS.map((day) => ({
 
 export const Dealerships: CollectionConfig = {
   access: {
+    create: editorsAndAdmins,
+    delete: adminsOnly,
     /**
      * Allow public read access for the frontend locations page
      */
     read: () => true,
+    update: editorsAndAdmins,
   },
   admin: {
     defaultColumns: ['name', 'phone', 'updatedAt'],

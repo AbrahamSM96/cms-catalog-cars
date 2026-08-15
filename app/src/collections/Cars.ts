@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { adminsOnly, editorsAndAdmins } from '../access'
 import {
   BODY_TYPE_OPTIONS,
   CONDITION_OPTIONS,
@@ -8,10 +9,13 @@ import {
 
 export const Cars: CollectionConfig = {
   access: {
+    create: editorsAndAdmins,
+    delete: adminsOnly,
     /**
      * read
      */
     read: () => true, // Public read access for frontend
+    update: editorsAndAdmins,
   },
   admin: {
     defaultColumns: ['title', 'brand', 'year', 'status'],
@@ -80,7 +84,7 @@ export const Cars: CollectionConfig = {
             {
               fields: [
                 {
-                  admin: { width: '50%' },
+                  admin: { sortOptions: 'name', width: '50%' },
                   hasMany: false,
                   name: 'brand',
                   relationTo: 'brands',

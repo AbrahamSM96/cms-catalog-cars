@@ -1,11 +1,14 @@
 import type { GlobalConfig } from 'payload'
 
+import { editorsAndAdmins } from '../access'
+
 export const Contact: GlobalConfig = {
   access: {
     /**
      * read
      */
     read: () => true, // Público: el frontend lo consume sin auth
+    update: editorsAndAdmins,
   },
   admin: {
     description: 'Datos de contacto que se muestran en el footer y en la página de contacto.',
