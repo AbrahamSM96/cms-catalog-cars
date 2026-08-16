@@ -116,6 +116,27 @@ export async function getFeaturedCars(): Promise<Car[]> {
 }
 
 /**
+ * Fetch all cars for the sitemap (unpaginated).
+ */
+export async function getAllCars(): Promise<Car[]> {
+  try {
+    const payload = await payloadClient()
+
+    const result = await payload.find({
+      collection: 'cars',
+      depth: 2,
+      limit: 100,
+    })
+
+    return result.docs as unknown as Car[]
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching all cars:', error)
+    return []
+  }
+}
+
+/**
  * Fetch a single car by ID.
  *
  * @param id - the car ID to fetch

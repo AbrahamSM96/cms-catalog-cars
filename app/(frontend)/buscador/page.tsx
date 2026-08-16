@@ -4,8 +4,17 @@ import { CatalogFinder } from '@/components/frontend/CatalogFinder'
 import { getBrands } from '@/lib/payload-client'
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: '/buscador',
+  },
   description:
     'Identifica tu vehículo por año, marca, modelo y versión con nuestro buscador guiado.',
+  openGraph: {
+    description:
+      'Identifica la versión exacta de tu vehículo seleccionando año, marca y modelo.',
+    title: 'Encuentra tu versión',
+    type: 'website',
+  },
   title: 'Encuentra tu versión',
 }
 

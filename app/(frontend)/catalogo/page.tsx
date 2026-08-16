@@ -1,14 +1,25 @@
+/* eslint-disable react/no-danger */
 import type { Metadata } from 'next'
 
 import { getBrands, getCars } from '@/lib/payload-client'
+import { buildItemListLd } from '@/lib/json-ld'
 import type { CarFilters } from '@/types/car'
 import { CarGrid } from '@/components/frontend/CarGrid'
 import { FilterBar } from '@/components/frontend/FilterBar'
 import { SearchBar } from '@/components/frontend/SearchBar'
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: '/catalogo',
+  },
   description:
     'Explora nuestro catálogo de autos seminuevos. Filtra por marca, año, precio y transmisión.',
+  openGraph: {
+    description:
+      'Explora nuestro catálogo de autos seminuevos y encuentra el ideal para ti.',
+    title: 'Catálogo de autos seminuevos',
+    type: 'website',
+  },
   title: 'Catálogo de autos seminuevos',
 }
 
@@ -49,8 +60,19 @@ export default async function CatalogoPage({
 
   const [carsData, brands] = await Promise.all([getCars(filters), getBrands()])
 
+  const itemListLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: buildItemListLd(carsData.docs),
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* SEO structured data */}
+      <script
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }}
+        type="application/ld+json"
+      />
       {/* Header band */}
       <section className="relative overflow-hidden bg-white pt-28 pb-12 sm:pt-32">
         <div className="pointer-events-none absolute -top-24 left-1/2 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-red-500/10 blur-3xl" />

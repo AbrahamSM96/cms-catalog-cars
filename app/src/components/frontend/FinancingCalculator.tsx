@@ -4,6 +4,7 @@ import { Banknote, CreditCard, Tag } from 'lucide-react'
 import { useState } from 'react'
 
 import type { Financing } from '../../types/car'
+import { formatPriceMXN } from '../../lib/currency'
 
 interface FinancingCalculatorProps {
   price: number
@@ -17,12 +18,7 @@ type Tab = 'credit' | 'reserve' | 'cash'
  *
  * @param value - number
  */
-const currency = (value: number): string =>
-  new Intl.NumberFormat('en-US', {
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    style: 'currency',
-  }).format(value)
+const currency = (value: number): string => formatPriceMXN(value)
 
 /**
  * FinancingCalculator
@@ -94,9 +90,9 @@ export function FinancingCalculator({
   })
 
   const tabs: { id: Tab; label: string; icon: typeof CreditCard }[] = [
-    { icon: CreditCard, id: 'credit', label: 'Crédito', },
-    { icon: Tag, id: 'reserve', label: 'Apártalo', },
-    { icon: Banknote, id: 'cash', label: 'Contado', },
+    { icon: CreditCard, id: 'credit', label: 'Crédito' },
+    { icon: Tag, id: 'reserve', label: 'Apártalo' },
+    { icon: Banknote, id: 'cash', label: 'Contado' },
   ]
 
   return (
@@ -109,10 +105,11 @@ export function FinancingCalculator({
       <div className="mb-6 grid grid-cols-3 gap-1 rounded-xl bg-slate-100 p-1">
         {tabs.map(({ icon: Icon, id, label }) => (
           <button
-            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition ${activeTab === id
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'cursor-pointer text-slate-500 hover:text-slate-900'
-              }`}
+            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
+              activeTab === id
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'cursor-pointer text-slate-500 hover:text-slate-900'
+            }`}
             key={id}
             onClick={() => setActiveTab(id)}
             type="button"

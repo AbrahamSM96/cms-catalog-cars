@@ -6,12 +6,14 @@ import { notFound } from 'next/navigation'
 import { buildCarImageAlt, getImageUrl } from '@/lib/images'
 import type { Dealership, Media } from '@/types/car'
 import { getCarBySlug, getContact } from '@/lib/payload-client'
+import { absoluteUrl } from '@/lib/seo'
 import { CarFeatures } from '@/components/frontend/CarFeatures'
 import { CarHeader } from '@/components/frontend/CarHeader'
 import { CarHistory } from '@/components/frontend/CarHistory'
 import { CarLocation } from '@/components/frontend/CarLocation'
 import { ContactButton } from '@/components/frontend/ContactButton'
 import { FinancingCalculator } from '@/components/frontend/FinancingCalculator'
+import { formatPriceMXN } from '@/lib/currency'
 import { ImageGallery } from '@/components/frontend/ImageGallery'
 
 interface CarDetailPageProps {
@@ -32,15 +34,32 @@ export async function generateMetadata({
 
   if (!car || !car.id) {
     return {
+      robots: { follow: false, index: false },
       title: 'Auto no encontrado',
     }
   }
 
   const brandName = typeof car.brand === 'object' ? car.brand.name : 'Unknown'
   const title = `${brandName} ${car.model} ${car.version} ${car.year}`
+  const carUrl = absoluteUrl(`/catalogo/${slug}`)
+
+  const featuredFilename =
+    typeof car.featuredImage === 'object'
+      ? car.featuredImage?.filename
+      : undefined
+  const image = featuredFilename ? getImageUrl(featuredFilename) : undefined
 
   return {
+    alternates: { canonical: carUrl },
     description: car.description || `${title} - Autos seminuevos de calidad`,
+    openGraph: {
+      description:
+        car.description || `${title} - Auto seminuevo en venta de calidad`,
+      images: image ? [image] : undefined,
+      title,
+      type: 'website',
+      url: carUrl,
+    },
     title,
   }
 }
@@ -71,11 +90,7 @@ export default async function CarDetailPage({
       ? [car.featuredImage]
       : []
 
-  const formattedPrice = new Intl.NumberFormat('en-US', {
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    style: 'currency',
-  }).format(car.price)
+  const formattedPrice = formatPriceMXN(car.price)
 
   // JSON-LD structured data for SEO (Vehicle / Product)
   const featuredFilename =
@@ -91,25 +106,25 @@ export default async function CarDetailPage({
     vehicleModelDate: String(car.year),
     ...(car.mileage
       ? {
-        mileageFromOdometer: {
-          '@type': 'QuantitativeValue',
-          unitCode: 'KMT',
-          value: car.mileage,
-        },
-      }
+          mileageFromOdometer: {
+            '@type': 'QuantitativeValue',
+            unitCode: 'KMT',
+            value: car.mileage,
+          },
+        }
       : {}),
     ...(car.fuelType ? { fuelType: car.fuelType } : {}),
     ...(car.horsepower
       ? {
-        vehicleEngine: {
-          '@type': 'EngineSpecification',
-          enginePower: {
-            '@type': 'QuantitativeValue',
-            unitCode: 'HP',
-            value: car.horsepower,
+          vehicleEngine: {
+            '@type': 'EngineSpecification',
+            enginePower: {
+              '@type': 'QuantitativeValue',
+              unitCode: 'HP',
+              value: car.horsepower,
+            },
           },
-        },
-      }
+        }
       : {}),
     ...(featuredFilename ? { image: getImageUrl(featuredFilename) } : {}),
     offers: {
@@ -118,9 +133,37 @@ export default async function CarDetailPage({
         car.status === 'available'
           ? 'https://schema.org/InStock'
           : 'https://schema.org/OutOfStock',
+      itemCondition: 'https://schema.org/UsedCondition',
       price: car.price,
       priceCurrency: 'MXN',
+      url: absoluteUrl(`/catalogo/${slug}`),
     },
+    url: absoluteUrl(`/catalogo/${slug}`),
+  }
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        item: absoluteUrl('/'),
+        name: 'Inicio',
+        position: 1,
+      },
+      {
+        '@type': 'ListItem',
+        item: absoluteUrl('/catalogo'),
+        name: 'Catálogo',
+        position: 2,
+      },
+      {
+        '@type': 'ListItem',
+        item: absoluteUrl(`/catalogo/${slug}`),
+        name: `${brandName} ${car.model} ${car.version} ${car.year}`,
+        position: 3,
+      },
+    ],
   }
 
   const statusConfig = {
@@ -149,6 +192,10 @@ export default async function CarDetailPage({
       {/* SEO structured data */}
       <script
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        type="application/ld+json"
+      />
+      <script
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
         type="application/ld+json"
       />
 

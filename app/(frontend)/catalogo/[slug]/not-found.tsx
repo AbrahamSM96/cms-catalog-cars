@@ -1,4 +1,13 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  robots: {
+    follow: false,
+    index: false,
+  },
+  title: 'Auto no encontrado',
+}
 
 /**
  * NotFound

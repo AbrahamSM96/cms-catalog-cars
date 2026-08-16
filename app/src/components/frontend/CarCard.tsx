@@ -7,13 +7,14 @@ import { useState } from 'react'
 import { buildCarImageAlt, getImageUrl } from '../../lib/images'
 import { buildCarSlug } from '../../lib/car-slug'
 import type { Car } from '../../types/car'
+import { formatPriceMXN } from '../../lib/currency'
 
 interface CarCardProps {
   car: Car
 }
 
 /**
- * CarCard 
+ * CarCard
  *
  * @param props - component props
  * @param props.car - car data
@@ -44,11 +45,7 @@ export function CarCard({ car }: CarCardProps): React.JSX.Element {
   const [imgSrc, setImgSrc] = useState(imageUrl)
   const [hasError, setHasError] = useState(false)
 
-  const formattedPrice = new Intl.NumberFormat('en-US', {
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    style: 'currency',
-  }).format(car.price)
+  const formattedPrice = formatPriceMXN(car.price)
 
   const formattedMileage = car.mileage
     ? new Intl.NumberFormat('en-US').format(car.mileage) + ' km'

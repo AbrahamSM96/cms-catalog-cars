@@ -1,11 +1,22 @@
+/* eslint-disable react/no-danger */
 import type { Metadata } from 'next'
 
+import { buildAutoDealerLd } from '@/lib/json-ld'
 import { getDealerships } from '@/lib/payload-client'
 import { Locations } from '@/components/frontend/Locations'
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: '/ubicaciones',
+  },
   description:
     'Encuentra nuestros concesionarios: dirección, horario y teléfono. Visítanos y encuentra tu próximo auto seminuevo.',
+  openGraph: {
+    description:
+      'Conoce la dirección, horario y teléfono de nuestros concesionarios.',
+    title: 'Nuestras ubicaciones',
+    type: 'website',
+  },
   title: 'Nuestras ubicaciones',
 }
 
@@ -15,8 +26,18 @@ export const metadata: Metadata = {
 export default async function UbicacionesPage(): Promise<React.JSX.Element> {
   const dealerships = await getDealerships()
 
+  const autoDealerLd = {
+    '@context': 'https://schema.org',
+    '@graph': buildAutoDealerLd(dealerships),
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* SEO structured data */}
+      <script
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(autoDealerLd) }}
+        type="application/ld+json"
+      />
       <div className="mx-auto max-w-7xl px-4 pt-24 pb-16 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">

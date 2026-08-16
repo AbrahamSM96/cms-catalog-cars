@@ -11,15 +11,24 @@ import type { Metadata } from 'next'
 import { getContact } from '@/lib/payload-client'
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: '/contacto',
+  },
   description:
     'Ponte en contacto con nosotros: WhatsApp, teléfono, correo y ubicación.',
+  openGraph: {
+    description:
+      'Ponte en contacto con nosotros por WhatsApp, teléfono, correo o visítanos.',
+    title: 'Contacto',
+    type: 'website',
+  },
   title: 'Contacto',
 }
 
 const FALLBACK_WHATSAPP = '525512345678'
 const FALLBACK_PHONE = '+52 55 1234 5678'
 
-/** 
+/**
  * ContactoPage
  */
 export default async function ContactoPage(): Promise<React.JSX.Element> {
@@ -35,12 +44,12 @@ export default async function ContactoPage(): Promise<React.JSX.Element> {
   const addr = contact?.address
   const addressText = addr
     ? [
-      addr.line1,
-      [addr.postalCode, addr.city, addr.state].filter(Boolean).join(', '),
-      addr.country,
-    ]
-      .filter(Boolean)
-      .join(', ')
+        addr.line1,
+        [addr.postalCode, addr.city, addr.state].filter(Boolean).join(', '),
+        addr.country,
+      ]
+        .filter(Boolean)
+        .join(', ')
     : null
   const mapsHref = addr?.googleMapsUrl
   const hours = contact?.hoursNote

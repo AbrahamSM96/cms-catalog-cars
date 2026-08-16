@@ -3,6 +3,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useField } from '@payloadcms/ui'
 
+import { formatPriceMXN } from '../lib/currency'
+
 /**
  * PriceDescription
  */
@@ -11,12 +13,7 @@ export function PriceDescription(): React.JSX.Element | null {
 
   if (!value || value === 0) return null
 
-  const formatted = new Intl.NumberFormat('en-US', {
-    currency: 'USD',
-    maximumFractionDigits: 0,
-    minimumFractionDigits: 0,
-    style: 'currency',
-  }).format(value)
+  const formatted = formatPriceMXN(value)
 
   return (
     <div

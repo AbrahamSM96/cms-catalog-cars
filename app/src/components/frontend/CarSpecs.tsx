@@ -1,11 +1,12 @@
 import type { Car } from '../../types/car'
+import { formatPriceMXN } from '../../lib/currency'
 
 interface CarSpecsProps {
   car: Car
 }
 
 /**
- * CarSpecs 
+ * CarSpecs
  *
  * @param props - CarSpecsProps
  * @param props.car - Car
@@ -85,11 +86,7 @@ export function CarSpecs({ car }: CarSpecsProps): React.JSX.Element {
       <div className="mt-6 rounded-lg bg-blue-50 p-4 dark:bg-blue-900/20">
         <div className="text-sm text-zinc-600 dark:text-zinc-400">Precio</div>
         <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-          {new Intl.NumberFormat('en-US', {
-            currency: 'USD',
-            minimumFractionDigits: 0,
-            style: 'currency',
-          }).format(car.price)}
+          {formatPriceMXN(car.price)}
         </div>
       </div>
 
