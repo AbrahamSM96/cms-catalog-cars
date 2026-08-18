@@ -22,7 +22,7 @@ export default tseslint.config(
   reactPlugin.configs.flat.all,
   oxlint.configs['flat/recommended'],
   {
-    files: ['*.ts', '*.tsx', '*.mjs', '**/*.ts', '**/*.tsx'],
+    files: ['*.ts', '*.tsx', '*.mjs', '*.mts', '**/*.ts', '**/*.tsx', '**/*.mts'],
     plugins: {
       '@typescript-eslint': tseslint.plugin,
       'sort-destructure-keys': eslintSortDestructueKeys,

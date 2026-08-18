@@ -18,10 +18,9 @@
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
     "check": "bun run lint:fix && bun run format",
-    "test": "vitest run",
+    "test": "vitest run --coverage",
     "test:watch": "vitest",
-    "test:cov": "vitest run --coverage",
-    "test:ci": "bun run lint && bun run test:cov"
+    "test:ci": "bun run lint && bun run test"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.78.0",

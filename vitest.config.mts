@@ -5,8 +5,11 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'app/src'),
-      '@payload-config': resolve(__dirname, 'app/src/payload.config.ts'),
+      '@': resolve(import.meta.dirname, 'app/src'),
+      '@payload-config': resolve(
+        import.meta.dirname,
+        'app/src/payload.config.ts'
+      ),
     },
   },
   test: {
