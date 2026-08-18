@@ -3,6 +3,11 @@
 import { Banknote, CreditCard, Tag } from 'lucide-react'
 import { useState } from 'react'
 
+import {
+  calculateMonthlyPayment,
+  resolveFinancingDefaults,
+  sliderPercentage,
+} from '../../lib/financing'
 import type { Financing } from '../../types/car'
 import { formatPriceMXN } from '../../lib/currency'
 
@@ -33,49 +38,39 @@ export function FinancingCalculator({
 }: FinancingCalculatorProps): React.JSX.Element {
   const [activeTab, setActiveTab] = useState<Tab>('credit')
 
-  const minDown = financing?.minDownPaymentPercentage ?? 20
-  const maxDown = financing?.maxDownPaymentPercentage ?? 80
-  const defaultDown = financing?.defaultDownPaymentPercentage ?? 20
-  const defaultTerm = financing?.defaultLoanTerm ?? 36
-  const interestRate = financing?.interestRate ?? 8.5
-
-  const availableTerms =
-    financing?.availableLoanTerms && financing.availableLoanTerms.length > 0
-      ? financing.availableLoanTerms.map((t) => t.months).sort((a, b) => a - b)
-      : [6, 12, 24, 36, 48, 60]
+  const {
+    availableTerms,
+    defaultDown,
+    defaultTerm,
+    interestRate,
+    maxDown,
+    minDown,
+  } = resolveFinancingDefaults(financing)
 
   const [downPaymentPercentage, setDownPaymentPercentage] =
     useState(defaultDown)
   const [loanTermMonths, setLoanTermMonths] = useState(defaultTerm)
 
-  /**
-   * calculateMonthlyPayment
-   */
-  const calculateMonthlyPayment = (): number => {
-    const downPaymentAmount = price * (downPaymentPercentage / 100)
-    const loanAmount = price - downPaymentAmount
-    const monthlyRate = interestRate / 100 / 12
-    const numberOfPayments = loanTermMonths
-
-    if (monthlyRate === 0) return loanAmount / numberOfPayments
-
-    return (
-      (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
-      (Math.pow(1 + monthlyRate, numberOfPayments) - 1)
-    )
-  }
-
-  const monthlyPayment = calculateMonthlyPayment()
+  const monthlyPayment = calculateMonthlyPayment({
+    downPaymentPercentage,
+    interestRate,
+    loanTermMonths,
+    price,
+  })
   const downPaymentAmount = price * (downPaymentPercentage / 100)
 
-  const downPct =
-    ((downPaymentPercentage - minDown) / (maxDown - minDown)) * 100
   const minTerm = Math.min(...availableTerms)
   const maxTerm = Math.max(...availableTerms)
-  const termPct =
-    maxTerm === minTerm
-      ? 0
-      : ((loanTermMonths - minTerm) / (maxTerm - minTerm)) * 100
+  const downPct = sliderPercentage({
+    max: maxDown,
+    min: minDown,
+    value: downPaymentPercentage,
+  })
+  const termPct = sliderPercentage({
+    max: maxTerm,
+    min: minTerm,
+    value: loanTermMonths,
+  })
 
   const sliderClass =
     'h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-red-600 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:transition [&::-webkit-slider-thumb]:hover:scale-110 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-red-600 [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:transition [&::-moz-range-thumb]:hover:scale-110'

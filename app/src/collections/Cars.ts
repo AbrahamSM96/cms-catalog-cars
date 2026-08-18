@@ -6,6 +6,7 @@ import {
   CONDITION_OPTIONS,
   VEHICLE_TYPE_OPTIONS,
 } from '../lib/marketplace'
+import { resolveBrandName, toTitleCase } from '../lib/car-title'
 
 export const Cars: CollectionConfig = {
   access: {
@@ -44,25 +45,10 @@ export const Cars: CollectionConfig = {
             if (value) return value
             if (!data) return value
 
-            const brandRef = data.brand
-            let brandName = ''
-            if (brandRef) {
-              if (typeof brandRef === 'object' && brandRef?.name) {
-                brandName = brandRef.name
-              } else {
-                try {
-                  const brand = await req.payload.findByID({
-                    collection: 'brands',
-                    depth: 0,
-                    id: brandRef,
-                  })
-                  brandName = brand?.name ?? ''
-                } catch {
-                  // ignore
-                }
-              }
-            }
-
+            const brandName = await resolveBrandName(
+              data.brand,
+              req.payload
+            )
             const computed = [brandName, data.model, data.year]
               .filter(Boolean)
               .join(' ')
@@ -788,49 +774,15 @@ export const Cars: CollectionConfig = {
        */
       // oxlint-disable-next-line typescript/no-explicit-any
       async ({ data, originalDoc, req }): Promise<Partial<any>> => {
-        // Format text fields to Title Case (Capital Letter)
-        const formattedModel = data.model
-          ? data.model
-              .toLowerCase()
-              .split(' ')
-              .map(
-                (word: string) => word.charAt(0).toUpperCase() + word.slice(1)
-              )
-              .join(' ')
-          : data.model
-
-        const formattedVersion = data.version
-          ? data.version
-              .toLowerCase()
-              .split(' ')
-              .map(
-                (word: string) => word.charAt(0).toUpperCase() + word.slice(1)
-              )
-              .join(' ')
-          : data.version
+        const formattedModel = toTitleCase(data.model) ?? data.model
+        const formattedVersion = toTitleCase(data.version) ?? data.version
 
         // Build the display title used across the admin: "Marca Modelo Año"
         const brandRef = data.brand ?? originalDoc?.brand
         const model = formattedModel ?? originalDoc?.model
         const year = data.year ?? originalDoc?.year
 
-        let brandName = ''
-        if (brandRef) {
-          if (typeof brandRef === 'object' && brandRef?.name) {
-            brandName = brandRef.name
-          } else {
-            try {
-              const brand = await req.payload.findByID({
-                collection: 'brands',
-                depth: 0,
-                id: brandRef,
-              })
-              brandName = brand?.name ?? ''
-            } catch {
-              // brand not found yet; leave blank
-            }
-          }
-        }
+        const brandName = await resolveBrandName(brandRef, req.payload)
 
         return {
           ...data,

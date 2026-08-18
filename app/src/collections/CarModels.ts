@@ -8,7 +8,7 @@ import { adminsOnly, editorsAndAdmins } from '../access'
  *
  * @param props - The Payload beforeValidate hook arguments.
  */
-const ensureBrandExists: CollectionBeforeValidateHook = async (
+export const ensureBrandExists: CollectionBeforeValidateHook = async (
   props
 ): Promise<Record<string, unknown> | undefined> => {
   const { data, req } = props

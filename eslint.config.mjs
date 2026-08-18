@@ -100,6 +100,7 @@ export default tseslint.config(
             '**/*.test.*',
             '**/__tests__/*',
             '**/*.config.*',
+            '**/vitest.setup.*',
           ],
           optionalDependencies: false,
         },

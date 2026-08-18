@@ -1,6 +1,7 @@
 import type { CollectionConfig, Field } from 'payload'
 
 import { adminsOnly, editorsAndAdmins } from '../access'
+import { validateLatitude, validateLongitude } from '../lib/coordinates'
 
 const DAYS: { label: string; name: string }[] = [
   { label: 'Lunes', name: 'monday' },
@@ -208,16 +209,7 @@ export const Dealerships: CollectionConfig = {
                       label: 'Latitud',
                       name: 'latitude',
                       type: 'number',
-                      /**
-                       * Validate latitude is between -90 and 90 degrees
-                       *
-                       * @param value - The latitude value in decimal degrees
-                       * @returns Error message if invalid, or true if valid
-                       */
-                      validate: (value: number | null | undefined) =>
-                        value == null ||
-                        (value >= -90 && value <= 90) ||
-                        'La latitud debe estar entre -90 y 90 en grados decimales (ej. 20.6597).',
+                      validate: validateLatitude,
                     },
                     {
                       admin: {
@@ -228,16 +220,7 @@ export const Dealerships: CollectionConfig = {
                       label: 'Longitud',
                       name: 'longitude',
                       type: 'number',
-                      /**
-                       * Validate longitude is between -180 and 180 degrees
-                       *
-                       * @param value - The longitude value in decimal degrees
-                       * @returns Error message if invalid, or true if valid
-                       */
-                      validate: (value: number | null | undefined) =>
-                        value == null ||
-                        (value >= -180 && value <= 180) ||
-                        'La longitud debe estar entre -180 y 180 en grados decimales (ej. -103.3496).',
+                      validate: validateLongitude,
                     },
                   ],
                   type: 'row',

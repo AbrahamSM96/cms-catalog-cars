@@ -15,7 +15,7 @@ export default defineConfig({
         'app/src/lib/catalog-actions.ts',
         'app/src/lib/payload-client.ts',
       ],
-      include: ['app/src/lib/**', 'app/src/utils/**'],
+      include: ['app/src/access.ts', 'app/src/lib/**', 'app/src/utils/**'],
       provider: 'v8',
       thresholds: {
         branches: 100,
@@ -26,6 +26,7 @@ export default defineConfig({
     },
     environment: 'node',
     restoreMocks: true,
+    setupFiles: ['./vitest.setup.ts'],
     unstubEnvs: true,
     unstubGlobals: true,
   },

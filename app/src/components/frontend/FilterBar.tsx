@@ -2,7 +2,13 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
+import {
+  applyFilter,
+  hasActiveFilters,
+  yearOptions,
+} from '../../lib/catalog-filters'
 import type { Brand } from '../../types/car'
+import type { FilterKey } from '../../lib/catalog-filters'
 
 interface FilterBarProps {
   brands: Brand[]
@@ -21,12 +27,8 @@ export function FilterBar({ brands }: FilterBarProps): React.JSX.Element {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  // Complete list of years (current year down to 2000) for the "año mínimo" filter.
   const currentYear = new Date().getFullYear()
-  const years = Array.from(
-    { length: currentYear - 2016 + 1 },
-    (_, i) => currentYear - i
-  )
+  const years = yearOptions(currentYear)
 
   /**
    * handleFilterChange
@@ -35,15 +37,7 @@ export function FilterBar({ brands }: FilterBarProps): React.JSX.Element {
    * @param value - string
    */
   const handleFilterChange = (key: string, value: string): void => {
-    const params = new URLSearchParams(searchParams.toString())
-
-    if (value === '' || value === 'all') {
-      params.delete(key)
-    } else {
-      params.set(key, value)
-    }
-
-    const query = params.toString()
+    const query = applyFilter(searchParams, key as FilterKey, value)
     router.push(query ? `${pathname}?${query}` : pathname, { scroll: false })
   }
 
@@ -54,12 +48,7 @@ export function FilterBar({ brands }: FilterBarProps): React.JSX.Element {
     router.push(pathname, { scroll: false })
   }
 
-  const hasActiveFilters =
-    searchParams.get('brand') ||
-    searchParams.get('status') ||
-    searchParams.get('transmission') ||
-    searchParams.get('minYear') ||
-    searchParams.get('search')
+  const activeFilters = hasActiveFilters(searchParams)
 
   return (
     <div className="shadow-soft rounded-2xl border border-slate-200 bg-white/70 p-4 backdrop-blur-sm sm:p-5">
@@ -83,7 +72,7 @@ export function FilterBar({ brands }: FilterBarProps): React.JSX.Element {
             Filtrar inventario
           </h3>
         </div>
-        {hasActiveFilters && (
+        {activeFilters && (
           <button
             className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
             onClick={handleClearAll}
