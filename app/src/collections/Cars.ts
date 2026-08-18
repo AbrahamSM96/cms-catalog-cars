@@ -84,7 +84,12 @@ export const Cars: CollectionConfig = {
             {
               fields: [
                 {
-                  admin: { sortOptions: 'name', width: '50%' },
+                  admin: {
+                    components: {
+                      Field: '/components/admin/BrandField#BrandField',
+                    },
+                    width: '50%',
+                  },
                   hasMany: false,
                   name: 'brand',
                   relationTo: 'brands',

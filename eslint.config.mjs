@@ -94,7 +94,13 @@ export default tseslint.config(
       'import/no-extraneous-dependencies': [
         'error',
         {
-          devDependencies: ['**/*.stories.*', '**/*.spec.*', '**/__tests__/*'],
+          devDependencies: [
+            '**/*.stories.*',
+            '**/*.spec.*',
+            '**/*.test.*',
+            '**/__tests__/*',
+            '**/*.config.*',
+          ],
           optionalDependencies: false,
         },
       ],

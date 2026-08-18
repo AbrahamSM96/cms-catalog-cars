@@ -17,7 +17,11 @@
     "lint:fix": "oxlint --fix . && bunx eslint . --fix",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
-    "check": "bun run lint:fix && bun run format"
+    "check": "bun run lint:fix && bun run format",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "test:ci": "bun run lint && bun run test:cov"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.78.0",
@@ -47,6 +51,7 @@
     "@typescript-eslint/eslint-plugin": "8.53.0",
     "@typescript-eslint/parser": "8.53.0",
     "@typescript-eslint/typescript-estree": "8.53.0",
+    "@vitest/coverage-v8": "^4.1.10",
     "eslint": "9.39.2",
     "eslint-config-next": "16.3.0",
     "eslint-config-prettier": "10.1.8",
@@ -63,6 +68,7 @@
     "oxlint": "^1.56.0",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "typescript-eslint": "8.53.0"
+    "typescript-eslint": "8.53.0",
+    "vitest": "^4.1.10"
   }
 }
