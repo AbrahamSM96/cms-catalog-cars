@@ -9,22 +9,15 @@ import { inter } from '@/commons/inter'
 import { Navbar } from '@/components/frontend/Navbar'
 import { poppins } from '@/commons/poppins'
 import { SITE_URL } from '@/lib/seo'
+import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
-  description:
-    'Encuentra tu auto seminuevo ideal. La mejor selección de autos con garantía de calidad, financiamiento disponible y facilidades de pago.',
-  keywords: [
-    'autos seminuevos',
-    'carros usados',
-    'venta de autos',
-    'autos de segunda mano',
-    'financiamiento de autos',
-  ],
+  description: siteConfig.seo.description,
+  keywords: siteConfig.seo.keywords,
   metadataBase: new URL(SITE_URL),
   openGraph: {
-    description:
-      'La mejor selección de autos seminuevos con garantía de calidad',
-    title: 'CMS Catalog Cars - Autos Seminuevos de Calidad',
+    description: siteConfig.seo.ogDescription,
+    title: siteConfig.seo.titleDefault,
     type: 'website',
   },
   robots: {
@@ -32,8 +25,8 @@ export const metadata: Metadata = {
     index: true,
   },
   title: {
-    default: 'CMS Catalog Cars - Autos Seminuevos de Calidad',
-    template: '%s | CMS Catalog Cars',
+    default: siteConfig.seo.titleDefault,
+    template: siteConfig.seo.titleTemplate,
   },
 }
 
@@ -62,25 +55,34 @@ export default async function RootLayout({
     '@type': 'Organization',
     ...(contact?.phone
       ? {
-          contactPoint: [
-            {
-              '@type': 'ContactPoint',
-              availableLanguage: ['es'],
-              contactType: 'sales',
-              telephone: contact.phone,
-            },
-          ],
-        }
+        contactPoint: [
+          {
+            '@type': 'ContactPoint',
+            availableLanguage: ['es'],
+            contactType: 'sales',
+            telephone: contact.phone,
+          },
+        ],
+      }
       : {}),
-    name: 'CMS Catalog Cars',
+    name: siteConfig.name,
     ...(socials.length > 0 ? { sameAs: socials } : {}),
     url: SITE_URL,
   }
+
+  // Brand colours from the per-client config override the CSS-variable defaults
+  // in globals.css, so anything using var(--accent) etc. re-themes from one file.
+  const themeStyle = {
+    '--accent': siteConfig.theme.accent,
+    '--accent-strong': siteConfig.theme.accentStrong,
+    '--primary': siteConfig.theme.primary,
+  } as React.CSSProperties
 
   return (
     <html
       className={`${poppins.variable} ${inter.variable} antialiased`}
       lang="es"
+      style={themeStyle}
     >
       <body>
         <script
@@ -88,9 +90,9 @@ export default async function RootLayout({
           type="application/ld+json"
         />
         <NextTopLoader
-          color="#DC2626"
+          color={siteConfig.theme.accent}
           height={3}
-          shadow="0 0 10px #DC2626,0 0 5px #DC2626"
+          shadow={`0 0 10px ${siteConfig.theme.accent},0 0 5px ${siteConfig.theme.accent}`}
           showSpinner={false}
           speed={200}
           zIndex={9999}

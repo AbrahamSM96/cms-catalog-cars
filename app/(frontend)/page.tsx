@@ -11,21 +11,20 @@ import { FeaturedCars } from '@/components/frontend/FeaturedCars'
 import { getImageUrl } from '@/lib/images'
 import { Locations } from '@/components/frontend/Locations'
 import type { Media } from '@/types/car'
+import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
-  description:
-    'Encuentra tu auto seminuevo ideal. La mejor selección de autos con garantía de calidad, financiamiento disponible y facilidades de pago.',
+  description: siteConfig.seo.description,
   openGraph: {
-    description:
-      'La mejor selección de autos seminuevos con garantía de calidad',
-    title: 'CMS Catalog Cars - Autos Seminuevos de Calidad',
+    description: siteConfig.seo.ogDescription,
+    title: siteConfig.seo.titleDefault,
     type: 'website',
   },
   title: {
-    absolute: 'CMS Catalog Cars - Autos Seminuevos de Calidad',
+    absolute: siteConfig.seo.titleDefault,
   },
 }
 

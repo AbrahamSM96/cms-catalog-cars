@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
+import { siteConfig } from '@/config/site'
+
 const LINKS = [
   { href: '/#featured', label: 'Destacados' },
   { href: '/catalogo', label: 'Inventario' },
@@ -63,7 +65,7 @@ export function Navbar({ whatsapp }: { whatsapp?: string }): React.JSX.Element {
             </svg>
           </span>
           <span className="text-lg font-bold tracking-tight text-slate-900">
-            Auto<span className="text-red-600">Catálogo</span>
+            {siteConfig.name}
           </span>
         </Link>
 

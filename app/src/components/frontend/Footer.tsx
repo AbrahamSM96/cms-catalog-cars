@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import type { Contact } from '@/types/car'
+import { siteConfig } from '@/config/site'
 
 interface FooterProps {
   contact: Contact | null
@@ -235,9 +236,9 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-slate-100 pt-6 sm:flex-row">
           <p className="text-sm text-slate-500">
-            © {year} AutoCatálogo. Todos los derechos reservados.
+            © {year} {siteConfig.name}. Todos los derechos reservados.
           </p>
-          <p className="text-sm text-slate-400">Autos seminuevos de calidad</p>
+          <p className="text-sm text-slate-400">{siteConfig.tagline}</p>
         </div>
       </div>
     </footer>
