@@ -8,6 +8,8 @@
  * new brand accent only needs to change once, right here.
  */
 export interface SiteConfig {
+  /** Short brand blurb shown in the footer. */
+  description: string
   /** Full brand name, shown in the navbar wordmark, footer and SEO. */
   name: string
   /** SEO defaults for titles, description and social sharing. */
@@ -37,6 +39,8 @@ export interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
+  description:
+    'Autos seminuevos con garantía de calidad, financiamiento disponible y facilidades de pago.',
   name: 'AutoCatálogo',
   seo: {
     description:
@@ -55,7 +59,7 @@ export const siteConfig: SiteConfig = {
   },
   tagline: 'Autos seminuevos de calidad',
   theme: {
-    accent: '#dc2626',
+    accent: '#276CF5',
     accentStrong: '#b91c1c',
     primary: '#0f172a',
   },

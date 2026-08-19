@@ -73,7 +73,7 @@ export function FinancingCalculator({
   })
 
   const sliderClass =
-    'h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-red-600 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:transition [&::-webkit-slider-thumb]:hover:scale-110 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-red-600 [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:transition [&::-moz-range-thumb]:hover:scale-110'
+    'h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-accent-600 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:transition [&::-webkit-slider-thumb]:hover:scale-110 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-accent-600 [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:transition [&::-moz-range-thumb]:hover:scale-110'
 
   /**
    * trackStyle
@@ -118,12 +118,12 @@ export function FinancingCalculator({
       {/* Credit */}
       {activeTab === 'credit' && (
         <div className="space-y-6">
-          <div className="rounded-xl bg-gradient-to-br from-red-50 to-rose-100 p-6">
+          <div className="rounded-xl bg-gradient-to-br from-accent-50 to-rose-100 p-6">
             <div className="mb-1 text-sm font-medium text-slate-600">
               Pago mensual estimado
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-bold text-red-600">
+              <span className="text-4xl font-bold text-accent-600">
                 {currency(monthlyPayment)}
               </span>
               <span className="text-sm text-slate-500">/mes</span>
@@ -143,7 +143,7 @@ export function FinancingCalculator({
               <label className="text-sm font-medium text-slate-900">
                 Enganche
               </label>
-              <span className="text-lg font-bold text-red-600">
+              <span className="text-lg font-bold text-accent-600">
                 {currency(downPaymentAmount)}
               </span>
             </div>
@@ -159,7 +159,7 @@ export function FinancingCalculator({
             />
             <div className="flex justify-between text-xs text-slate-400">
               <span>{minDown}%</span>
-              <span className="font-semibold text-red-600">
+              <span className="font-semibold text-accent-600">
                 {downPaymentPercentage}%
               </span>
               <span>{maxDown}%</span>
@@ -172,7 +172,7 @@ export function FinancingCalculator({
               <label className="text-sm font-medium text-slate-900">
                 Plazo del crédito
               </label>
-              <span className="text-lg font-bold text-red-600">
+              <span className="text-lg font-bold text-accent-600">
                 {loanTermMonths}{' '}
                 <span className="text-sm font-normal text-slate-500">
                   meses
@@ -200,7 +200,7 @@ export function FinancingCalculator({
               {availableTerms.map((term) => (
                 <span
                   className={
-                    loanTermMonths === term ? 'font-bold text-red-600' : ''
+                    loanTermMonths === term ? 'font-bold text-accent-600' : ''
                   }
                   key={term}
                 >
@@ -219,8 +219,8 @@ export function FinancingCalculator({
       {/* Reserve */}
       {activeTab === 'reserve' && (
         <div className="space-y-5 py-6 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
-            <Tag aria-hidden="true" className="h-7 w-7 text-red-600" />
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent-50">
+            <Tag aria-hidden="true" className="h-7 w-7 text-accent-600" />
           </div>
           <div>
             <h4 className="text-lg font-bold text-slate-900">

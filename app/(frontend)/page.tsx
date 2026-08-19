@@ -68,8 +68,8 @@ export default async function HomePage(): Promise<React.JSX.Element> {
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <div className="shadow-soft inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-500" />
             </span>
             <span className="text-sm font-medium text-slate-700">
               Inventario actualizado
@@ -84,7 +84,7 @@ export default async function HomePage(): Promise<React.JSX.Element> {
           </p>
           <div className="mt-8">
             <Link
-              className="group inline-flex cursor-pointer items-center gap-2 rounded-xl bg-red-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:bg-red-700 hover:shadow-red-600/30"
+              className="group inline-flex cursor-pointer items-center gap-2 rounded-xl bg-accent-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:bg-accent-700 hover:shadow-accent-600/30"
               href="/catalogo"
             >
               Ver catálogo completo

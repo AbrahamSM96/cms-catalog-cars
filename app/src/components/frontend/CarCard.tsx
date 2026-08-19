@@ -89,7 +89,7 @@ export function CarCard({ car }: CarCardProps): React.JSX.Element {
           {/* Badges */}
           <div className="absolute inset-x-0 top-0 flex items-start justify-between p-3">
             {car.featured ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white shadow-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-600 px-3 py-1 text-xs font-semibold text-white shadow-sm">
                 <svg
                   aria-hidden="true"
                   className="h-3.5 w-3.5"
@@ -122,7 +122,7 @@ export function CarCard({ car }: CarCardProps): React.JSX.Element {
         {/* Content */}
         <div className="p-5">
           <div className="mb-3">
-            <h3 className="text-lg font-bold text-slate-900 transition-colors group-hover:text-red-600">
+            <h3 className="text-lg font-bold text-slate-900 transition-colors group-hover:text-accent-600">
               {brandName} {car.model}
             </h3>
             <p className="mt-0.5 truncate text-sm font-medium text-slate-500">
@@ -184,7 +184,7 @@ export function CarCard({ car }: CarCardProps): React.JSX.Element {
               </div>
             </div>
 
-            <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-red-600 transition-all duration-300 group-hover:gap-2.5">
+            <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-600 transition-all duration-300 group-hover:gap-2.5">
               Ver detalles
               <svg
                 aria-hidden="true"

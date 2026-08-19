@@ -27,7 +27,7 @@ export default async function BuscadorPage(): Promise<React.JSX.Element> {
   return (
     <div className="min-h-screen bg-slate-50">
       <section className="relative overflow-hidden bg-white pt-28 pb-12 sm:pt-32">
-        <div className="pointer-events-none absolute -top-24 left-1/2 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-red-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -top-24 left-1/2 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-accent-500/10 blur-3xl" />
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)] opacity-50" />
 
         <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">

@@ -48,7 +48,7 @@ export function Navbar({ whatsapp }: { whatsapp?: string }): React.JSX.Element {
           className="group flex items-center gap-2.5"
           href="/"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-white transition-colors group-hover:bg-red-600">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-white transition-colors group-hover:bg-accent-600">
             <svg
               aria-hidden="true"
               className="h-5 w-5"
@@ -85,7 +85,7 @@ export function Navbar({ whatsapp }: { whatsapp?: string }): React.JSX.Element {
         {/* CTA */}
         <div className="flex items-center gap-2">
           <a
-            className="hidden cursor-pointer items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-red-700 hover:shadow-lg hover:shadow-red-600/25 sm:inline-flex"
+            className="hidden cursor-pointer items-center gap-2 rounded-xl bg-accent-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-accent-700 hover:shadow-lg hover:shadow-accent-600/25 sm:inline-flex"
             href={whatsappUrl}
             rel="noopener noreferrer"
             target="_blank"
@@ -151,7 +151,7 @@ export function Navbar({ whatsapp }: { whatsapp?: string }): React.JSX.Element {
               </Link>
             ))}
             <a
-              className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-3 text-base font-semibold text-white"
+              className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent-600 px-4 py-3 text-base font-semibold text-white"
               href={whatsappUrl}
               rel="noopener noreferrer"
               target="_blank"

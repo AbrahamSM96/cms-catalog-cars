@@ -101,10 +101,10 @@ export function CarFeatures(props: CarFeaturesProps): React.JSX.Element | null {
       <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
         {rows.map(({ icon: Icon, label, value }) => (
           <div className="flex items-center gap-4" key={label}>
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-50 ring-1 ring-red-100">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-accent-50 ring-1 ring-accent-100">
               <Icon
                 aria-hidden="true"
-                className="h-5 w-5 text-red-600"
+                className="h-5 w-5 text-accent-600"
                 strokeWidth={1.5}
               />
             </div>

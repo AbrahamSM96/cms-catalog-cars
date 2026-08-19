@@ -87,7 +87,7 @@ export function LocationsMap({
               <div
                 aria-label={d.name}
                 className={clsx(
-                  'flex items-center justify-center rounded-full border-2 border-white bg-red-600 text-white shadow-lg transition-transform duration-200',
+                  'flex items-center justify-center rounded-full border-2 border-white bg-accent-600 text-white shadow-lg transition-transform duration-200',
                   active
                     ? 'z-10 h-10 w-10 scale-100'
                     : 'h-8 w-8 hover:scale-110'

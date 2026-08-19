@@ -156,7 +156,7 @@ export function Locations({ dealerships }: LocationsProps): React.JSX.Element {
             <Search className="pointer-events-none absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-slate-400" />
             <input
               aria-label="Buscar ubicación"
-              className="w-full cursor-text rounded-xl border border-slate-200 bg-white py-3 pr-4 pl-12 text-slate-900 transition-colors placeholder:text-slate-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none"
+              className="w-full cursor-text rounded-xl border border-slate-200 bg-white py-3 pr-4 pl-12 text-slate-900 transition-colors placeholder:text-slate-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 focus:outline-none"
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar por dirección, ciudad o C.P…"
               type="text"
@@ -188,7 +188,7 @@ export function Locations({ dealerships }: LocationsProps): React.JSX.Element {
                 <button
                   className={clsx(
                     'flex w-full cursor-pointer gap-4 p-4 text-left transition-colors',
-                    active ? 'bg-red-50/60' : 'hover:bg-slate-50'
+                    active ? 'bg-accent-50/60' : 'hover:bg-slate-50'
                   )}
                   key={d.id}
                   onClick={() => setSelectedId(d.id)}
@@ -224,7 +224,7 @@ export function Locations({ dealerships }: LocationsProps): React.JSX.Element {
                         <span
                           className={clsx(
                             'font-semibold',
-                            status.open ? 'text-emerald-600' : 'text-red-600'
+                            status.open ? 'text-emerald-600' : 'text-accent-600'
                           )}
                         >
                           {status.label}
@@ -253,7 +253,7 @@ export function Locations({ dealerships }: LocationsProps): React.JSX.Element {
                       )}
                       {mapsHref && (
                         <a
-                          className="inline-flex cursor-pointer items-center gap-1.5 font-medium text-red-600 hover:text-red-700"
+                          className="inline-flex cursor-pointer items-center gap-1.5 font-medium text-accent-600 hover:text-accent-700"
                           href={mapsHref}
                           onClick={(e) => e.stopPropagation()}
                           rel="noopener noreferrer"

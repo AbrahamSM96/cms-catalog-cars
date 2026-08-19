@@ -76,7 +76,7 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
               className="group inline-flex items-center gap-2.5"
               href="/"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-white transition-colors group-hover:bg-red-600">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-white transition-colors group-hover:bg-accent-600">
                 <svg
                   aria-hidden="true"
                   className="h-5 w-5"
@@ -93,12 +93,11 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
                 </svg>
               </span>
               <span className="text-lg font-bold tracking-tight text-slate-900">
-                Auto<span className="text-red-600">Catálogo</span>
+                {siteConfig.name}
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-600">
-              Autos seminuevos con garantía de calidad, financiamiento
-              disponible y facilidades de pago.
+              {siteConfig.description}
             </p>
 
             {socials.length > 0 && (
@@ -106,7 +105,7 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
                 {socials.map((s) => (
                   <a
                     aria-label={s.label}
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition-colors hover:border-red-500 hover:bg-red-600 hover:text-white"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 transition-colors hover:border-accent-500 hover:bg-accent-600 hover:text-white"
                     href={contact!.social![s.key]}
                     key={s.key}
                     rel="noopener noreferrer"
@@ -134,7 +133,7 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
             <ul className="mt-4 space-y-2.5 text-sm text-slate-600">
               <li>
                 <Link
-                  className="transition-colors hover:text-red-600"
+                  className="transition-colors hover:text-accent-600"
                   href="/catalogo"
                 >
                   Inventario
@@ -142,7 +141,7 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
               </li>
               <li>
                 <Link
-                  className="transition-colors hover:text-red-600"
+                  className="transition-colors hover:text-accent-600"
                   href="/ubicaciones"
                 >
                   Ubicaciones
@@ -150,7 +149,7 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
               </li>
               <li>
                 <Link
-                  className="transition-colors hover:text-red-600"
+                  className="transition-colors hover:text-accent-600"
                   href="/contacto"
                 >
                   Contacto
@@ -167,7 +166,7 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
             <ul className="mt-4 space-y-2.5 text-sm text-slate-600">
               <li>
                 <a
-                  className="transition-colors hover:text-red-600"
+                  className="transition-colors hover:text-accent-600"
                   href={telHref}
                 >
                   {phone}
@@ -176,7 +175,7 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
               {email && (
                 <li>
                   <a
-                    className="break-all transition-colors hover:text-red-600"
+                    className="break-all transition-colors hover:text-accent-600"
                     href={`mailto:${email}`}
                   >
                     {email}
@@ -210,7 +209,7 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
                 WhatsApp
               </a>
               <a
-                className="shadow-soft inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition-colors hover:border-red-500 hover:text-red-600"
+                className="shadow-soft inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition-colors hover:border-accent-500 hover:text-accent-600"
                 href={telHref}
               >
                 <svg

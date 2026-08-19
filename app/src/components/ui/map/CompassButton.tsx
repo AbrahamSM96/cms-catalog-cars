@@ -52,8 +52,8 @@ function CompassButton({
         style={{ transformStyle: 'preserve-3d' }}
         viewBox="0 0 24 24"
       >
-        <path className="fill-red-500" d="M12 2L16 12H12V2Z" />
-        <path className="fill-red-300" d="M12 2L8 12H12V2Z" />
+        <path className="fill-accent-500" d="M12 2L16 12H12V2Z" />
+        <path className="fill-accent-300" d="M12 2L8 12H12V2Z" />
         <path className="fill-muted-foreground/60" d="M12 22L16 12H12V22Z" />
         <path className="fill-muted-foreground/30" d="M12 22L8 12H12V22Z" />
       </svg>

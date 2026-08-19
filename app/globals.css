@@ -25,7 +25,22 @@
   --color-surface: var(--surface);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
+
+  /* Brand accent scale, derived from the single --accent value (set per client
+     in site.config). Changing --accent re-themes the whole scale via color-mix,
+     so components use accent-* utilities instead of hardcoded red-*. */
   --color-accent: var(--accent);
+  --color-accent-50: color-mix(in oklab, var(--accent) 8%, white);
+  --color-accent-100: color-mix(in oklab, var(--accent) 14%, white);
+  --color-accent-200: color-mix(in oklab, var(--accent) 26%, white);
+  --color-accent-300: color-mix(in oklab, var(--accent) 40%, white);
+  --color-accent-400: color-mix(in oklab, var(--accent) 62%, white);
+  --color-accent-500: color-mix(in oklab, var(--accent) 82%, white);
+  --color-accent-600: var(--accent);
+  --color-accent-700: color-mix(in oklab, var(--accent) 84%, black);
+  --color-accent-800: color-mix(in oklab, var(--accent) 68%, black);
+  --color-accent-900: color-mix(in oklab, var(--accent) 54%, black);
+  --color-accent-950: color-mix(in oklab, var(--accent) 42%, black);
 
   /* Neutral tokens consumed by the mapcn map component (controls, popups). */
   --color-muted: #f1f5f9;

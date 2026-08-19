@@ -46,7 +46,7 @@ export function CarSpecs({ car }: CarSpecsProps): React.JSX.Element {
       label: '🟡 Reservado',
     },
     sold: {
-      color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
+      color: 'bg-accent-100 text-accent-800 dark:bg-accent-900 dark:text-accent-100',
       label: '🔴 Vendido',
     },
   }

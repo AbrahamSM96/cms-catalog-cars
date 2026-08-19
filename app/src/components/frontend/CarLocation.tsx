@@ -79,7 +79,7 @@ export function CarLocation({
                   className={
                     status.open
                       ? 'font-semibold text-emerald-600'
-                      : 'font-semibold text-red-600'
+                      : 'font-semibold text-accent-600'
                   }
                 >
                   {status.label}
@@ -94,7 +94,7 @@ export function CarLocation({
               <div className="mt-4 flex items-start gap-2 text-slate-600">
                 <MapPin
                   aria-hidden="true"
-                  className="mt-0.5 h-5 w-5 shrink-0 text-red-600"
+                  className="mt-0.5 h-5 w-5 shrink-0 text-accent-600"
                 />
                 <p className="text-sm leading-relaxed">
                   {addressLines.join(', ')}

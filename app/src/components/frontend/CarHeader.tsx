@@ -87,7 +87,7 @@ export function CarHeader({ car }: CarHeaderProps): React.JSX.Element | null {
           <span className="text-sm font-semibold text-slate-900">
             {brandName}
           </span>
-          <BadgeCheck aria-hidden="true" className="h-5 w-5 text-red-600" />
+          <BadgeCheck aria-hidden="true" className="h-5 w-5 text-accent-600" />
         </div>
       </div>
 
@@ -103,7 +103,7 @@ export function CarHeader({ car }: CarHeaderProps): React.JSX.Element | null {
           )}
 
           <div className="mt-3 flex items-center gap-2 text-slate-600">
-            <MapPin aria-hidden="true" className="h-5 w-5 text-red-600" />
+            <MapPin aria-hidden="true" className="h-5 w-5 text-accent-600" />
             <span className="text-sm font-medium">{location}</span>
           </div>
         </div>

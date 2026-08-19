@@ -45,7 +45,7 @@ export function SearchBar(): React.JSX.Element {
     <form className="w-full max-w-2xl" onSubmit={handleSearch}>
       <div className="group relative">
         {/* Search Icon */}
-        <div className="pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-red-600">
+        <div className="pointer-events-none absolute top-1/2 left-5 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-accent-600">
           <svg
             className="h-5 w-5"
             fill="none"
@@ -64,7 +64,7 @@ export function SearchBar(): React.JSX.Element {
         {/* Input */}
         <input
           aria-label="Buscar autos"
-          className="shadow-soft focus:shadow-float w-full cursor-text rounded-2xl border border-slate-200 bg-white py-4 pr-32 pl-14 text-slate-900 transition-all duration-300 placeholder:text-slate-400 focus:border-red-500 focus:outline-none"
+          className="shadow-soft focus:shadow-float w-full cursor-text rounded-2xl border border-slate-200 bg-white py-4 pr-32 pl-14 text-slate-900 transition-all duration-300 placeholder:text-slate-400 focus:border-accent-500 focus:outline-none"
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Buscar por marca, modelo o versión..."
           type="text"
@@ -98,7 +98,7 @@ export function SearchBar(): React.JSX.Element {
 
         {/* Search Button */}
         <button
-          className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-xl bg-red-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-red-700 hover:shadow-lg hover:shadow-red-600/30 active:scale-95"
+          className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-xl bg-accent-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-accent-700 hover:shadow-lg hover:shadow-accent-600/30 active:scale-95"
           type="submit"
         >
           Buscar

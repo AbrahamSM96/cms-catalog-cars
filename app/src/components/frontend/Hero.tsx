@@ -81,7 +81,7 @@ export function Hero({ slides = DEFAULT_SLIDES, text }: HeroProps): React.JSX.El
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white">
       {/* Soft ambient glow */}
-      <div className="pointer-events-none absolute -top-24 left-1/2 h-[32rem] w-[52rem] -translate-x-1/2 rounded-full bg-red-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -top-24 left-1/2 h-[32rem] w-[52rem] -translate-x-1/2 rounded-full bg-accent-500/10 blur-3xl" />
       <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)] opacity-60" />
 
       <div className="relative mx-auto max-w-7xl px-4 pt-28 pb-16 sm:px-6 sm:pt-32 lg:px-8">
@@ -89,8 +89,8 @@ export function Hero({ slides = DEFAULT_SLIDES, text }: HeroProps): React.JSX.El
         <div className="mx-auto max-w-3xl text-center">
           <div className="animate-rise shadow-soft inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-500" />
             </span>
             <span className="text-sm font-medium text-slate-700">
               {t.badge}
@@ -103,7 +103,7 @@ export function Hero({ slides = DEFAULT_SLIDES, text }: HeroProps): React.JSX.El
           >
             {t.heading}
             {t.headingHighlight && (
-              <span className="mt-2 block bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">
+              <span className="mt-2 block bg-gradient-to-r from-accent-600 to-accent-500 bg-clip-text text-transparent">
                 {t.headingHighlight}
               </span>
             )}
@@ -136,7 +136,7 @@ export function Hero({ slides = DEFAULT_SLIDES, text }: HeroProps): React.JSX.El
               >
                 <svg
                   aria-hidden="true"
-                  className="h-5 w-5 text-red-600"
+                  className="h-5 w-5 text-accent-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -253,7 +253,7 @@ export function Hero({ slides = DEFAULT_SLIDES, text }: HeroProps): React.JSX.El
                     <button
                       aria-label={`Ir al slide ${i + 1}`}
                       className={`h-2 cursor-pointer rounded-full transition-all ${i === current
-                        ? 'w-8 bg-red-500'
+                        ? 'w-8 bg-accent-500'
                         : 'w-2 bg-white/70 hover:bg-white'
                         }`}
                       key={i}

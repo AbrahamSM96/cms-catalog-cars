@@ -58,7 +58,7 @@ export default async function ContactoPage(): Promise<React.JSX.Element> {
     <div className="min-h-screen bg-slate-50">
       {/* Header band */}
       <section className="relative overflow-hidden bg-white pt-28 pb-12 sm:pt-32">
-        <div className="pointer-events-none absolute -top-24 left-1/2 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-red-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -top-24 left-1/2 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-accent-500/10 blur-3xl" />
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)] opacity-50" />
         <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
@@ -97,16 +97,16 @@ export default async function ContactoPage(): Promise<React.JSX.Element> {
 
             {/* Phone */}
             <a
-              className="group shadow-soft hover:shadow-float flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-red-300"
+              className="group shadow-soft hover:shadow-float flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-accent-300"
               href={telHref}
             >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-red-50 text-red-600">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-600">
                 <Phone className="h-6 w-6" />
               </span>
               <div>
                 <h2 className="font-semibold text-slate-900">Teléfono</h2>
                 <p className="mt-0.5 text-sm text-slate-500">{phone}</p>
-                <span className="mt-2 inline-block text-sm font-semibold text-red-600">
+                <span className="mt-2 inline-block text-sm font-semibold text-accent-600">
                   Llamar →
                 </span>
               </div>
@@ -115,7 +115,7 @@ export default async function ContactoPage(): Promise<React.JSX.Element> {
             {/* Email */}
             {email && (
               <a
-                className="group shadow-soft hover:shadow-float flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-red-300"
+                className="group shadow-soft hover:shadow-float flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-accent-300"
                 href={`mailto:${email}`}
               >
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
@@ -126,7 +126,7 @@ export default async function ContactoPage(): Promise<React.JSX.Element> {
                   <p className="mt-0.5 text-sm break-all text-slate-500">
                     {email}
                   </p>
-                  <span className="mt-2 inline-block text-sm font-semibold text-red-600">
+                  <span className="mt-2 inline-block text-sm font-semibold text-accent-600">
                     Enviar correo →
                   </span>
                 </div>
@@ -144,7 +144,7 @@ export default async function ContactoPage(): Promise<React.JSX.Element> {
                   <p className="mt-0.5 text-sm text-slate-500">{addressText}</p>
                   {mapsHref && (
                     <a
-                      className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-red-600 hover:text-red-700"
+                      className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-600 hover:text-accent-700"
                       href={mapsHref}
                       rel="noopener noreferrer"
                       target="_blank"

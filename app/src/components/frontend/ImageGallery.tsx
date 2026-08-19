@@ -155,7 +155,7 @@ export function ImageGallery({
                   aria-label={`Seleccionar imagen ${index + 1}`}
                   className={`relative h-20 w-full cursor-pointer overflow-hidden rounded-xl border-2 transition ${
                     index === selectedIndex
-                      ? 'border-red-600 ring-2 ring-red-600/30'
+                      ? 'border-accent-600 ring-2 ring-accent-600/30'
                       : 'border-slate-200 hover:border-slate-300'
                   }`}
                   key={imgItem.media.id}

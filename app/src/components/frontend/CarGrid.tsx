@@ -43,7 +43,7 @@ export function CarGrid({ cars }: CarGridProps): React.ReactElement {
           </p>
 
           <a
-            className="mt-6 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-red-600 px-6 py-3 font-semibold text-white shadow-sm transition-all duration-300 hover:bg-red-700 hover:shadow-lg hover:shadow-red-600/25"
+            className="mt-6 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-accent-600 px-6 py-3 font-semibold text-white shadow-sm transition-all duration-300 hover:bg-accent-700 hover:shadow-lg hover:shadow-accent-600/25"
             href="/catalogo"
           >
             <svg
