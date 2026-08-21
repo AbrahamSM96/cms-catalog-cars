@@ -4,6 +4,8 @@
 import { SelectInput, useField, useFormFields } from '@payloadcms/ui'
 import { useEffect, useRef, useState } from 'react'
 
+import { detectTransmission } from '../../lib/transmission'
+
 interface VersionFieldProps {
   field?: { admin?: { width?: string }; label?: unknown; required?: boolean }
   path: string
@@ -29,6 +31,9 @@ type SelectOption = { label?: string; value?: string }
 export function VersionField(props: VersionFieldProps): React.JSX.Element {
   const { field, path } = props
   const { setValue, value } = useField<string>({ path })
+  const { setValue: setTransmission } = useField<string>({
+    path: 'transmission',
+  })
   const brandId = useFormFields(([fields]) => fields?.brand?.value)
   const modelName = useFormFields(([fields]) => fields?.model?.value)
   const year = useFormFields(([fields]) => fields?.year?.value)
@@ -95,7 +100,13 @@ export function VersionField(props: VersionFieldProps): React.JSX.Element {
    */
   const handleChange = (option: unknown): void => {
     const opt = Array.isArray(option) ? option[0] : option
-    setValue((opt as SelectOption | null)?.value ?? '')
+    const picked = (opt as SelectOption | null)?.value ?? ''
+    setValue(picked)
+
+    // Infer the transmission from the version description so the editor doesn't
+    // have to pick it by hand; leave it untouched when it can't be determined.
+    const transmission = detectTransmission(picked)
+    if (transmission) setTransmission(transmission)
   }
 
   const label = typeof field?.label === 'string' ? field.label : 'Version'
