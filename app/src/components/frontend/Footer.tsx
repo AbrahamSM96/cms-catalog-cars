@@ -1,10 +1,11 @@
 import Link from 'next/link'
 
+import type { SiteConfig } from '@/config/site'
 import type { Contact } from '@/types/car'
-import { siteConfig } from '@/config/site'
 
 interface FooterProps {
   contact: Contact | null
+  site: SiteConfig
 }
 
 const FALLBACK_WHATSAPP = '525512345678'
@@ -42,8 +43,9 @@ const SOCIALS: {
  *
  * @param props - FooterProps
  * @param props.contact - Contact | null
+ * @param props.site - resolved per-client site configuration
  */
-export function Footer({ contact }: FooterProps): React.JSX.Element {
+export function Footer({ contact, site }: FooterProps): React.JSX.Element {
   const whatsappDigits = (contact?.whatsapp || FALLBACK_WHATSAPP).replace(
     /\D/g,
     ''
@@ -93,11 +95,11 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
                 </svg>
               </span>
               <span className="text-lg font-bold tracking-tight text-slate-900">
-                {siteConfig.name}
+                {site.name}
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-600">
-              {siteConfig.description}
+              {site.description}
             </p>
 
             {socials.length > 0 && (
@@ -235,9 +237,9 @@ export function Footer({ contact }: FooterProps): React.JSX.Element {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-slate-100 pt-6 sm:flex-row">
           <p className="text-sm text-slate-500">
-            © {year} {siteConfig.name}. Todos los derechos reservados.
+            © {year} {site.name}. Todos los derechos reservados.
           </p>
-          <p className="text-sm text-slate-400">{siteConfig.tagline}</p>
+          <p className="text-sm text-slate-400">{site.tagline}</p>
         </div>
       </div>
     </footer>

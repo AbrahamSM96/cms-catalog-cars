@@ -13,6 +13,7 @@ import type {
   Contact,
   Dealership,
   Homepage,
+  SiteSettings,
 } from '../types/car'
 
 import { parseCarSlug } from './car-slug'
@@ -253,6 +254,27 @@ export async function getContact(): Promise<Contact | null> {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching contact:', error)
+    return null
+  }
+}
+
+/**
+ * Fetch the SiteSettings global (brand, SEO, favicon, OG image, theme colours).
+ * depth 1 so the favicon / OG image uploads are populated with their URLs.
+ */
+export async function getSiteSettings(): Promise<SiteSettings | null> {
+  try {
+    const payload = await payloadClient()
+
+    const settings = await payload.findGlobal({
+      depth: 1,
+      slug: 'site-settings',
+    })
+
+    return settings as unknown as SiteSettings
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching site settings:', error)
     return null
   }
 }

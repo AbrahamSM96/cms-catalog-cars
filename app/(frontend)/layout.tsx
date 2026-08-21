@@ -4,30 +4,40 @@ import NextTopLoader from 'nextjs-toploader'
 
 import '../globals.css'
 import { Footer } from '@/components/frontend/Footer'
-import { getContact } from '@/lib/payload-client'
+import { getContact, getSiteSettings } from '@/lib/payload-client'
 import { inter } from '@/commons/inter'
 import { Navbar } from '@/components/frontend/Navbar'
 import { poppins } from '@/commons/poppins'
+import { resolveSiteConfig } from '@/config/site'
 import { SITE_URL } from '@/lib/seo'
-import { siteConfig } from '@/config/site'
 
-export const metadata: Metadata = {
-  description: siteConfig.seo.description,
-  keywords: siteConfig.seo.keywords,
-  metadataBase: new URL(SITE_URL),
-  openGraph: {
-    description: siteConfig.seo.ogDescription,
-    title: siteConfig.seo.titleDefault,
-    type: 'website',
-  },
-  robots: {
-    follow: true,
-    index: true,
-  },
-  title: {
-    default: siteConfig.seo.titleDefault,
-    template: siteConfig.seo.titleTemplate,
-  },
+/**
+ * generateMetadata — build the site metadata from the CMS `site-settings`
+ * global, falling back to the static defaults when it is empty.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const site = resolveSiteConfig(await getSiteSettings())
+
+  return {
+    description: site.seo.description,
+    ...(site.faviconUrl ? { icons: { icon: site.faviconUrl } } : {}),
+    keywords: site.seo.keywords,
+    metadataBase: new URL(SITE_URL),
+    openGraph: {
+      description: site.seo.ogDescription,
+      ...(site.ogImageUrl ? { images: [site.ogImageUrl] } : {}),
+      title: site.seo.titleDefault,
+      type: 'website',
+    },
+    robots: {
+      follow: true,
+      index: true,
+    },
+    title: {
+      default: site.seo.titleDefault,
+      template: site.seo.titleTemplate,
+    },
+  }
 }
 
 /**
@@ -41,7 +51,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>): Promise<React.JSX.Element> {
-  const contact = await getContact()
+  const [contact, site] = await Promise.all([
+    getContact(),
+    getSiteSettings().then(resolveSiteConfig),
+  ])
 
   const socials = [
     contact?.social?.facebook,
@@ -65,7 +78,7 @@ export default async function RootLayout({
         ],
       }
       : {}),
-    name: siteConfig.name,
+    name: site.name,
     ...(socials.length > 0 ? { sameAs: socials } : {}),
     url: SITE_URL,
   }
@@ -73,9 +86,9 @@ export default async function RootLayout({
   // Brand colours from the per-client config override the CSS-variable defaults
   // in globals.css, so anything using var(--accent) etc. re-themes from one file.
   const themeStyle = {
-    '--accent': siteConfig.theme.accent,
-    '--accent-strong': siteConfig.theme.accentStrong,
-    '--primary': siteConfig.theme.primary,
+    '--accent': site.theme.accent,
+    '--accent-strong': site.theme.accentStrong,
+    '--primary': site.theme.primary,
   } as React.CSSProperties
 
   return (
@@ -90,16 +103,16 @@ export default async function RootLayout({
           type="application/ld+json"
         />
         <NextTopLoader
-          color={siteConfig.theme.accent}
+          color={site.theme.accent}
           height={3}
-          shadow={`0 0 10px ${siteConfig.theme.accent},0 0 5px ${siteConfig.theme.accent}`}
+          shadow={`0 0 10px ${site.theme.accent},0 0 5px ${site.theme.accent}`}
           showSpinner={false}
           speed={200}
           zIndex={9999}
         />
-        <Navbar whatsapp={contact?.whatsapp} />
+        <Navbar brandName={site.name} whatsapp={contact?.whatsapp} />
         {children}
-        <Footer contact={contact} />
+        <Footer site={site} contact={contact} />
       </body>
     </html>
   )

@@ -202,6 +202,30 @@ export interface Contact {
   }
 }
 
+export interface SiteSettings {
+  brand?: {
+    name?: string
+    tagline?: string
+    description?: string
+  }
+  seo?: {
+    titleDefault?: string
+    titleTemplate?: string
+    description?: string
+    ogDescription?: string
+    keywords?: { value: string }[]
+  }
+  media?: {
+    favicon?: Media | string | number
+    ogImage?: Media | string | number
+  }
+  theme?: {
+    accent?: string
+    accentStrong?: string
+    primary?: string
+  }
+}
+
 export interface DealershipAddress {
   line1?: string
   neighborhood?: string

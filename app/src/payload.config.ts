@@ -18,6 +18,7 @@ import { Dealerships } from './collections/Dealerships'
 import { Homepage } from './globals/Homepage'
 import { Media } from './collections/Media'
 import { MEDIA_PREFIX, r2PublicUrl } from './lib/r2'
+import { SiteSettings } from './globals/SiteSettings'
 import { Users } from './collections/Users'
 import { vehicleCatalog } from './seed/vehicleCatalog'
 
@@ -47,12 +48,13 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI,
     },
-    // In dev, Payload pushes schema changes automatically (no migration files).
-    // In production, run `payload migrate` from versioned migrations instead.
-    push: process.env.NODE_ENV !== 'production',
+    // v1 ships with schema push everywhere: Payload creates/updates the schema
+    // on boot (no migration files needed). Set PAYLOAD_DB_PUSH=false per deploy
+    // once versioned migrations exist (Fase 1) to switch to `payload migrate`.
+    push: process.env.PAYLOAD_DB_PUSH !== 'false',
   }),
   editor: lexicalEditor(),
-  globals: [Homepage, Contact],
+  globals: [Homepage, Contact, SiteSettings],
   /**
    * onInit
    *

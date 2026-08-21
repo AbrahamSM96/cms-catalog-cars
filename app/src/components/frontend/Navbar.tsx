@@ -3,8 +3,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-import { siteConfig } from '@/config/site'
-
 const LINKS = [
   { href: '/#featured', label: 'Destacados' },
   { href: '/catalogo', label: 'Inventario' },
@@ -16,9 +14,16 @@ const LINKS = [
  * Navbar 
  *
  * @param props - Component props.
+ * @param props.brandName - The brand name shown in the wordmark.
  * @param props.whatsapp - The WhatsApp number to use in the CTA button.
  */
-export function Navbar({ whatsapp }: { whatsapp?: string }): React.JSX.Element {
+export function Navbar({
+  brandName,
+  whatsapp,
+}: {
+  brandName: string
+  whatsapp?: string
+}): React.JSX.Element {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -65,7 +70,7 @@ export function Navbar({ whatsapp }: { whatsapp?: string }): React.JSX.Element {
             </svg>
           </span>
           <span className="text-lg font-bold tracking-tight text-slate-900">
-            {siteConfig.name}
+            {brandName}
           </span>
         </Link>
 

@@ -5,27 +5,36 @@ import {
   getDealerships,
   getFeaturedCars,
   getHomepage,
+  getSiteSettings,
 } from '@/lib/payload-client'
 import { Hero, type HeroSlideView } from '@/components/frontend/Hero'
 import { FeaturedCars } from '@/components/frontend/FeaturedCars'
 import { getImageUrl } from '@/lib/images'
 import { Locations } from '@/components/frontend/Locations'
 import type { Media } from '@/types/car'
-import { siteConfig } from '@/config/site'
+import { resolveSiteConfig } from '@/config/site'
 
-export const metadata: Metadata = {
-  alternates: {
-    canonical: '/',
-  },
-  description: siteConfig.seo.description,
-  openGraph: {
-    description: siteConfig.seo.ogDescription,
-    title: siteConfig.seo.titleDefault,
-    type: 'website',
-  },
-  title: {
-    absolute: siteConfig.seo.titleDefault,
-  },
+/**
+ * generateMetadata — home page SEO from the CMS `site-settings` global.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const site = resolveSiteConfig(await getSiteSettings())
+
+  return {
+    alternates: {
+      canonical: '/',
+    },
+    description: site.seo.description,
+    openGraph: {
+      description: site.seo.ogDescription,
+      ...(site.ogImageUrl ? { images: [site.ogImageUrl] } : {}),
+      title: site.seo.titleDefault,
+      type: 'website',
+    },
+    title: {
+      absolute: site.seo.titleDefault,
+    },
+  }
 }
 
 /**
