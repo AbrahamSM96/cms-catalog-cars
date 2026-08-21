@@ -1,18 +1,11 @@
 import { fileURLToPath } from 'url'
 import path from 'path'
 
-import type {
-  GeneratedAdapter,
-  HandleDelete,
-  HandleUpload,
-} from '@payloadcms/plugin-cloud-storage/types'
 import { buildConfig } from 'payload'
-import { v2 as cloudinary } from 'cloudinary'
-import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { postgresAdapter } from '@payloadcms/db-postgres'
+import { s3Storage } from '@payloadcms/storage-s3'
 import sharp from 'sharp'
-import type { UploadApiResponse } from 'cloudinary'
 
 import { Brands } from './collections/Brands'
 import { CarModels } from './collections/CarModels'
@@ -22,85 +15,14 @@ import { Colors } from './collections/Colors'
 import { colorsList } from './seed/colors'
 import { Contact } from './globals/Contact'
 import { Dealerships } from './collections/Dealerships'
-import { filenameToPublicId } from './lib/cloudinary-path'
 import { Homepage } from './globals/Homepage'
 import { Media } from './collections/Media'
+import { MEDIA_PREFIX, r2PublicUrl } from './lib/r2'
 import { Users } from './collections/Users'
 import { vehicleCatalog } from './seed/vehicleCatalog'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
-
-cloudinary.config({
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-})
-
-/**
- * cloudinaryAdapters
- */
-const cloudinaryAdapter = (): GeneratedAdapter => ({
-  /**
-   * handleDelete
-   *
-   * @param props - component props
-   * @param props.filename - filename to delete
-   */
-  async handleDelete({ filename: fileToDelete }: Parameters<HandleDelete>[0]) {
-    try {
-      await cloudinary.uploader.destroy(filenameToPublicId(fileToDelete))
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Cloudinary Delete Error:', error)
-    }
-  },
-
-  /**
-   * handleUpload
-   *
-   * @param props - component props
-   * @param props.file - file to upload
-   */
-  async handleUpload({ file }: Parameters<HandleUpload>[0]) {
-    // Upload to a public_id derived deterministically from the (already
-    // deduplicated) Payload filename, so the stored filename and the Cloudinary
-    // location always map to each other via filenameToPublicId. No timestamp,
-    // no reliance on mutating file.filename (the plugin does not persist that).
-    const publicId = filenameToPublicId(file.filename)
-    try {
-      await new Promise<UploadApiResponse>((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          {
-            overwrite: true,
-            public_id: publicId,
-            resource_type: 'auto',
-            use_filename: false,
-          },
-          (error, result) => {
-            if (error) return reject(error)
-            if (!result)
-              return reject(new Error('No result returned from Cloudinary'))
-            resolve(result)
-          }
-        )
-        uploadStream.end(file.buffer)
-      })
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error(`Cloudinary upload failed for ${publicId}:`, err)
-      throw err
-    }
-  },
-  name: 'cloudinary-adapter',
-
-  /**
-   * staticHandler
-   */
-  staticHandler() {
-    return new Response('Not implemented', { status: 501 })
-  },
-})
 
 export const importMap = {
   baseDir: path.resolve(dirname),
@@ -224,24 +146,31 @@ export default buildConfig({
     }
   },
   plugins: [
-    cloudStoragePlugin({
+    s3Storage({
+      bucket: process.env.R2_BUCKET ?? '',
       collections: {
         media: {
-          adapter: cloudinaryAdapter,
           disableLocalStorage: true,
 
           /**
-           * generateFileURL
+           * generateFileURL — build the public R2 URL for a stored file.
            *
            * @param props - component props
-           * @param props.filename - filename to generate URL for
+           * @param props.filename - filename to generate the URL for
            */
-          generateFileURL: ({ filename: fileToUrl }) => {
-            return cloudinary.url(filenameToPublicId(fileToUrl), {
-              secure: true,
-            })
-          },
+          generateFileURL: ({ filename: fileToUrl }): string =>
+            r2PublicUrl(fileToUrl),
+          prefix: MEDIA_PREFIX,
         },
+      },
+      config: {
+        credentials: {
+          accessKeyId: process.env.R2_ACCESS_KEY_ID ?? '',
+          secretAccessKey: process.env.R2_SECRET_ACCESS_KEY ?? '',
+        },
+        endpoint: process.env.R2_ENDPOINT,
+        forcePathStyle: true,
+        region: 'auto',
       },
     }),
   ],

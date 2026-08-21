@@ -6,6 +6,7 @@ import {
   CONDITION_OPTIONS,
   VEHICLE_TYPE_OPTIONS,
 } from '../lib/marketplace'
+import { renameCarMedia } from '../hooks/renameCarMedia'
 import { resolveBrandName, toTitleCase } from '../lib/car-title'
 
 export const Cars: CollectionConfig = {
@@ -762,6 +763,7 @@ export const Cars: CollectionConfig = {
     },
   ],
   hooks: {
+    afterChange: [renameCarMedia],
     beforeChange: [
       /**
        * Format text fields and build display title for the car collection.

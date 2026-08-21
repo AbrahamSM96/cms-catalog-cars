@@ -33,6 +33,24 @@ export function buildCarSlug(car: Car): string {
 }
 
 /**
+ * Build a short slug base for image filenames.
+ * Format: marca-modelo-año-id  (e.g. "audi-a3-2026-8").
+ * Unlike buildCarSlug it omits `version`, which in this catalogue is a long
+ * description that would make filenames unwieldy. The id keeps two otherwise
+ * identical cars from colliding.
+ *
+ * @param car - Car
+ */
+export function buildCarImageSlug(car: Car): string {
+  const brandName =
+    typeof car.brand === 'object' ? (car.brand as Brand).name : ''
+  const parts = [brandName, car.model, car.year, car.id]
+    .map((part) => slugify(part))
+    .filter(Boolean)
+  return parts.join('-')
+}
+
+/**
  * Extract the car id from a slug produced by buildCarSlug.
  * The id is the last hyphen-separated segment.
  * Returns null if no id can be found.

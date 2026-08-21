@@ -39,32 +39,27 @@ describe('getImageUrl', () => {
     expect(getImageUrl(url)).toBe(url)
   })
 
-  it('builds Cloudinary URL from filename', () => {
-    const result = getImageUrl('photo.jpg')
-    expect(result).toContain('res.cloudinary.com')
-    expect(result).toContain('cms-cars/photo')
-    expect(result).toMatch(
-      /^https:\/\/res\.cloudinary\.com\/.+\/image\/upload\/cms-cars\/photo$/
-    )
-  })
-
-  it('uses NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME when set', () => {
-    const original = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = 'mycloud'
+  it('builds R2 public URL from filename (prefixed, extension kept)', () => {
+    const original = process.env.NEXT_PUBLIC_R2_PUBLIC_URL
+    process.env.NEXT_PUBLIC_R2_PUBLIC_URL = 'https://cdn.example.com'
     try {
-      expect(getImageUrl('test.png')).toContain('res.cloudinary.com/mycloud/')
+      expect(getImageUrl('photo.jpg')).toBe(
+        'https://cdn.example.com/cms-cars/photo.jpg'
+      )
     } finally {
-      process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = original
+      process.env.NEXT_PUBLIC_R2_PUBLIC_URL = original
     }
   })
 
-  it('falls back to default cloud name when env is empty', () => {
-    const original = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = ''
+  it('trims a trailing slash from the public base URL', () => {
+    const original = process.env.NEXT_PUBLIC_R2_PUBLIC_URL
+    process.env.NEXT_PUBLIC_R2_PUBLIC_URL = 'https://cdn.example.com/'
     try {
-      expect(getImageUrl('test.png')).toContain('res.cloudinary.com/dchfrwaei/')
+      expect(getImageUrl('test.png')).toBe(
+        'https://cdn.example.com/cms-cars/test.png'
+      )
     } finally {
-      process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = original
+      process.env.NEXT_PUBLIC_R2_PUBLIC_URL = original
     }
   })
 })

@@ -25,9 +25,8 @@
   "dependencies": {
     "@payloadcms/db-postgres": "3.78.0",
     "@payloadcms/next": "^3.78.0",
-    "@payloadcms/plugin-cloud-storage": "^3.78.0",
     "@payloadcms/richtext-lexical": "^3.78.0",
-    "cloudinary": "^2.9.0",
+    "@payloadcms/storage-s3": "3.78.0",
     "clsx": "^2.1.1",
     "lucide-react": "^1.27.0",
     "maplibre-gl": "^5",

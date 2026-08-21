@@ -1,14 +1,13 @@
 import type { Car } from '../types/car'
 
-import { filenameToPublicId } from './cloudinary-path'
+import { r2PublicUrl } from './r2'
 
 /**
- * Get image URL from Cloudinary.
+ * Get the public image URL from R2.
  *
  * Pure helper (no server-only dependencies) so it can be imported from both
- * Server Components and Client Components. Uses the same filename→public_id
- * mapping as the storage adapter so the URL always points to where the file
- * actually lives.
+ * Server Components and Client Components. Uses the same filename→URL mapping as
+ * the storage plugin so the URL always points to where the file actually lives.
  *
  * @param filename - string | undefined
  */
@@ -18,8 +17,7 @@ export function getImageUrl(filename: string | undefined): string {
   // If it's already a full URL, return it
   if (filename.startsWith('http')) return filename
 
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'dchfrwaei'
-  return `https://res.cloudinary.com/${cloudName}/image/upload/${filenameToPublicId(filename)}`
+  return r2PublicUrl(filename)
 }
 
 /**
