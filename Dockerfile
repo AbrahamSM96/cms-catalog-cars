@@ -15,6 +15,17 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Public, per-client values that Next resolves at build time: next.config.ts
+# derives the next/image remotePatterns host from NEXT_PUBLIC_R2_PUBLIC_URL, and
+# the client bundle inlines both. Passing them at run time only is not enough.
+# Only NEXT_PUBLIC_* belongs here — R2 credentials stay run-time env so they are
+# never baked into an image layer.
+ARG NEXT_PUBLIC_R2_PUBLIC_URL
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_R2_PUBLIC_URL=$NEXT_PUBLIC_R2_PUBLIC_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+
 RUN bun run build
 
 # ---- runner: minimal runtime image ----

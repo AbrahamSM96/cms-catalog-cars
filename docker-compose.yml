@@ -36,6 +36,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      # NEXT_PUBLIC_* vars are baked in at build time (next.config.ts reads
+      # NEXT_PUBLIC_R2_PUBLIC_URL for next/image remotePatterns, and the client
+      # bundle inlines both), so they must be build args, not just runtime env.
+      # They are public by definition — no secret is baked into the image.
+      args:
+        NEXT_PUBLIC_R2_PUBLIC_URL: ${NEXT_PUBLIC_R2_PUBLIC_URL:?set NEXT_PUBLIC_R2_PUBLIC_URL in .env}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
     container_name: cms-cars-app
     restart: unless-stopped
     depends_on:
@@ -45,11 +52,18 @@ services:
       NODE_ENV: production
       # Inside the compose network the DB host is the service name `db`.
       DATABASE_URI: postgres://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD:-payload}@db:5432/${POSTGRES_DB:-cms_catalog_cars}
-      PAYLOAD_SECRET: ${PAYLOAD_SECRET}
-      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
-      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
-      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
-      NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?set PAYLOAD_SECRET in .env (openssl rand -base64 32)}
+      PAYLOAD_DB_PUSH: ${PAYLOAD_DB_PUSH:-true}
+      # Cloudflare R2 (S3-compatible). Server-side only — kept out of the image
+      # and injected at run time so credentials never land in a layer.
+      R2_ENDPOINT: ${R2_ENDPOINT:?set R2_ENDPOINT in .env}
+      R2_BUCKET: ${R2_BUCKET:?set R2_BUCKET in .env}
+      R2_ACCESS_KEY_ID: ${R2_ACCESS_KEY_ID:?set R2_ACCESS_KEY_ID in .env}
+      R2_SECRET_ACCESS_KEY: ${R2_SECRET_ACCESS_KEY:?set R2_SECRET_ACCESS_KEY in .env}
+      # Also needed at run time: r2PublicUrl() and the SEO helpers read these on
+      # the server, where build-time inlining does not apply.
+      NEXT_PUBLIC_R2_PUBLIC_URL: ${NEXT_PUBLIC_R2_PUBLIC_URL}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
     ports:
       - '3000:3000'
 
