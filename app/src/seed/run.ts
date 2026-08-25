@@ -3,8 +3,8 @@ import type { Payload } from 'payload'
 
 import config from '../payload.config'
 
+import { type CatalogVersion, vehicleCatalog } from './vehicleCatalog'
 import { colorsList } from './colors'
-import { vehicleCatalog } from './vehicleCatalog'
 
 /**
  * Reference-data seed, run as an explicit provisioning step.
@@ -25,6 +25,59 @@ import { vehicleCatalog } from './vehicleCatalog'
  * created, so an interrupted run resumes instead of duplicating or, worse,
  * skipping the rest because the collection was no longer empty.
  */
+
+/**
+ * How many documents to create at once.
+ *
+ * The seed is bound by network round-trips, not by Postgres: against a managed
+ * database each `payload.create` costs a few hundred milliseconds of latency, so
+ * doing ~10k of them one after another took about 40 minutes. Running a fixed
+ * number in flight collapses that to minutes.
+ *
+ * Kept well below node-postgres' default pool size of 10. Matching the pool
+ * exactly starves it: every worker holds a connection, anything needing a second
+ * one waits for a connection that cannot be released, and the server eventually
+ * kills the stalled sessions (Postgres 25P03, idle-in-transaction timeout).
+ */
+const CONCURRENCY = 5
+
+/**
+ * Reference rows are independent, and the seed already resumes from whatever is
+ * missing, so per-document transactions buy nothing here — they only hold a
+ * pooled connection open for the length of each insert.
+ */
+const CREATE_OPTIONS = { disableTransaction: true } as const
+
+/**
+ * Run `task` over every item with at most CONCURRENCY promises in flight.
+ *
+ * Workers pull from a shared cursor rather than splitting the list up front, so
+ * a slow item does not leave the other workers idle.
+ *
+ * @param items - Items to process.
+ * @param task - Work to perform for one item.
+ */
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  task: (item: T) => Promise<R>
+): Promise<R[]> {
+  const results: R[] = new Array<R>(items.length)
+  let cursor = 0
+
+  const workers = Array.from(
+    { length: Math.min(CONCURRENCY, items.length) },
+    async () => {
+      while (cursor < items.length) {
+        const index = cursor++
+        results[index] = await task(items[index] as T)
+      }
+    }
+  )
+
+  await Promise.all(workers)
+
+  return results
+}
 
 /**
  * Narrow a Payload document id to a number.
@@ -60,7 +113,7 @@ async function seedColors(payload: Payload): Promise<number> {
   let created = 0
   for (const color of colorsList) {
     if (known.has(color.name)) continue
-    await payload.create({ collection: 'colors', data: color })
+    await payload.create({ ...CREATE_OPTIONS, collection: 'colors', data: color })
     created++
   }
 
@@ -104,50 +157,75 @@ async function seedVehicleCatalog(
     )
   )
 
-  const counts = { brands: 0, carModels: 0, carVersions: 0 }
+  // Three phases, because each level needs the ids of the one above it: models
+  // reference a brand, versions reference a model. Within a phase the rows are
+  // independent, so they go out concurrently; across phases they cannot.
 
+  // Phase 1 — brands.
+  const missingBrands = vehicleCatalog.filter(
+    (brand) => !brandIds.has(brand.slug)
+  )
+  const newBrands = await mapWithConcurrency(missingBrands, async (brand) => {
+    const doc = await payload.create({
+      ...CREATE_OPTIONS,
+      collection: 'brands',
+      data: { name: brand.name, slug: brand.slug },
+    })
+
+    return { id: toId(doc.id), slug: brand.slug }
+  })
+  for (const brand of newBrands) brandIds.set(brand.slug, brand.id)
+
+  // Phase 2 — models, now that every brand id is known.
+  const missingModels: { brandId: number; key: string; name: string }[] = []
   for (const brand of vehicleCatalog) {
-    let brandId = brandIds.get(brand.slug)
-    if (!brandId) {
-      const doc = await payload.create({
-        collection: 'brands',
-        data: { name: brand.name, slug: brand.slug },
-      })
-      brandId = toId(doc.id)
-      brandIds.set(brand.slug, brandId)
-      counts.brands++
-    }
-
+    const brandId = brandIds.get(brand.slug) as number
     for (const model of brand.models) {
-      const modelKey = `${brandId}::${model.name}`
-      let modelId = modelIds.get(modelKey)
-      if (!modelId) {
-        const doc = await payload.create({
-          collection: 'car-models',
-          data: { brand: brandId, name: model.name },
-        })
-        modelId = toId(doc.id)
-        modelIds.set(modelKey, modelId)
-        counts.carModels++
-      }
+      const key = `${brandId}::${model.name}`
+      if (!modelIds.has(key)) missingModels.push({ brandId, key, name: model.name })
+    }
+  }
+  const newModels = await mapWithConcurrency(missingModels, async (model) => {
+    const doc = await payload.create({
+      ...CREATE_OPTIONS,
+      collection: 'car-models',
+      data: { brand: model.brandId, name: model.name },
+    })
 
+    return { id: toId(doc.id), key: model.key }
+  })
+  for (const model of newModels) modelIds.set(model.key, model.id)
+
+  // Phase 3 — versions, the bulk of the work (~8.7k rows).
+  const missingVersions: { modelId: number; version: CatalogVersion }[] = []
+  for (const brand of vehicleCatalog) {
+    const brandId = brandIds.get(brand.slug) as number
+    for (const model of brand.models) {
+      const modelId = modelIds.get(`${brandId}::${model.name}`) as number
       for (const version of model.versions) {
         if (versionKeys.has(`${modelId}::${version.clave}`)) continue
-        await payload.create({
-          collection: 'car-versions',
-          data: {
-            clave: version.clave,
-            description: version.description,
-            model: modelId,
-            years: version.years,
-          },
-        })
-        counts.carVersions++
+        missingVersions.push({ modelId, version })
       }
     }
   }
+  await mapWithConcurrency(missingVersions, ({ modelId, version }) =>
+    payload.create({
+      ...CREATE_OPTIONS,
+      collection: 'car-versions',
+      data: {
+        clave: version.clave,
+        description: version.description,
+        model: modelId,
+        years: version.years,
+      },
+    })
+  )
 
-  return counts
+  return {
+    brands: missingBrands.length,
+    carModels: missingModels.length,
+    carVersions: missingVersions.length,
+  }
 }
 
 /**
@@ -167,8 +245,8 @@ const counts = await seed()
 // eslint-disable-next-line no-console
 console.log(
   `Seed complete — created ${counts.colors} colors, ${counts.brands} brands, ` +
-    `${counts.carModels} models, ${counts.carVersions} versions ` +
-    `(existing rows left untouched).`
+  `${counts.carModels} models, ${counts.carVersions} versions ` +
+  `(existing rows left untouched).`
 )
 
 process.exit(0)
