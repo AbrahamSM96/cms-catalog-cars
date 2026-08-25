@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import NextTopLoader from 'nextjs-toploader'
 
 import '../globals.css'
-import { Footer } from '@/components/frontend/Footer'
 import { getContact, getSiteSettings } from '@/lib/payload-client'
+import { Footer } from '@/components/frontend/Footer'
 import { inter } from '@/commons/inter'
 import { Navbar } from '@/components/frontend/Navbar'
 import { poppins } from '@/commons/poppins'
@@ -122,9 +122,9 @@ export default async function RootLayout({
           speed={200}
           zIndex={9999}
         />
-        <Navbar brandName={site.name} whatsapp={contact?.whatsapp} />
+        <Navbar site={site} whatsapp={contact?.whatsapp} />
         {children}
-        <Footer site={site} contact={contact} />
+        <Footer contact={contact} site={site} />
       </body>
     </html>
   )

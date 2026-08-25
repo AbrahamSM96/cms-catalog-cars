@@ -16,6 +16,10 @@ export interface SiteConfig {
   description: string
   /** Public URL of the favicon, or undefined to use the static default. */
   faviconUrl?: string
+  /** Alt text for the brand logo, falling back to the brand name. */
+  logoAlt?: string
+  /** Public URL of the brand logo, or undefined to use the built-in icon. */
+  logoUrl?: string
   /** Full brand name, shown in the navbar wordmark, footer and SEO. */
   name: string
   /** Public URL of the Open Graph / social sharing image. */
@@ -33,6 +37,8 @@ export interface SiteConfig {
     /** Title template for inner pages, e.g. `%s | Brand`. */
     titleTemplate: string
   }
+  /** Whether the brand name is shown next to the logo. */
+  showName: boolean
   /** Short slogan shown under the brand in the footer. */
   tagline: string
   /** Brand colours, injected as CSS variables by the root layout. */
@@ -65,6 +71,7 @@ export const siteConfig: SiteConfig = {
     titleDefault: 'AutoCatálogo - Autos Seminuevos de Calidad',
     titleTemplate: '%s | AutoCatálogo',
   },
+  showName: true,
   tagline: 'Autos seminuevos de calidad',
   theme: {
     accent: '#276CF5',
@@ -87,6 +94,19 @@ function mediaUrl(media?: Media | string | number): string | undefined {
 }
 
 /**
+ * mediaAlt — read the alt text of an upload field when it is populated.
+ *
+ * @param media - upload value from the CMS (populated Media, id or undefined)
+ */
+function mediaAlt(media?: Media | string | number): string | undefined {
+  if (!media || typeof media !== 'object') {
+    return undefined
+  }
+
+  return media.alt
+}
+
+/**
  * resolveSiteConfig — merge the CMS `site-settings` global over the static
  * defaults, so a missing/empty field always falls back to a sane value.
  *
@@ -104,6 +124,8 @@ export function resolveSiteConfig(settings: SiteSettings | null): SiteConfig {
   return {
     description: settings.brand?.description || siteConfig.description,
     faviconUrl: mediaUrl(settings.media?.favicon),
+    logoAlt: mediaAlt(settings.media?.logo),
+    logoUrl: mediaUrl(settings.media?.logo),
     name: settings.brand?.name || siteConfig.name,
     ogImageUrl: mediaUrl(settings.media?.ogImage),
     seo: {
@@ -115,6 +137,7 @@ export function resolveSiteConfig(settings: SiteSettings | null): SiteConfig {
       titleTemplate:
         settings.seo?.titleTemplate || siteConfig.seo.titleTemplate,
     },
+    showName: settings.brand?.showName ?? siteConfig.showName,
     tagline: settings.brand?.tagline || siteConfig.tagline,
     theme: {
       accent: settings.theme?.accent || siteConfig.theme.accent,

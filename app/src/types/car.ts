@@ -102,15 +102,15 @@ export interface Car {
   horsepower?: number
   vehicleType?: 'car' | 'truck'
   bodyType?:
-    | 'coupe'
-    | 'truck'
-    | 'sedan'
-    | 'hatchback'
-    | 'suv'
-    | 'convertible'
-    | 'wagon'
-    | 'minivan'
-    | 'small-car'
+  | 'coupe'
+  | 'truck'
+  | 'sedan'
+  | 'hatchback'
+  | 'suv'
+  | 'convertible'
+  | 'wagon'
+  | 'minivan'
+  | 'small-car'
   condition?: 'excellent' | 'very-good' | 'good' | 'fair' | 'poor'
   fuelType?: 'gasoline' | 'diesel' | 'electric' | 'hybrid' | 'plug-in-hybrid'
 
@@ -207,6 +207,7 @@ export interface SiteSettings {
     name?: string
     tagline?: string
     description?: string
+    showName?: boolean
   }
   seo?: {
     titleDefault?: string
@@ -217,6 +218,7 @@ export interface SiteSettings {
   }
   media?: {
     favicon?: Media | string | number
+    logo?: Media | string | number
     ogImage?: Media | string | number
   }
   theme?: {

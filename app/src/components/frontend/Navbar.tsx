@@ -3,6 +3,10 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
+import { BrandLogo } from '@/components/frontend/BrandLogo'
+import type { SiteConfig } from '@/config/site'
+
+
 const LINKS = [
   { href: '/#featured', label: 'Destacados' },
   { href: '/catalogo', label: 'Inventario' },
@@ -14,14 +18,14 @@ const LINKS = [
  * Navbar 
  *
  * @param props - Component props.
- * @param props.brandName - The brand name shown in the wordmark.
+ * @param props.site - Resolved per-client site configuration (logo, brand).
  * @param props.whatsapp - The WhatsApp number to use in the CTA button.
  */
 export function Navbar({
-  brandName,
+  site,
   whatsapp,
 }: {
-  brandName: string
+  site: SiteConfig
   whatsapp?: string
 }): React.JSX.Element {
   const [scrolled, setScrolled] = useState(false)
@@ -48,31 +52,7 @@ export function Navbar({
     >
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link
-          aria-label="Inicio"
-          className="group flex items-center gap-2.5"
-          href="/"
-        >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-white transition-colors group-hover:bg-accent-600">
-            <svg
-              aria-hidden="true"
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M8 17H6a2 2 0 01-2-2v-3.28a2 2 0 01.12-.68l1.7-4.53A2 2 0 017.7 5.2h8.6a2 2 0 011.88 1.31l1.7 4.53a2 2 0 01.12.68V15a2 2 0 01-2 2h-2M9 17h6M9 17a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm9 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            </svg>
-          </span>
-          <span className="text-lg font-bold tracking-tight text-slate-900">
-            {brandName}
-          </span>
-        </Link>
+        <BrandLogo priority site={site} />
 
         {/* Desktop links */}
         <div className="hidden items-center gap-1 md:flex">

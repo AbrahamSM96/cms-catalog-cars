@@ -1,7 +1,8 @@
 import Link from 'next/link'
 
-import type { SiteConfig } from '@/config/site'
+import { BrandLogo } from '@/components/frontend/BrandLogo'
 import type { Contact } from '@/types/car'
+import type { SiteConfig } from '@/config/site'
 
 interface FooterProps {
   contact: Contact | null
@@ -73,31 +74,7 @@ export function Footer({ contact, site }: FooterProps): React.JSX.Element {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>
-            <Link
-              aria-label="Inicio"
-              className="group inline-flex items-center gap-2.5"
-              href="/"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-white transition-colors group-hover:bg-accent-600">
-                <svg
-                  aria-hidden="true"
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M8 17H6a2 2 0 01-2-2v-3.28a2 2 0 01.12-.68l1.7-4.53A2 2 0 017.7 5.2h8.6a2 2 0 011.88 1.31l1.7 4.53a2 2 0 01.12.68V15a2 2 0 01-2 2h-2M9 17h6M9 17a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm9 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                  />
-                </svg>
-              </span>
-              <span className="text-lg font-bold tracking-tight text-slate-900">
-                {site.name}
-              </span>
-            </Link>
+            <BrandLogo site={site} />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-600">
               {site.description}
             </p>

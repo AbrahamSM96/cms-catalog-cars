@@ -7,6 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "analyze": "next experimental-analyze",
     "clean": "rm -rf node_modules .next coverage tsconfig.tsbuildinfo .turbo .swc && bun install",
     "reinstall:hard": "bun run clean && rm -f bun.lock && bun pm cache rm && bun install",
     "db:up": "docker compose up -d db",

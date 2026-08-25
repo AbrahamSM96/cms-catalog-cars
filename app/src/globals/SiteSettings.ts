@@ -50,6 +50,16 @@ export const SiteSettings: GlobalConfig = {
           name: 'description',
           type: 'textarea',
         },
+        {
+          admin: {
+            description:
+              'Muestra el nombre de la marca junto al logo en la barra superior y el pie de página. Desactívalo si tu logo ya incluye el nombre.',
+          },
+          defaultValue: true,
+          label: 'Mostrar el nombre junto al logo',
+          name: 'showName',
+          type: 'checkbox',
+        },
       ],
       label: 'Marca',
       name: 'brand',
@@ -120,9 +130,19 @@ export const SiteSettings: GlobalConfig = {
     {
       admin: {
         description:
-          'Imágenes de marca. El favicon es el ícono de la pestaña; la imagen para compartir aparece al pegar el enlace en redes.',
+          'Imágenes de marca. El logo se muestra en la barra superior y el pie de página; el favicon es el ícono de la pestaña; la imagen para compartir aparece al pegar el enlace en redes.',
       },
       fields: [
+        {
+          admin: {
+            description:
+              'Logo de la marca (SVG, PNG o WebP). Se muestra a una altura de 36 px, así que usa un archivo con fondo transparente. Si lo dejas vacío se usa el ícono por defecto.',
+          },
+          label: 'Logo',
+          name: 'logo',
+          relationTo: 'media',
+          type: 'upload',
+        },
         {
           admin: {
             description: 'Ícono de la pestaña del navegador (PNG o ICO).',
