@@ -27,6 +27,28 @@ export const importMap = {
   baseDir: path.resolve(dirname),
 }
 
+/**
+ * Resolve which database this process talks to.
+ *
+ * `DATABASE_URI` wins whenever it is set: that is what Docker Compose and the
+ * hosting provider inject into the container, and it has to stay authoritative
+ * there.
+ *
+ * Locally it is absent, so NODE_ENV picks the target instead — DATABASE_URI_DEV
+ * for `bun dev`, DATABASE_URI_PROD for the production-mode commands (`migrate`,
+ * `seed`, `start`). Splitting them is what keeps development off the live
+ * database: in development Payload pushes schema changes on boot, so a dev
+ * server pointed at production would rewrite its schema behind the migrations'
+ * back.
+ */
+function databaseUri(): string | undefined {
+  if (process.env.DATABASE_URI) return process.env.DATABASE_URI
+
+  return process.env.NODE_ENV === 'production'
+    ? process.env.DATABASE_URI_PROD
+    : process.env.DATABASE_URI_DEV
+}
+
 export default buildConfig({
   admin: {
     importMap,
@@ -44,11 +66,11 @@ export default buildConfig({
   ],
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI,
+      connectionString: databaseUri(),
     },
-    // v1 ships with schema push everywhere: Payload creates/updates the schema
-    // on boot (no migration files needed). Set PAYLOAD_DB_PUSH=false per deploy
-    // once versioned migrations exist (Fase 1) to switch to `payload migrate`.
+    // Development only: the adapter itself ignores this in production, where the
+    // schema belongs to the migrations in ./migrations. Set PAYLOAD_DB_PUSH=false
+    // to develop against a schema you do not want rewritten on boot.
     push: process.env.PAYLOAD_DB_PUSH !== 'false',
   }),
   editor: lexicalEditor(),
