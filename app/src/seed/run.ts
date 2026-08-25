@@ -26,6 +26,20 @@ import { vehicleCatalog } from './vehicleCatalog'
  * skipping the rest because the collection was no longer empty.
  */
 
+/**
+ * Narrow a Payload document id to a number.
+ *
+ * Payload types ids as `string | number` because it supports both Mongo and SQL
+ * adapters. This project runs on Postgres, where every id column is a `serial`,
+ * so the string half never occurs at runtime — but the compiler still sees it
+ * and rejects assigning a raw `doc.id` into the numeric maps below.
+ *
+ * @param id - Document id as Payload reports it.
+ */
+function toId(id: number | string): number {
+  return typeof id === 'number' ? id : Number(id)
+}
+
 /** Number of documents created, per collection. */
 interface SeedCounts {
   brands: number
@@ -73,20 +87,20 @@ async function seedVehicleCatalog(
 
   /** slug -> brand id */
   const brandIds = new Map<string, number>(
-    existingBrands.docs.map((doc) => [doc.slug, doc.id])
+    existingBrands.docs.map((doc) => [doc.slug, toId(doc.id)])
   )
   /** `${brandId}::${modelName}` -> model id */
   const modelIds = new Map<string, number>(
     existingModels.docs.map((doc) => [
-      `${typeof doc.brand === 'object' ? doc.brand.id : doc.brand}::${doc.name}`,
-      doc.id,
+      `${toId(typeof doc.brand === 'object' ? doc.brand.id : doc.brand)}::${doc.name}`,
+      toId(doc.id),
     ])
   )
   /** `${modelId}::${clave}` of every version already stored */
   const versionKeys = new Set(
     existingVersions.docs.map(
       (doc) =>
-        `${typeof doc.model === 'object' ? doc.model.id : doc.model}::${doc.clave}`
+        `${toId(typeof doc.model === 'object' ? doc.model.id : doc.model)}::${doc.clave}`
     )
   )
 
@@ -99,7 +113,7 @@ async function seedVehicleCatalog(
         collection: 'brands',
         data: { name: brand.name, slug: brand.slug },
       })
-      brandId = doc.id
+      brandId = toId(doc.id)
       brandIds.set(brand.slug, brandId)
       counts.brands++
     }
@@ -112,7 +126,7 @@ async function seedVehicleCatalog(
           collection: 'car-models',
           data: { brand: brandId, name: model.name },
         })
-        modelId = doc.id
+        modelId = toId(doc.id)
         modelIds.set(modelKey, modelId)
         counts.carModels++
       }
