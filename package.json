@@ -28,6 +28,7 @@
     "test:ci": "bun run lint && bun run test"
   },
   "dependencies": {
+    "@maplibre/maplibre-gl-style-spec": "26.4.0",
     "@payloadcms/db-postgres": "3.78.0",
     "@payloadcms/next": "3.78.0",
     "@payloadcms/richtext-lexical": "3.78.0",

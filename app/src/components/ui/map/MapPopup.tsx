@@ -1,9 +1,9 @@
 'use client'
 
+import * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useMemo, useRef } from 'react'
 import { clsx } from 'clsx'
 import { createPortal } from 'react-dom'
-import MapLibreGL from 'maplibre-gl'
 
 import type { MapPopupProps } from './types'
 import { PopupCloseButton } from './PopupCloseButton'

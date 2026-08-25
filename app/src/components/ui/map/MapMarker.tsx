@@ -1,7 +1,7 @@
 'use client'
 
+import * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useMemo, useRef } from 'react'
-import MapLibreGL from 'maplibre-gl'
 
 import { MarkerContext, useMap } from './context'
 import type { MapMarkerProps } from './types'

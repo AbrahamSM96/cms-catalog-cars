@@ -1,7 +1,7 @@
 'use client'
 
+import type * as MapLibreGL from 'maplibre-gl'
 import { createContext, useContext } from 'react'
-import type MapLibreGL from 'maplibre-gl'
 
 import type { Theme } from './theme'
 

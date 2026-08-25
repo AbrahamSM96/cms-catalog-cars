@@ -1,7 +1,7 @@
 'use client'
 
+import type * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useId } from 'react'
-import type MapLibreGL from 'maplibre-gl'
 
 import type { MapRouteProps } from './types'
 import { useMap } from './context'

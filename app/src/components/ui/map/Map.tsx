@@ -1,6 +1,7 @@
 'use client'
 
 import 'maplibre-gl/dist/maplibre-gl.css'
+import * as MapLibreGL from 'maplibre-gl'
 import {
   forwardRef,
   useEffect,
@@ -10,7 +11,7 @@ import {
   useState,
 } from 'react'
 import { clsx } from 'clsx'
-import MapLibreGL from 'maplibre-gl'
+import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec'
 
 import type { MapProps, MapRef, MapStyleOption, MapViewport } from './types'
 import { DefaultLoader } from './DefaultLoader'
@@ -28,7 +29,7 @@ const defaultStyles = {
 // `blank` prop:
 //   <Map blank>...</Map>
 // The transparent background lets the themed container show through.
-const blankMapStyle: MapLibreGL.StyleSpecification = {
+const blankMapStyle: StyleSpecification = {
   layers: [
     {
       id: 'background',

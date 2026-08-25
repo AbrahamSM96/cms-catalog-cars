@@ -1,6 +1,12 @@
 import type * as GeoJSON from 'geojson'
+import type * as MapLibreGL from 'maplibre-gl'
+import type {
+  FillLayerSpecification,
+  LineLayerSpecification,
+  ProjectionSpecification,
+  StyleSpecification,
+} from '@maplibre/maplibre-gl-style-spec'
 import type { MarkerOptions, PopupOptions } from 'maplibre-gl'
-import type MapLibreGL from 'maplibre-gl'
 import type { ReactNode } from 'react'
 
 import type { Theme } from './theme'
@@ -17,7 +23,7 @@ type MapViewport = {
   pitch: number
 }
 
-type MapStyleOption = string | MapLibreGL.StyleSpecification
+type MapStyleOption = string | StyleSpecification
 
 type MapRef = MapLibreGL.Map
 
@@ -44,7 +50,7 @@ type MapProps = {
    */
   blank?: boolean
   /** Map projection type. Use `{ type: "globe" }` for 3D globe view. */
-  projection?: MapLibreGL.ProjectionSpecification
+  projection?: ProjectionSpecification
   /**
    * Controlled viewport. When provided with onViewportChange,
    * the map becomes controlled and viewport is driven by this prop.
@@ -176,8 +182,8 @@ type MapGeoJSONData<
   | GeoJSON.Geometry
   | string
 
-type MapFillPaint = NonNullable<MapLibreGL.FillLayerSpecification['paint']>
-type MapLinePaint = NonNullable<MapLibreGL.LineLayerSpecification['paint']>
+type MapFillPaint = NonNullable<FillLayerSpecification['paint']>
+type MapLinePaint = NonNullable<LineLayerSpecification['paint']>
 
 /** A rendered feature with strongly-typed `properties`. */
 type MapGeoJSONFeature<
@@ -260,8 +266,8 @@ type MapArcEvent<T extends MapArcDatum = MapArcDatum> = {
   originalEvent: MapLibreGL.MapMouseEvent
 }
 
-type MapArcLinePaint = NonNullable<MapLibreGL.LineLayerSpecification['paint']>
-type MapArcLineLayout = NonNullable<MapLibreGL.LineLayerSpecification['layout']>
+type MapArcLinePaint = NonNullable<LineLayerSpecification['paint']>
+type MapArcLineLayout = NonNullable<LineLayerSpecification['layout']>
 
 type MapArcProps<T extends MapArcDatum = MapArcDatum> = {
   /** Array of arcs to render. Each arc must have a unique `id`. */

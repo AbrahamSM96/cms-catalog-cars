@@ -1,9 +1,9 @@
 'use client'
 
+import * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useMemo } from 'react'
 import { clsx } from 'clsx'
 import { createPortal } from 'react-dom'
-import MapLibreGL from 'maplibre-gl'
 
 import type { MarkerTooltipProps } from './types'
 import { useMarkerContext } from './context'

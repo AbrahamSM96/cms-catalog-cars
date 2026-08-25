@@ -1,8 +1,8 @@
 'use client'
 
 import type * as GeoJSON from 'geojson'
+import type * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useId, useMemo, useRef } from 'react'
-import type MapLibreGL from 'maplibre-gl'
 
 import type {
   MapFillPaint,
