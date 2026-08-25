@@ -28,6 +28,14 @@ import { parseCarSlug } from './car-slug'
  *
  * For building image URLs from a media filename, use getImageUrl from
  * "@/lib/images" (client-safe, importable from Client Components).
+ *
+ * Errors are logged and rethrown, never converted into an empty result. A query
+ * that succeeds with zero rows means the client has not added that content yet
+ * and legitimately returns [] or null; a query that throws means the database is
+ * unreachable or the schema is missing. Returning [] for the second case makes a
+ * broken deploy look like a brand-new one — the page renders, empty, and nothing
+ * surfaces the failure. Letting it throw hands the error to Next's error
+ * boundary so the deploy fails loudly instead.
  */
 function payloadClient(): Promise<Payload> {
   return getPayload({ config })
@@ -112,7 +120,7 @@ export async function getFeaturedCars(): Promise<Car[]> {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching featured cars:', error)
-    return []
+    throw error
   }
 }
 
@@ -126,14 +134,16 @@ export async function getAllCars(): Promise<Car[]> {
     const result = await payload.find({
       collection: 'cars',
       depth: 2,
-      limit: 100,
+      // 0 disables the page limit: the sitemap must list every car, and a fixed
+      // limit would silently drop the rest once the catalog outgrows it.
+      limit: 0,
     })
 
     return result.docs as unknown as Car[]
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching all cars:', error)
-    return []
+    throw error
   }
 }
 
@@ -191,7 +201,7 @@ export async function getBrands(): Promise<Brand[]> {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching brands:', error)
-    return []
+    throw error
   }
 }
 
@@ -213,13 +223,14 @@ export async function getDealerships(): Promise<Dealership[]> {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching dealerships:', error)
-    return []
+    throw error
   }
 }
 
 /**
  * Fetch the Homepage global (hero carousel slides + hero text).
- * Returns null on failure so the Hero can fall back to its defaults.
+ * Returns null when the client has not configured it yet, so the Hero can fall
+ * back to its defaults. A database failure throws rather than returning null.
  */
 export async function getHomepage(): Promise<Homepage | null> {
   try {
@@ -234,7 +245,7 @@ export async function getHomepage(): Promise<Homepage | null> {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching homepage:', error)
-    return null
+    throw error
   }
 }
 
@@ -254,7 +265,7 @@ export async function getContact(): Promise<Contact | null> {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching contact:', error)
-    return null
+    throw error
   }
 }
 
@@ -275,6 +286,6 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching site settings:', error)
-    return null
+    throw error
   }
 }

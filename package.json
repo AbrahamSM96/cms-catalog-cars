@@ -2,6 +2,7 @@
   "name": "cms-catalog-cars",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,6 +14,7 @@
     "docker:app": "docker compose --profile app up --build",
     "migrate:create": "payload migrate:create",
     "migrate": "NODE_ENV=production payload migrate",
+    "seed": "NODE_ENV=production payload run app/src/seed/run.ts",
     "lint": "oxlint . && bunx eslint . && bunx tsc --noEmit",
     "lint:fix": "oxlint --fix . && bunx eslint . --fix",
     "format": "oxfmt --write .",

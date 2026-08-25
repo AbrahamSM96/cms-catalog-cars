@@ -35,8 +35,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — one per client / per deploy, each holding that client's database
+# password, Payload secret and R2 keys. Ignore every variant, then re-include the
+# committed template. Without the wildcard a file like `.env.cliente1` would be
+# tracked and its credentials pushed to the remote.
 .env
+.env.*
+!.env.example
 
 # vercel
 .vercel

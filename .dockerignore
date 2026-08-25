@@ -2,6 +2,11 @@ node_modules
 .next
 .git
 .gitignore
+# Dangling symlink to the graphify workspace: `COPY . .` would carry it into the
+# image and Next's file scan fails with ENOENT when it stats the broken target.
+graphify-out
+coverage
+tsconfig.tsbuildinfo
 *.md
 docs
 .env

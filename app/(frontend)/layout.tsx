@@ -12,6 +12,18 @@ import { resolveSiteConfig } from '@/config/site'
 import { SITE_URL } from '@/lib/seo'
 
 /**
+ * Every page under this layout reads from the CMS — the layout itself pulls the
+ * brand, navigation and footer from the `site-settings` and `contact` globals,
+ * and the pages below add cars, brands and dealerships on top. Prerendering them
+ * would bake whatever the database held at build time into the deploy, so an
+ * edit in the admin would not appear until the next rebuild. Worse, production
+ * images are built without database access, which bakes empty pages.
+ *
+ * Applied on the layout so it covers the whole route group in one place.
+ */
+export const dynamic = 'force-dynamic'
+
+/**
  * generateMetadata — build the site metadata from the CMS `site-settings`
  * global, falling back to the static defaults when it is empty.
  */

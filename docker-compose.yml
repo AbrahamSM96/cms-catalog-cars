@@ -31,6 +31,55 @@ services:
       timeout: 5s
       retries: 10
 
+  # One-shot schema migration, run to completion before the app starts.
+  #
+  # The postgres adapter only pushes the schema when NODE_ENV !== 'production'
+  # (see @payloadcms/db-postgres connect.js), so a production deploy against a
+  # fresh client database creates no tables at all unless migrations run first.
+  # It uses the dedicated `migrator` stage: the runtime image ships only the Next
+  # standalone bundle, which has neither the Payload CLI nor ./migrations.
+  migrate:
+    profiles: ['app']
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrator
+    container_name: cms-cars-migrate
+    restart: 'no'
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URI: postgres://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD:-payload}@db:5432/${POSTGRES_DB:-cms_catalog_cars}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?set PAYLOAD_SECRET in .env (openssl rand -base64 32)}
+
+  # One-shot reference-data seed (colours + the brand/model/version catalog the
+  # admin's pickers read from), run after the migrations and before the app.
+  #
+  # This used to happen inside the config's `onInit`, which put ~43s of inserts
+  # in the first request and let two concurrent requests seed at once. It is
+  # idempotent — a second run creates nothing and takes a few seconds — so it is
+  # safe on every `up`, and a fresh client is fully provisioned by one command.
+  seed:
+    profiles: ['app']
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: migrator
+    container_name: cms-cars-seed
+    # The migrator stage is Node-based (see Dockerfile), so this mirrors the
+    # `seed` package script without going through bun.
+    command: ['node', 'node_modules/payload/bin.js', 'run', 'app/src/seed/run.ts']
+    restart: 'no'
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: production
+      DATABASE_URI: postgres://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD:-payload}@db:5432/${POSTGRES_DB:-cms_catalog_cars}
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?set PAYLOAD_SECRET in .env (openssl rand -base64 32)}
+
   app:
     profiles: ['app']
     build:
@@ -48,12 +97,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      seed:
+        condition: service_completed_successfully
     environment:
       NODE_ENV: production
       # Inside the compose network the DB host is the service name `db`.
       DATABASE_URI: postgres://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD:-payload}@db:5432/${POSTGRES_DB:-cms_catalog_cars}
       PAYLOAD_SECRET: ${PAYLOAD_SECRET:?set PAYLOAD_SECRET in .env (openssl rand -base64 32)}
-      PAYLOAD_DB_PUSH: ${PAYLOAD_DB_PUSH:-true}
+      # Migrations own the schema here, never push. (NODE_ENV=production already
+      # disables push; this makes the intent explicit rather than incidental.)
+      PAYLOAD_DB_PUSH: 'false'
       # Cloudflare R2 (S3-compatible). Server-side only — kept out of the image
       # and injected at run time so credentials never land in a layer.
       R2_ENDPOINT: ${R2_ENDPOINT:?set R2_ENDPOINT in .env}
