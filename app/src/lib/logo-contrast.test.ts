@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import sharp from 'sharp'
 
-import { needsDarkPlateForBytes } from '@/lib/logo-contrast'
+import { logoNeedsDarkPlate, needsDarkPlateForBytes } from '@/lib/logo-contrast'
 
 /**
  * Render a solid mark of the given colour on a transparent canvas — the shape
@@ -36,6 +36,12 @@ describe('needsDarkPlateForBytes', () => {
     expect(await needsDarkPlateForBytes(await logo('#0f172a'))).toBe(false)
   })
 
+  // Channels at or below 0.04045 of full scale take the linear branch of the
+  // WCAG luminance formula instead of the gamma one.
+  it('leaves a pure black logo alone', async () => {
+    expect(await needsDarkPlateForBytes(await logo('#000000'))).toBe(false)
+  })
+
   it('ignores transparent padding instead of reading it as dark', async () => {
     const padded = await sharp({
       create: {
@@ -65,5 +71,69 @@ describe('needsDarkPlateForBytes', () => {
       .toBuffer()
 
     expect(await needsDarkPlateForBytes(blank)).toBe(false)
+  })
+})
+
+/**
+ * Stub `fetch` with a canned response and hand back the mock so a test can
+ * assert how many times the logo was actually downloaded.
+ *
+ * @param response - value the stubbed fetch resolves to.
+ */
+function stubFetch(response: unknown): ReturnType<typeof vi.fn> {
+  const fetchMock = vi.fn().mockResolvedValue(response)
+  vi.stubGlobal('fetch', fetchMock)
+
+  return fetchMock
+}
+
+/**
+ * Build an ok Response-alike carrying the given image bytes.
+ *
+ * @param bytes - raw image bytes the response should expose.
+ */
+function okResponse(bytes: Buffer): unknown {
+  return { arrayBuffer: () => Promise.resolve(bytes), ok: true }
+}
+
+describe('logoNeedsDarkPlate', () => {
+  it('returns false when no logo is uploaded', async () => {
+    const fetchMock = stubFetch(okResponse(await logo('#ffffff')))
+
+    expect(await logoNeedsDarkPlate(undefined)).toBe(false)
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('asks for a plate when the fetched logo is too light', async () => {
+    stubFetch(okResponse(await logo('#ffffff')))
+
+    expect(await logoNeedsDarkPlate('https://cdn.test/white.png')).toBe(true)
+  })
+
+  it('leaves a dark fetched logo alone', async () => {
+    stubFetch(okResponse(await logo('#0f172a')))
+
+    expect(await logoNeedsDarkPlate('https://cdn.test/dark.png')).toBe(false)
+  })
+
+  it('caches the verdict per URL instead of refetching', async () => {
+    const fetchMock = stubFetch(okResponse(await logo('#ffffff')))
+    const url = 'https://cdn.test/cached.png'
+
+    expect(await logoNeedsDarkPlate(url)).toBe(true)
+    expect(await logoNeedsDarkPlate(url)).toBe(true)
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('assumes no plate when the logo cannot be downloaded', async () => {
+    stubFetch({ ok: false })
+
+    expect(await logoNeedsDarkPlate('https://cdn.test/404.png')).toBe(false)
+  })
+
+  it('assumes no plate when the request throws', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')))
+
+    expect(await logoNeedsDarkPlate('https://cdn.test/offline.png')).toBe(false)
   })
 })

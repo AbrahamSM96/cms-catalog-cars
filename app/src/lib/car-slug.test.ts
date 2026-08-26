@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { Car } from '../types/car'
 
-import { buildCarSlug, parseCarSlug } from './car-slug'
+import { buildCarImageSlug, buildCarSlug, parseCarSlug } from './car-slug'
 
 /**
  * Minimal car fixture.
@@ -75,6 +75,34 @@ describe('buildCarSlug', () => {
   it('handles undefined version in slugify', () => {
     const car = makeCar({ version: undefined as unknown as string })
     expect(buildCarSlug(car)).toBe('nissan-versa-2021-42')
+  })
+})
+
+describe('buildCarImageSlug', () => {
+  it('omits the version so filenames stay short', () => {
+    const car = makeCar()
+    expect(buildCarImageSlug(car)).toBe('nissan-versa-2021-42')
+  })
+
+  it('builds a slug when brand is a string (brandName becomes empty)', () => {
+    const car = makeCar({ brand: 'Nissan' })
+    expect(buildCarImageSlug(car)).toBe('versa-2021-42')
+  })
+
+  it('strips accents and symbols from the model', () => {
+    const car = makeCar({ model: 'Márch (GT)' })
+    expect(buildCarImageSlug(car)).toBe('nissan-march-gt-2021-42')
+  })
+
+  it('filters out empty slugified segments (model empty)', () => {
+    const car = makeCar({ model: '' })
+    expect(buildCarImageSlug(car)).toBe('nissan-2021-42')
+  })
+
+  it('keeps two otherwise identical cars apart through the id', () => {
+    expect(buildCarImageSlug(makeCar({ id: 7 }))).not.toBe(
+      buildCarImageSlug(makeCar({ id: 8 }))
+    )
   })
 })
 
