@@ -1,10 +1,9 @@
 'use client'
 
 import { MapPin, Navigation, Phone } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 
-import { getOpenStatus, type OpenStatus } from '@/lib/hours'
+import { useOpenStatus } from '@/lib/hours-client'
 import type { Dealership } from '@/types/car'
 import { normalizeCoords } from '@/lib/geo'
 
@@ -34,11 +33,7 @@ export function CarLocation({
 }: {
   dealership: Dealership
 }): React.JSX.Element {
-  const [status, setStatus] = useState<OpenStatus | null>(null)
-
-  useEffect(() => {
-    setStatus(getOpenStatus(dealership.hours))
-  }, [dealership])
+  const status = useOpenStatus(dealership.hours)
 
   const coords = normalizeCoords(
     dealership.coordinates?.latitude,

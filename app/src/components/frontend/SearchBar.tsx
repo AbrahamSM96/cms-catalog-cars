@@ -1,21 +1,23 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
 
 /**
  * SearchBar
  */
 export function SearchBar(): React.JSX.Element {
-  const [search, setSearch] = useState('')
   const router = useRouter()
   const searchParams = useSearchParams()
+  const urlSearch = searchParams.get('search') || ''
+  const [search, setSearch] = useState(urlSearch)
+  const [prevUrlSearch, setPrevUrlSearch] = useState(urlSearch)
 
-  // Sync with URL search param
-  useEffect(() => {
-    const currentSearch = searchParams.get('search') || ''
-    setSearch(currentSearch)
-  }, [searchParams])
+  // Sync with URL search param without an effect
+  if (prevUrlSearch !== urlSearch) {
+    setPrevUrlSearch(urlSearch)
+    setSearch(urlSearch)
+  }
 
   /**
    * handleSearch

@@ -24,8 +24,6 @@ interface FeatureRow {
  * @param value - The relationship value (id or populated object).
  */
 function useRelationName(collection: string, value: unknown): string {
-  const [name, setName] = useState('')
-
   const id =
     value &&
     typeof value === 'object' &&
@@ -33,33 +31,43 @@ function useRelationName(collection: string, value: unknown): string {
       ? (value as { value: unknown }).value
       : value
 
+  // Already-populated object with a name: no fetch needed.
+  const populatedName =
+    typeof id === 'object' && id !== null && 'name' in id
+      ? String((id as { name: string }).name)
+      : null
+  const shouldFetch =
+    populatedName === null && id !== undefined && id !== null && id !== ''
+
+  // The fetched name is kept together with the id it belongs to, so a stale
+  // name is discarded during render instead of cleared from an effect.
+  const [fetched, setFetched] = useState<{ id: unknown; name: string }>({
+    id: undefined,
+    name: '',
+  })
+
   useEffect(() => {
-    if (id === undefined || id === null || id === '') {
-      setName('')
-      return
-    }
-    // Already-populated object with a name
-    if (typeof id === 'object' && id !== null && 'name' in id) {
-      setName(String((id as { name: string }).name))
-      return
-    }
+    if (!shouldFetch) return
 
     let cancelled = false
     fetch(`/api/${collection}/${id}?depth=0`)
       .then((r) => (r.ok ? r.json() : null))
       .then((doc) => {
-        if (!cancelled && doc?.name) setName(String(doc.name))
+        if (!cancelled) {
+          setFetched({ id, name: doc?.name ? String(doc.name) : '' })
+        }
       })
       .catch(() => {
-        if (!cancelled) setName('')
+        if (!cancelled) setFetched({ id, name: '' })
       })
 
     return (): void => {
       cancelled = true
     }
-  }, [collection, id])
+  }, [collection, id, shouldFetch])
 
-  return name
+  if (populatedName !== null) return populatedName
+  return fetched.id === id ? fetched.name : ''
 }
 
 /**

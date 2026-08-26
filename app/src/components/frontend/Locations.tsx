@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 
 import type { Dealership, Media } from '@/types/car'
-import { getOpenStatus, type OpenStatus } from '@/lib/hours'
+import { useOpenStatuses } from '@/lib/hours-client'
 import { getImageUrl } from '@/lib/images'
 import { normalizeCoords } from '@/lib/geo'
 
@@ -76,17 +76,10 @@ function addressLines(d: Dealership): string[] {
 export function Locations({ dealerships }: LocationsProps): React.JSX.Element {
   const [query, setQuery] = useState('')
   const [selectedId, setSelectedId] = useState<string | number | null>(null)
-  const [statuses, setStatuses] = useState<Record<string, OpenStatus | null>>(
-    {}
-  )
   const cardRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
-  // Compute open/closed on the client only (time-dependent → avoid SSR mismatch).
-  useEffect(() => {
-    const next: Record<string, OpenStatus | null> = {}
-    for (const d of dealerships) next[String(d.id)] = getOpenStatus(d.hours)
-    setStatuses(next)
-  }, [dealerships])
+  // Computed on the client only (time-dependent → avoid SSR mismatch).
+  const statuses = useOpenStatuses(dealerships)
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()

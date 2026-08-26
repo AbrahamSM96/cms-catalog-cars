@@ -1,6 +1,3 @@
-'use client'
-
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import type { Car } from '../../types/car'
@@ -20,12 +17,6 @@ interface FeaturedCarsProps {
 export function FeaturedCars({
   cars,
 }: FeaturedCarsProps): React.JSX.Element | null {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    setIsVisible(true)
-  }, [])
-
   if (cars.length === 0) return null
 
   return (
@@ -84,12 +75,9 @@ export function FeaturedCars({
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {cars.map((car, index) => (
             <div
-              className={`transition-all duration-700 ${isVisible
-                ? 'translate-y-0 opacity-100'
-                : 'translate-y-8 opacity-0'
-                }`}
+              className="animate-rise"
               key={car.id}
-              style={{ transitionDelay: `${index * 90}ms` }}
+              style={{ animationDelay: `${index * 90}ms` }}
             >
               <CarCard car={car} />
             </div>

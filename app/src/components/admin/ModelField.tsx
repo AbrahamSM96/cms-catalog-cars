@@ -26,11 +26,19 @@ export function ModelField(props: ModelFieldProps): React.JSX.Element {
   const { field, path } = props
   const { setValue, value } = useField<string>({ path })
   const brandId = useFormFields(([fields]) => fields?.brand?.value)
-  const [options, setOptions] = useState<string[]>([])
+  // Options are stored together with the brand they belong to, so they can be
+  // discarded during render instead of cleared from an effect.
+  const [fetched, setFetched] = useState<{ brand: unknown; names: string[] }>({
+    brand: undefined,
+    names: [],
+  })
+  const options = brandId && fetched.brand === brandId ? fetched.names : []
 
   // Ref so the effect can reset the value without depending on setValue.
   const setValueRef = useRef(setValue)
-  setValueRef.current = setValue
+  useEffect((): void => {
+    setValueRef.current = setValue
+  }, [setValue])
   const didMount = useRef(false)
   const prevBrand = useRef<unknown>(undefined)
 
@@ -42,10 +50,7 @@ export function ModelField(props: ModelFieldProps): React.JSX.Element {
     prevBrand.current = brandId
     didMount.current = true
 
-    if (!brandId) {
-      setOptions([])
-      return
-    }
+    if (!brandId) return
 
     let active = true
     fetch(
@@ -57,7 +62,7 @@ export function ModelField(props: ModelFieldProps): React.JSX.Element {
         const names = (data.docs ?? [])
           .map((doc) => doc.name)
           .filter((name): name is string => Boolean(name))
-        setOptions([...new Set(names)])
+        setFetched({ brand: brandId, names: [...new Set(names)] })
       })
       .catch((): void => {})
     return (): void => {

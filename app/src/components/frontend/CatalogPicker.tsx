@@ -55,16 +55,11 @@ export function CatalogPicker(props: CatalogPickerProps): React.JSX.Element {
   const [loadingModels, setLoadingModels] = useState(false)
   const [loadingVersions, setLoadingVersions] = useState(false)
 
-  // Load models whenever the brand changes; reset the downstream steps.
+  // Load models whenever the brand changes.
   useEffect((): (() => void) | void => {
-    setModelId('')
-    setVersionId('')
-    setModels([])
-    setVersions([])
     if (!brandSlug) return
 
     let active = true
-    setLoadingModels(true)
     getCatalogModels({ brandSlug })
       .then((result): void => {
         if (active) setModels(result)
@@ -79,12 +74,9 @@ export function CatalogPicker(props: CatalogPickerProps): React.JSX.Element {
 
   // Load versions whenever both a model and a year are selected.
   useEffect((): (() => void) | void => {
-    setVersionId('')
-    setVersions([])
     if (!modelId || !year) return
 
     let active = true
-    setLoadingVersions(true)
     getCatalogVersions({ modelId, year })
       .then((result): void => {
         if (active) setVersions(result)
@@ -126,9 +118,12 @@ export function CatalogPicker(props: CatalogPickerProps): React.JSX.Element {
           <select
             className={SELECT_CLASS}
             id="picker-year"
-            onChange={(e) =>
+            onChange={(e) => {
               setYear(e.target.value ? Number(e.target.value) : '')
-            }
+              setVersionId('')
+              setVersions([])
+              setLoadingVersions(true)
+            }}
             value={year}
           >
             <option value="">Selecciona año</option>
@@ -147,7 +142,14 @@ export function CatalogPicker(props: CatalogPickerProps): React.JSX.Element {
           <select
             className={SELECT_CLASS}
             id="picker-brand"
-            onChange={(e) => setBrandSlug(e.target.value)}
+            onChange={(e) => {
+              setBrandSlug(e.target.value)
+              setModelId('')
+              setVersionId('')
+              setModels([])
+              setVersions([])
+              setLoadingModels(true)
+            }}
             value={brandSlug}
           >
             <option value="">Selecciona marca</option>
@@ -167,7 +169,12 @@ export function CatalogPicker(props: CatalogPickerProps): React.JSX.Element {
             className={SELECT_CLASS}
             disabled={!brandSlug || loadingModels}
             id="picker-model"
-            onChange={(e) => setModelId(e.target.value)}
+            onChange={(e) => {
+              setModelId(e.target.value)
+              setVersionId('')
+              setVersions([])
+              setLoadingVersions(true)
+            }}
             value={modelId}
           >
             <option value="">

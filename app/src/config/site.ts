@@ -1,6 +1,6 @@
 import type { Media, SiteSettings } from '@/types/car'
-
 import { getImageUrl } from '@/lib/images'
+
 
 /**
  * Per-client brand configuration.

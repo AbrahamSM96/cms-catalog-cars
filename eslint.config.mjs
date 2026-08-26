@@ -275,6 +275,7 @@ export default tseslint.config(
       '**/__generated__/**',
       'generated/**',
       'app/(payload)/**',
+      'migrations/**',
       '**/payload-types.ts',
       '__mocks__/**',
       'scripts/**',

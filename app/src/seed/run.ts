@@ -61,7 +61,7 @@ async function mapWithConcurrency<T, R>(
   items: T[],
   task: (item: T) => Promise<R>
 ): Promise<R[]> {
-  const results: R[] = new Array<R>(items.length)
+  const results: R[] = Array.from({ length: items.length })
   let cursor = 0
 
   const workers = Array.from(
