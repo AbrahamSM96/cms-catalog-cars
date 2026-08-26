@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { cacheLife, cacheTag } from 'next/cache'
 import type { Payload, Where } from 'payload'
 import { getPayload } from 'payload'
 
@@ -16,6 +17,7 @@ import type {
   SiteSettings,
 } from '../types/car'
 
+import { CACHE_TAGS } from './cache-tags'
 import { parseCarSlug } from './car-slug'
 
 /**
@@ -28,6 +30,13 @@ import { parseCarSlug } from './car-slug'
  *
  * For building image URLs from a media filename, use getImageUrl from
  * "@/lib/images" (client-safe, importable from Client Components).
+ *
+ * Every reader is a `use cache` scope, so a page render costs a database round
+ * trip only on a cache miss. The CMS purges the matching tag on every save
+ * (see `hooks/revalidate.ts`), which is what keeps an edit in the admin visible
+ * immediately; the `days` lifetime is only the safety net for a purge that
+ * never arrived. Callers must therefore reach these from inside a `<Suspense>`
+ * boundary, after `connection()`, so the build never needs the database.
  *
  * Errors are logged and rethrown, never converted into an empty result. A query
  * that succeeds with zero rows means the client has not added that content yet
@@ -47,6 +56,10 @@ function payloadClient(): Promise<Payload> {
  * @param filters - optional filters to apply to the query
  */
 export async function getCars(filters?: CarFilters): Promise<CarsResponse> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.cars)
+
   try {
     const payload = await payloadClient()
 
@@ -101,6 +114,10 @@ export async function getCars(filters?: CarFilters): Promise<CarsResponse> {
  * Fetch featured cars (featured = true).
  */
 export async function getFeaturedCars(): Promise<Car[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.cars)
+
   try {
     const payload = await payloadClient()
 
@@ -128,6 +145,10 @@ export async function getFeaturedCars(): Promise<Car[]> {
  * Fetch all cars for the sitemap (unpaginated).
  */
 export async function getAllCars(): Promise<Car[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.cars)
+
   try {
     const payload = await payloadClient()
 
@@ -153,6 +174,10 @@ export async function getAllCars(): Promise<Car[]> {
  * @param id - the car ID to fetch
  */
 export async function getCarById(id: string): Promise<Car> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.cars)
+
   try {
     const payload = await payloadClient()
 
@@ -188,6 +213,10 @@ export async function getCarBySlug(slug: string): Promise<Car> {
  * Fetch all brands.
  */
 export async function getBrands(): Promise<Brand[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.brands)
+
   try {
     const payload = await payloadClient()
 
@@ -209,6 +238,10 @@ export async function getBrands(): Promise<Brand[]> {
  * Fetch all dealerships (concesionarios) for the locations page.
  */
 export async function getDealerships(): Promise<Dealership[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.dealerships)
+
   try {
     const payload = await payloadClient()
 
@@ -233,6 +266,10 @@ export async function getDealerships(): Promise<Dealership[]> {
  * back to its defaults. A database failure throws rather than returning null.
  */
 export async function getHomepage(): Promise<Homepage | null> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.homepage)
+
   try {
     const payload = await payloadClient()
 
@@ -253,6 +290,10 @@ export async function getHomepage(): Promise<Homepage | null> {
  * Fetch the Contact global (phone, WhatsApp, email, address, social links).
  */
 export async function getContact(): Promise<Contact | null> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.contact)
+
   try {
     const payload = await payloadClient()
 
@@ -274,6 +315,10 @@ export async function getContact(): Promise<Contact | null> {
  * depth 1 so the favicon / OG image uploads are populated with their URLs.
  */
 export async function getSiteSettings(): Promise<SiteSettings | null> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.siteSettings)
+
   try {
     const payload = await payloadClient()
 

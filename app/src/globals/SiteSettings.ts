@@ -1,6 +1,8 @@
 import type { GlobalConfig } from 'payload'
 
+import { CACHE_TAGS } from '../lib/cache-tags'
 import { editorsAndAdmins } from '../access'
+import { revalidateGlobalAfterChange } from '../hooks/revalidate'
 
 /**
  * Per-client site configuration, editable from the admin panel.
@@ -205,6 +207,9 @@ export const SiteSettings: GlobalConfig = {
       type: 'group',
     },
   ],
+  hooks: {
+    afterChange: [revalidateGlobalAfterChange(CACHE_TAGS.siteSettings)],
+  },
   label: 'Configuración del sitio',
   slug: 'site-settings',
 }

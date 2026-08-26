@@ -1,9 +1,7 @@
-/* eslint-disable react/no-danger */
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 
-import { buildAutoDealerLd } from '@/lib/json-ld'
-import { getDealerships } from '@/lib/payload-client'
-import { Locations } from '@/components/frontend/Locations'
+import { DealershipLocations } from '@/components/frontend/DealershipLocations'
 
 export const metadata: Metadata = {
   alternates: {
@@ -22,22 +20,13 @@ export const metadata: Metadata = {
 
 /**
  * UbicacionesPage
+ *
+ * The heading is static; the dealership list and its structured data stream
+ * from their own boundary so the shell prerenders without a database.
  */
-export default async function UbicacionesPage(): Promise<React.JSX.Element> {
-  const dealerships = await getDealerships()
-
-  const autoDealerLd = {
-    '@context': 'https://schema.org',
-    '@graph': buildAutoDealerLd(dealerships),
-  }
-
+export default function UbicacionesPage(): React.JSX.Element {
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* SEO structured data */}
-      <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(autoDealerLd) }}
-        type="application/ld+json"
-      />
       <div className="mx-auto max-w-7xl px-4 pt-24 pb-16 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -49,7 +38,13 @@ export default async function UbicacionesPage(): Promise<React.JSX.Element> {
           </p>
         </div>
 
-        <Locations dealerships={dealerships} />
+        <Suspense
+          fallback={
+            <div className="h-[32rem] animate-pulse rounded-2xl bg-slate-200" />
+          }
+        >
+          <DealershipLocations />
+        </Suspense>
       </div>
     </div>
   )

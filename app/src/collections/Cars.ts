@@ -6,8 +6,13 @@ import {
   CONDITION_OPTIONS,
   VEHICLE_TYPE_OPTIONS,
 } from '../lib/marketplace'
-import { renameCarMedia } from '../hooks/renameCarMedia'
 import { resolveBrandName, toTitleCase } from '../lib/car-title'
+import {
+  revalidateAfterChange,
+  revalidateAfterDelete,
+} from '../hooks/revalidate'
+import { CACHE_TAGS } from '../lib/cache-tags'
+import { renameCarMedia } from '../hooks/renameCarMedia'
 
 export const Cars: CollectionConfig = {
   access: {
@@ -46,10 +51,7 @@ export const Cars: CollectionConfig = {
             if (value) return value
             if (!data) return value
 
-            const brandName = await resolveBrandName(
-              data.brand,
-              req.payload
-            )
+            const brandName = await resolveBrandName(data.brand, req.payload)
             const computed = [brandName, data.model, data.year]
               .filter(Boolean)
               .join(' ')
@@ -763,7 +765,8 @@ export const Cars: CollectionConfig = {
     },
   ],
   hooks: {
-    afterChange: [renameCarMedia],
+    afterChange: [renameCarMedia, revalidateAfterChange(CACHE_TAGS.cars)],
+    afterDelete: [revalidateAfterDelete(CACHE_TAGS.cars)],
     beforeChange: [
       /**
        * Format text fields and build display title for the car collection.

@@ -1,6 +1,8 @@
 import type { GlobalConfig } from 'payload'
 
+import { CACHE_TAGS } from '../lib/cache-tags'
 import { editorsAndAdmins } from '../access'
+import { revalidateGlobalAfterChange } from '../hooks/revalidate'
 
 export const Contact: GlobalConfig = {
   access: {
@@ -11,14 +13,15 @@ export const Contact: GlobalConfig = {
     update: editorsAndAdmins,
   },
   admin: {
-    description: 'Datos de contacto que se muestran en el footer y en la página de contacto.',
+    description:
+      'Datos de contacto que se muestran en el footer y en la página de contacto.',
     group: 'Content',
   },
   fields: [
     {
       fields: [
         {
-          admin: { placeholder: '+52 55 5001 0000', width: '50%', },
+          admin: { placeholder: '+52 55 5001 0000', width: '50%' },
           label: 'Teléfono',
           name: 'phone',
           type: 'text',
@@ -54,13 +57,13 @@ export const Contact: GlobalConfig = {
         {
           fields: [
             {
-              admin: { placeholder: 'Ciudad de México', width: '50%', },
+              admin: { placeholder: 'Ciudad de México', width: '50%' },
               label: 'Ciudad',
               name: 'city',
               type: 'text',
             },
             {
-              admin: { placeholder: 'CDMX', width: '50%', },
+              admin: { placeholder: 'CDMX', width: '50%' },
               label: 'Estado',
               name: 'state',
               type: 'text',
@@ -71,7 +74,7 @@ export const Contact: GlobalConfig = {
         {
           fields: [
             {
-              admin: { placeholder: '04360', width: '50%', },
+              admin: { placeholder: '04360', width: '50%' },
               label: 'Código postal',
               name: 'postalCode',
               type: 'text',
@@ -144,6 +147,9 @@ export const Contact: GlobalConfig = {
       type: 'group',
     },
   ],
+  hooks: {
+    afterChange: [revalidateGlobalAfterChange(CACHE_TAGS.contact)],
+  },
   label: 'Contacto',
   slug: 'contact',
 }

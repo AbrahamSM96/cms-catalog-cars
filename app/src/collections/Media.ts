@@ -1,6 +1,11 @@
 import type { CollectionConfig } from 'payload'
 
 import { adminsOnly, editorsAndAdmins } from '../access'
+import {
+  revalidateAfterChange,
+  revalidateAfterDelete,
+} from '../hooks/revalidate'
+import { CACHE_TAGS } from '../lib/cache-tags'
 
 export const Media: CollectionConfig = {
   access: {
@@ -26,6 +31,24 @@ export const Media: CollectionConfig = {
     },
   ],
 
+  hooks: {
+    afterChange: [
+      revalidateAfterChange(
+        CACHE_TAGS.cars,
+        CACHE_TAGS.dealerships,
+        CACHE_TAGS.homepage,
+        CACHE_TAGS.siteSettings
+      ),
+    ],
+    afterDelete: [
+      revalidateAfterDelete(
+        CACHE_TAGS.cars,
+        CACHE_TAGS.dealerships,
+        CACHE_TAGS.homepage,
+        CACHE_TAGS.siteSettings
+      ),
+    ],
+  },
   slug: 'media',
   upload: {
     mimeTypes: ['image/*', 'video/*'],

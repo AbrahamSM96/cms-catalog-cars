@@ -1,6 +1,11 @@
 import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
 import { adminsOnly, editorsAndAdmins } from '../access'
+import {
+  revalidateAfterChange,
+  revalidateAfterDelete,
+} from '../hooks/revalidate'
+import { CACHE_TAGS } from '../lib/cache-tags'
 
 /**
  * Reject a model whose referenced brand does not exist, so a model can only be
@@ -61,6 +66,8 @@ export const CarModels: CollectionConfig = {
     },
   ],
   hooks: {
+    afterChange: [revalidateAfterChange(CACHE_TAGS.cars)],
+    afterDelete: [revalidateAfterDelete(CACHE_TAGS.cars)],
     beforeValidate: [ensureBrandExists],
   },
   slug: 'car-models',

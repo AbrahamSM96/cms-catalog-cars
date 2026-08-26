@@ -1,7 +1,12 @@
 import type { CollectionConfig, Field } from 'payload'
 
 import { adminsOnly, editorsAndAdmins } from '../access'
+import {
+  revalidateAfterChange,
+  revalidateAfterDelete,
+} from '../hooks/revalidate'
 import { validateLatitude, validateLongitude } from '../lib/coordinates'
+import { CACHE_TAGS } from '../lib/cache-tags'
 
 const DAYS: { label: string; name: string }[] = [
   { label: 'Lunes', name: 'monday' },
@@ -261,5 +266,13 @@ export const Dealerships: CollectionConfig = {
       type: 'tabs',
     },
   ],
+  hooks: {
+    afterChange: [
+      revalidateAfterChange(CACHE_TAGS.cars, CACHE_TAGS.dealerships),
+    ],
+    afterDelete: [
+      revalidateAfterDelete(CACHE_TAGS.cars, CACHE_TAGS.dealerships),
+    ],
+  },
   slug: 'dealerships',
 }

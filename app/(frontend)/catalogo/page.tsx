@@ -1,11 +1,8 @@
-/* eslint-disable react/no-danger */
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 
-import { getBrands, getCars } from '@/lib/payload-client'
-import { buildItemListLd } from '@/lib/json-ld'
-import type { CarFilters } from '@/types/car'
-import { CarGrid } from '@/components/frontend/CarGrid'
-import { FilterBar } from '@/components/frontend/FilterBar'
+import { CatalogResults } from '@/components/frontend/CatalogResults'
+import type { CatalogSearchParams } from '@/components/frontend/CatalogResults'
 import { SearchBar } from '@/components/frontend/SearchBar'
 
 export const metadata: Metadata = {
@@ -24,55 +21,24 @@ export const metadata: Metadata = {
 }
 
 interface CatalogoPageProps {
-  searchParams: Promise<{
-    brand?: string
-    status?: string
-    transmission?: string
-    minYear?: string
-    maxYear?: string
-    minPrice?: string
-    maxPrice?: string
-    search?: string
-  }>
+  searchParams: Promise<CatalogSearchParams>
 }
 
 /**
- *  CatalogoPage
+ * CatalogoPage
+ *
+ * The heading and the search box are static. `searchParams` is never awaited
+ * here — the promise is handed to `CatalogResults` behind a `<Suspense>`
+ * boundary so this shell prerenders once and serves every filter combination.
  *
  * @param props - component props
  * @param props.searchParams - search parameters from the URL
  */
-export default async function CatalogoPage({
+export default function CatalogoPage({
   searchParams,
-}: CatalogoPageProps): Promise<React.JSX.Element> {
-  const params = await searchParams
-
-  const filters: CarFilters = {
-    brand: params.brand,
-    maxPrice: params.maxPrice ? parseInt(params.maxPrice) : undefined,
-    maxYear: params.maxYear ? parseInt(params.maxYear) : undefined,
-    minPrice: params.minPrice ? parseInt(params.minPrice) : undefined,
-    minYear: params.minYear ? parseInt(params.minYear) : undefined,
-    search: params.search,
-    status: params.status,
-    transmission: params.transmission,
-  }
-
-  const [carsData, brands] = await Promise.all([getCars(filters), getBrands()])
-
-  const itemListLd = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    itemListElement: buildItemListLd(carsData.docs),
-  }
-
+}: CatalogoPageProps): React.JSX.Element {
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* SEO structured data */}
-      <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }}
-        type="application/ld+json"
-      />
       {/* Header band */}
       <section className="relative overflow-hidden bg-white pt-28 pb-12 sm:pt-32">
         <div className="pointer-events-none absolute -top-24 left-1/2 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-accent-500/10 blur-3xl" />
@@ -86,7 +52,15 @@ export default async function CatalogoPage({
             Encuentra el auto seminuevo ideal para ti.
           </p>
           <div className="mt-8 flex justify-center">
-            <SearchBar />
+            {/* Reads the query string on the client, so it needs its own
+                boundary. */}
+            <Suspense
+              fallback={
+                <div className="h-14 w-full max-w-2xl animate-pulse rounded-2xl bg-slate-200" />
+              }
+            >
+              <SearchBar />
+            </Suspense>
           </div>
         </div>
       </section>
@@ -94,30 +68,20 @@ export default async function CatalogoPage({
       {/* Results */}
       <section className="py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <FilterBar brands={brands} />
-          </div>
-
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-xl font-bold text-slate-900">
-              {params.search
-                ? `Resultados para "${params.search}"`
-                : 'Todos los autos'}
-            </h2>
-            <span className="text-sm font-medium text-slate-500">
-              {carsData.totalDocs} {carsData.totalDocs === 1 ? 'auto' : 'autos'}
-            </span>
-          </div>
-
-          <CarGrid cars={carsData.docs} />
-
-          {carsData.totalPages > 1 && (
-            <div className="mt-14 text-center">
-              <div className="shadow-soft inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-600">
-                Página {carsData.page} de {carsData.totalPages}
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div
+                    className="shadow-soft h-80 animate-pulse rounded-2xl border border-slate-200 bg-white"
+                    key={i}
+                  />
+                ))}
               </div>
-            </div>
-          )}
+            }
+          >
+            <CatalogResults searchParams={searchParams} />
+          </Suspense>
         </div>
       </section>
     </div>

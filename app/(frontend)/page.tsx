@@ -1,23 +1,23 @@
+import { connection } from 'next/server'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 
-import {
-  getDealerships,
-  getFeaturedCars,
-  getHomepage,
-  getSiteSettings,
-} from '@/lib/payload-client'
-import { Hero, type HeroSlideView } from '@/components/frontend/Hero'
-import { FeaturedCars } from '@/components/frontend/FeaturedCars'
-import { getImageUrl } from '@/lib/images'
-import { Locations } from '@/components/frontend/Locations'
-import type { Media } from '@/types/car'
+import { getSiteSettings } from '@/lib/payload-client'
+import { HomeFeatured } from '@/components/frontend/HomeFeatured'
+import { HomeHero } from '@/components/frontend/HomeHero'
+import { HomeLocations } from '@/components/frontend/HomeLocations'
 import { resolveSiteConfig } from '@/config/site'
 
 /**
  * generateMetadata — home page SEO from the CMS `site-settings` global.
+ *
+ * `connection()` keeps the read at request time; metadata cannot sit behind a
+ * `<Suspense>` boundary and the production image is built without a database.
  */
 export async function generateMetadata(): Promise<Metadata> {
+  await connection()
+
   const site = resolveSiteConfig(await getSiteSettings())
 
   return {
@@ -39,37 +39,23 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /**
  * HomePage
+ *
+ * Only the CTA band is static; the hero, the featured strip and the locations
+ * each stream from their own boundary, so the shell is prerendered at build
+ * time and the CMS content arrives from cache at request time.
  */
-export default async function HomePage(): Promise<React.JSX.Element> {
-  // Fetch data in parallel
-  const [featuredCars, homepage, dealerships] = await Promise.all([
-    getFeaturedCars(),
-    getHomepage(),
-    getDealerships(),
-  ])
-
-  // Resolve hero carousel slides (image relation -> Cloudinary URL).
-  const heroSlides: HeroSlideView[] = (homepage?.heroSlides ?? [])
-    .map((slide): HeroSlideView | null => {
-      const image = slide.image
-      if (!image || typeof image !== 'object') return null
-      const media = image as Media
-      return {
-        alt:
-          media.alt || slide.caption || 'Catálogo de autos seminuevos en venta',
-        caption: slide.caption,
-        url: media.url || getImageUrl(media.filename),
-      }
-    })
-    .filter((s): s is HeroSlideView => s !== null)
-
+export default function HomePage(): React.JSX.Element {
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <Hero slides={heroSlides} text={homepage?.hero} />
+      <Suspense
+        fallback={<div className="h-[42rem] animate-pulse bg-slate-100" />}
+      >
+        <HomeHero />
+      </Suspense>
 
-      {/* Featured */}
-      <FeaturedCars cars={featuredCars} />
+      <Suspense fallback={<div className="h-[38rem] animate-pulse bg-white" />}>
+        <HomeFeatured />
+      </Suspense>
 
       {/* Catalog CTA band */}
       <section className="relative overflow-hidden bg-slate-50 py-20 sm:py-24">
@@ -116,23 +102,9 @@ export default async function HomePage(): Promise<React.JSX.Element> {
         </div>
       </section>
 
-      {/* Locations */}
-      {dealerships.length > 0 && (
-        <section className="bg-white py-20 sm:py-24" id="ubicaciones">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-8 max-w-2xl">
-              <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-                Nuestras ubicaciones
-              </h2>
-              <p className="mt-2 text-slate-600">
-                Visítanos en cualquiera de nuestros concesionarios. Consulta
-                dirección, horario y teléfono.
-              </p>
-            </div>
-            <Locations dealerships={dealerships} />
-          </div>
-        </section>
-      )}
+      <Suspense fallback={<div className="h-[32rem] animate-pulse bg-white" />}>
+        <HomeLocations />
+      </Suspense>
     </div>
   )
 }

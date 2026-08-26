@@ -1,6 +1,11 @@
 import type { CollectionConfig } from 'payload'
 
 import { adminsOnly, editorsAndAdmins } from '../access'
+import {
+  revalidateAfterChange,
+  revalidateAfterDelete,
+} from '../hooks/revalidate'
+import { CACHE_TAGS } from '../lib/cache-tags'
 
 export const Colors: CollectionConfig = {
   access: {
@@ -42,5 +47,9 @@ export const Colors: CollectionConfig = {
       type: 'text',
     },
   ],
+  hooks: {
+    afterChange: [revalidateAfterChange(CACHE_TAGS.cars)],
+    afterDelete: [revalidateAfterDelete(CACHE_TAGS.cars)],
+  },
   slug: 'colors',
 }

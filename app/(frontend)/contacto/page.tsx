@@ -1,14 +1,7 @@
-import {
-  Clock,
-  Mail,
-  MapPin,
-  MessageCircle,
-  Navigation,
-  Phone,
-} from 'lucide-react'
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 
-import { getContact } from '@/lib/payload-client'
+import { ContactDetails } from '@/components/frontend/ContactDetails'
 
 export const metadata: Metadata = {
   alternates: {
@@ -25,35 +18,13 @@ export const metadata: Metadata = {
   title: 'Contacto',
 }
 
-const FALLBACK_WHATSAPP = '525512345678'
-const FALLBACK_PHONE = '+52 55 1234 5678'
-
 /**
  * ContactoPage
+ *
+ * The heading is static; every contact detail comes from the CMS and streams
+ * from its own boundary, so the shell prerenders without a database.
  */
-export default async function ContactoPage(): Promise<React.JSX.Element> {
-  const contact = await getContact()
-
-  const whatsappDigits = (contact?.whatsapp || FALLBACK_WHATSAPP).replace(
-    /\D/g,
-    ''
-  )
-  const phone = contact?.phone || FALLBACK_PHONE
-  const telHref = `tel:${phone.replace(/[^\d+]/g, '')}`
-  const email = contact?.email
-  const addr = contact?.address
-  const addressText = addr
-    ? [
-        addr.line1,
-        [addr.postalCode, addr.city, addr.state].filter(Boolean).join(', '),
-        addr.country,
-      ]
-        .filter(Boolean)
-        .join(', ')
-    : null
-  const mapsHref = addr?.googleMapsUrl
-  const hours = contact?.hoursNote
-
+export default function ContactoPage(): React.JSX.Element {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header band */}
@@ -71,109 +42,22 @@ export default async function ContactoPage(): Promise<React.JSX.Element> {
         </div>
       </section>
 
-      <section className="py-14">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-4 sm:grid-cols-2">
-            {/* WhatsApp */}
-            <a
-              className="group shadow-soft hover:shadow-float flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-green-300"
-              href={`https://wa.me/${whatsappDigits}`}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-600">
-                <MessageCircle className="h-6 w-6" />
-              </span>
-              <div>
-                <h2 className="font-semibold text-slate-900">WhatsApp</h2>
-                <p className="mt-0.5 text-sm text-slate-500">
-                  Respuesta rápida a tus dudas
-                </p>
-                <span className="mt-2 inline-block text-sm font-semibold text-green-600">
-                  Escríbenos →
-                </span>
-              </div>
-            </a>
-
-            {/* Phone */}
-            <a
-              className="group shadow-soft hover:shadow-float flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-accent-300"
-              href={telHref}
-            >
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-600">
-                <Phone className="h-6 w-6" />
-              </span>
-              <div>
-                <h2 className="font-semibold text-slate-900">Teléfono</h2>
-                <p className="mt-0.5 text-sm text-slate-500">{phone}</p>
-                <span className="mt-2 inline-block text-sm font-semibold text-accent-600">
-                  Llamar →
-                </span>
-              </div>
-            </a>
-
-            {/* Email */}
-            {email && (
-              <a
-                className="group shadow-soft hover:shadow-float flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-accent-300"
-                href={`mailto:${email}`}
-              >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
-                  <Mail className="h-6 w-6" />
-                </span>
-                <div>
-                  <h2 className="font-semibold text-slate-900">Correo</h2>
-                  <p className="mt-0.5 text-sm break-all text-slate-500">
-                    {email}
-                  </p>
-                  <span className="mt-2 inline-block text-sm font-semibold text-accent-600">
-                    Enviar correo →
-                  </span>
-                </div>
-              </a>
-            )}
-
-            {/* Address */}
-            {addressText && (
-              <div className="shadow-soft flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
-                  <MapPin className="h-6 w-6" />
-                </span>
-                <div>
-                  <h2 className="font-semibold text-slate-900">Dirección</h2>
-                  <p className="mt-0.5 text-sm text-slate-500">{addressText}</p>
-                  {mapsHref && (
-                    <a
-                      className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-600 hover:text-accent-700"
-                      href={mapsHref}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <Navigation className="h-4 w-4" />
-                      Cómo llegar
-                    </a>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Hours */}
-          {hours && (
-            <div className="shadow-soft mt-4 flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
-                <Clock className="h-6 w-6" />
-              </span>
-              <div>
-                <h2 className="font-semibold text-slate-900">Horario</h2>
-                <p className="mt-0.5 text-sm whitespace-pre-line text-slate-500">
-                  {hours}
-                </p>
-              </div>
+      <Suspense
+        fallback={
+          <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  className="h-32 animate-pulse rounded-2xl bg-slate-200"
+                  key={i}
+                />
+              ))}
             </div>
-          )}
-        </div>
-      </section>
+          </div>
+        }
+      >
+        <ContactDetails />
+      </Suspense>
     </div>
   )
 }

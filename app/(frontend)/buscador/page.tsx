@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 
-import { CatalogFinder } from '@/components/frontend/CatalogFinder'
-import { getBrands } from '@/lib/payload-client'
+import { FinderBrands } from '@/components/frontend/FinderBrands'
 
 export const metadata: Metadata = {
   alternates: {
@@ -20,10 +20,11 @@ export const metadata: Metadata = {
 
 /**
  * Guided vehicle finder page: año → marca → modelo → versión.
+ *
+ * The page itself is static; only the brand list comes from the CMS, so it
+ * streams from its own boundary.
  */
-export default async function BuscadorPage(): Promise<React.JSX.Element> {
-  const brands = await getBrands()
-
+export default function BuscadorPage(): React.JSX.Element {
   return (
     <div className="min-h-screen bg-slate-50">
       <section className="relative overflow-hidden bg-white pt-28 pb-12 sm:pt-32">
@@ -43,7 +44,13 @@ export default async function BuscadorPage(): Promise<React.JSX.Element> {
 
       <section className="py-14">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <CatalogFinder brands={brands} />
+          <Suspense
+            fallback={
+              <div className="h-96 animate-pulse rounded-2xl bg-slate-200" />
+            }
+          >
+            <FinderBrands />
+          </Suspense>
         </div>
       </section>
     </div>

@@ -1,6 +1,8 @@
 import type { GlobalConfig } from 'payload'
 
+import { CACHE_TAGS } from '../lib/cache-tags'
 import { editorsAndAdmins } from '../access'
+import { revalidateGlobalAfterChange } from '../hooks/revalidate'
 
 export const Homepage: GlobalConfig = {
   access: {
@@ -87,6 +89,9 @@ export const Homepage: GlobalConfig = {
       type: 'group',
     },
   ],
+  hooks: {
+    afterChange: [revalidateGlobalAfterChange(CACHE_TAGS.homepage)],
+  },
   label: 'Homepage',
   slug: 'homepage',
 }
