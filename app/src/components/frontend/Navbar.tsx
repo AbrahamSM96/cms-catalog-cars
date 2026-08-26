@@ -18,13 +18,17 @@ const LINKS = [
  * Navbar 
  *
  * @param props - Component props.
+ * @param props.logoNeedsDarkPlate - Whether the uploaded logo is too light for
+ *   the white header and needs a dark plate behind it.
  * @param props.site - Resolved per-client site configuration (logo, brand).
  * @param props.whatsapp - The WhatsApp number to use in the CTA button.
  */
 export function Navbar({
+  logoNeedsDarkPlate = false,
   site,
   whatsapp,
 }: {
+  logoNeedsDarkPlate?: boolean
   site: SiteConfig
   whatsapp?: string
 }): React.JSX.Element {
@@ -52,7 +56,7 @@ export function Navbar({
     >
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <BrandLogo priority site={site} />
+        <BrandLogo needsDarkPlate={logoNeedsDarkPlate} priority site={site} />
 
         {/* Desktop links */}
         <div className="hidden items-center gap-1 md:flex">

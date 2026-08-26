@@ -9,6 +9,11 @@ interface BrandLogoProps {
   className?: string
   /** Rendered height of the logo in pixels. */
   height?: number
+  /**
+   * Paint a dark plate behind the logo. Comes from `logoNeedsDarkPlate()`,
+   * which measures the uploaded logo against our white surfaces.
+   */
+  needsDarkPlate?: boolean
   /** Load the logo eagerly (use it for the navbar, above the fold). */
   priority?: boolean
   /** Resolved per-client site configuration. */
@@ -25,10 +30,20 @@ interface BrandLogoProps {
  * and the wordmark can be switched off from the CMS for logos that already
  * include the brand name.
  *
+ * White-on-transparent logos would disappear on our white navbar and footer, so
+ * `needsDarkPlate` (measured server-side by `logoNeedsDarkPlate()`) puts a dark
+ * rounded plate behind the image to restore the contrast.
+ *
  * @param props - Component props.
  */
 export function BrandLogo(props: BrandLogoProps): React.JSX.Element {
-  const { className, height = 36, priority = false, site } = props
+  const {
+    className,
+    height = 36,
+    needsDarkPlate = false,
+    priority = false,
+    site,
+  } = props
   const isSvg = /\.svg(?:$|[?#])/i.test(site.logoUrl ?? '')
 
   return (
@@ -40,7 +55,10 @@ export function BrandLogo(props: BrandLogoProps): React.JSX.Element {
       {site.logoUrl ? (
         <Image
           alt={site.logoAlt || site.name}
-          className="w-auto max-w-40 object-contain"
+          className={clsx(
+            'w-auto max-w-40 object-contain',
+            needsDarkPlate && 'rounded-xl bg-slate-900 px-2.5 py-1.5'
+          )}
           height={height}
           priority={priority}
           src={site.logoUrl}

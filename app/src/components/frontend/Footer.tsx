@@ -6,6 +6,8 @@ import type { SiteConfig } from '@/config/site'
 
 interface FooterProps {
   contact: Contact | null
+  /** Whether the uploaded logo is too light for the white footer. */
+  logoNeedsDarkPlate?: boolean
   site: SiteConfig
 }
 
@@ -44,9 +46,15 @@ const SOCIALS: {
  *
  * @param props - FooterProps
  * @param props.contact - Contact | null
+ * @param props.logoNeedsDarkPlate - whether the logo needs a dark plate behind
+ *   it to stay legible on the white footer
  * @param props.site - resolved per-client site configuration
  */
-export function Footer({ contact, site }: FooterProps): React.JSX.Element {
+export function Footer({
+  contact,
+  logoNeedsDarkPlate = false,
+  site,
+}: FooterProps): React.JSX.Element {
   const whatsappDigits = (contact?.whatsapp || FALLBACK_WHATSAPP).replace(
     /\D/g,
     ''
@@ -74,7 +82,7 @@ export function Footer({ contact, site }: FooterProps): React.JSX.Element {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>
-            <BrandLogo site={site} />
+            <BrandLogo needsDarkPlate={logoNeedsDarkPlate} site={site} />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-600">
               {site.description}
             </p>

@@ -6,6 +6,7 @@ import '../globals.css'
 import { getContact, getSiteSettings } from '@/lib/payload-client'
 import { Footer } from '@/components/frontend/Footer'
 import { inter } from '@/commons/inter'
+import { logoNeedsDarkPlate } from '@/lib/logo-contrast'
 import { Navbar } from '@/components/frontend/Navbar'
 import { poppins } from '@/commons/poppins'
 import { resolveSiteConfig } from '@/config/site'
@@ -68,6 +69,11 @@ export default async function RootLayout({
     getSiteSettings().then(resolveSiteConfig),
   ])
 
+  // Clients upload their own logo and some are white-on-transparent, which is
+  // invisible on the white navbar and footer. Measure it once and let the two
+  // put a dark plate behind it when it would not read.
+  const needsDarkPlate = await logoNeedsDarkPlate(site.logoUrl)
+
   const socials = [
     contact?.social?.facebook,
     contact?.social?.instagram,
@@ -122,9 +128,17 @@ export default async function RootLayout({
           speed={200}
           zIndex={9999}
         />
-        <Navbar site={site} whatsapp={contact?.whatsapp} />
+        <Navbar
+          logoNeedsDarkPlate={needsDarkPlate}
+          site={site}
+          whatsapp={contact?.whatsapp}
+        />
         {children}
-        <Footer contact={contact} site={site} />
+        <Footer
+          contact={contact}
+          logoNeedsDarkPlate={needsDarkPlate}
+          site={site}
+        />
       </body>
     </html>
   )
