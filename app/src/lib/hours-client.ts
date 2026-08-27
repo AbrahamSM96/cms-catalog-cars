@@ -2,8 +2,8 @@
 
 import { useMemo, useSyncExternalStore } from 'react'
 
-import { getOpenStatus, type OpenStatus } from '@/lib/hours'
 import type { Dealership, WeeklyHours } from '@/types/car'
+import { getOpenStatus, type OpenStatus } from '@/lib/hours'
 
 // Stable server snapshots: a fresh object per call would break the identity
 // check `useSyncExternalStore` runs on every render.

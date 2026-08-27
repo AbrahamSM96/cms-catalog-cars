@@ -1,8 +1,8 @@
 import type { CollectionAfterChangeHook } from 'payload'
 
+import { MEDIA_PREFIX, r2PublicUrl } from '../lib/r2'
 import { buildCarImageSlug } from '../lib/car-slug'
 import type { Car } from '../types/car'
-import { MEDIA_PREFIX, r2PublicUrl } from '../lib/r2'
 import { moveObject } from '../lib/r2-server'
 import { resolveBrandName } from '../lib/car-title'
 

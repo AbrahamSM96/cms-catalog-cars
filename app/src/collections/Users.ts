@@ -1,6 +1,11 @@
 import type { CollectionConfig } from 'payload'
 
 import { adminsOnly, adminsOrSelf, adminsOrSelfFieldRead, editorsAndAdmins } from '../access'
+import {
+  forgotPasswordHTML,
+  forgotPasswordSubject,
+  RESET_TOKEN_EXPIRATION,
+} from '../lib/email'
 
 export const Users: CollectionConfig = {
   access: {
@@ -16,6 +21,11 @@ export const Users: CollectionConfig = {
     group: 'Settings',
   },
   auth: {
+    forgotPassword: {
+      expiration: RESET_TOKEN_EXPIRATION,
+      generateEmailHTML: forgotPasswordHTML,
+      generateEmailSubject: forgotPasswordSubject,
+    },
     lockTime: 60 * 60 * 1000,
     maxLoginAttempts: 5,
     tokenExpiration: 60 * 60 * 4,

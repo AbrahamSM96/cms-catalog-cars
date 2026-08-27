@@ -7,6 +7,7 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { s3Storage } from '@payloadcms/storage-s3'
 import sharp from 'sharp'
 
+import { MEDIA_PREFIX, r2PublicUrl } from './lib/r2'
 import { Brands } from './collections/Brands'
 import { CarModels } from './collections/CarModels'
 import { Cars } from './collections/Cars'
@@ -14,9 +15,9 @@ import { CarVersions } from './collections/CarVersions'
 import { Colors } from './collections/Colors'
 import { Contact } from './globals/Contact'
 import { Dealerships } from './collections/Dealerships'
+import { emailAdapter } from './lib/email'
 import { Homepage } from './globals/Homepage'
 import { Media } from './collections/Media'
-import { MEDIA_PREFIX, r2PublicUrl } from './lib/r2'
 import { SiteSettings } from './globals/SiteSettings'
 import { Users } from './collections/Users'
 
@@ -49,6 +50,23 @@ function databaseUri(): string | undefined {
     : process.env.DATABASE_URI_DEV
 }
 
+/**
+ * Public origin Payload writes into the links it emails (the password reset
+ * URL, the verification URL).
+ *
+ * An empty string tells Payload to rebuild the origin from the incoming
+ * request host, which is what we want in development and in any preview deploy
+ * where the domain is not known ahead of time. In production the host header
+ * comes from whatever proxy sits in front of the app, so the real domain is
+ * pinned instead — a spoofed or internal host would otherwise end up inside a
+ * reset link.
+ */
+function serverUrl(): string {
+  if (process.env.NODE_ENV !== 'production') return ''
+
+  return process.env.NEXT_PUBLIC_SITE_URL ?? ''
+}
+
 export default buildConfig({
   admin: {
     importMap,
@@ -74,6 +92,7 @@ export default buildConfig({
     push: process.env.PAYLOAD_DB_PUSH !== 'false',
   }),
   editor: lexicalEditor(),
+  email: emailAdapter(),
   globals: [Homepage, Contact, SiteSettings],
   plugins: [
     s3Storage({
@@ -105,6 +124,7 @@ export default buildConfig({
     }),
   ],
   secret: process.env.PAYLOAD_SECRET || 'your-secret-key-here',
+  serverURL: serverUrl(),
   sharp,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
