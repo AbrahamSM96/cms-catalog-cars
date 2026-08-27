@@ -28,26 +28,31 @@ function fakeRequest(serverURL: string): PayloadRequest {
 }
 
 describe('emailAdapter', () => {
-  it('stays undefined when SMTP is not configured, so Payload keeps its console adapter', () => {
-    vi.stubEnv('SMTP_HOST', '')
-    vi.stubEnv('SMTP_USER', '')
-    vi.stubEnv('SMTP_PASS', '')
+  it('stays undefined when Resend is not configured, so Payload keeps its console adapter', () => {
+    vi.stubEnv('RESEND_API_KEY', '')
+    vi.stubEnv('EMAIL_FROM_ADDRESS', '')
 
     expect(emailAdapter()).toBeUndefined()
   })
 
-  it('stays undefined when only part of the credentials are present', () => {
-    vi.stubEnv('SMTP_HOST', 'smtp.resend.com')
-    vi.stubEnv('SMTP_USER', 'resend')
-    vi.stubEnv('SMTP_PASS', '')
+  it('stays undefined without a sender address, which Resend has no default for', () => {
+    vi.stubEnv('RESEND_API_KEY', 're_test_key')
+    vi.stubEnv('EMAIL_FROM_ADDRESS', '')
 
     expect(emailAdapter()).toBeUndefined()
+  })
+
+  it('builds the adapter once key and sender are both present', () => {
+    vi.stubEnv('RESEND_API_KEY', 're_test_key')
+    vi.stubEnv('EMAIL_FROM_ADDRESS', 'no-reply@agencia.test')
+
+    expect(emailAdapter()).toBeDefined()
   })
 })
 
 describe('forgotPasswordSubject', () => {
   it('names the sender', () => {
-    vi.stubEnv('SMTP_FROM_NAME', 'Autos del Valle')
+    vi.stubEnv('EMAIL_FROM_NAME', 'Autos del Valle')
 
     expect(forgotPasswordSubject()).toContain('Autos del Valle')
   })

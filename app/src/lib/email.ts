@@ -1,22 +1,25 @@
 import type { EmailAdapter, PayloadRequest } from 'payload'
 
 import { formatAdminURL } from 'payload/shared'
-import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+import { resendAdapter } from '@payloadcms/email-resend'
 
 /**
- * Outgoing email for the admin panel (SMTP).
+ * Outgoing email for the admin panel (Resend HTTP API).
  *
  * Payload only sends transactional mail — the "forgot password" reset link and
  * the verification email — and it needs an email adapter to do it. Without one
  * it silently falls back to its console adapter, which logs the attempt and
  * drops the message, so the reset link never reaches the user.
  *
- * The transport is plain SMTP so every deploy can point at whatever provider
- * the dealership already pays for (Resend, Brevo, Mailgun, its own host). All
- * of it comes from the environment: see the SMTP_* block in `.env.example`.
+ * Delivery goes over Resend's REST API on port 443, not SMTP. That is not a
+ * preference: Render blocks outbound traffic to ports 25, 465 and 587 on free
+ * web services (25 stays blocked on every plan, since they run on EC2), so an
+ * SMTP transport dies with ETIMEDOUT on CONN before the handshake and the
+ * forgot-password request answers "Something went wrong". HTTPS is never
+ * blocked, so this works on any plan.
  *
- * IMPORTANT: the sender address has to belong to a domain verified with the
- * provider, otherwise the message is rejected or lands in spam.
+ * IMPORTANT: the sender address has to belong to a domain verified with Resend
+ * (SPF/DKIM records), otherwise the API rejects the message.
  */
 
 /**
@@ -27,38 +30,29 @@ import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 export const RESET_TOKEN_EXPIRATION = 60 * 60 * 1000
 
 /**
- * Build the SMTP email adapter, or undefined when SMTP is not configured.
+ * Build the Resend email adapter, or undefined when it is not configured.
  *
- * Returning undefined (instead of calling the adapter with no transport) is
- * deliberate: with no arguments nodemailer creates an Ethereal test account on
- * boot, which needs network access and delivers nowhere. Undefined leaves
- * Payload on its console adapter, which is the right behaviour for local
- * development.
+ * Both the API key and the sender address are required: Resend has no default
+ * for the `from` field, so an adapter built without one would only fail later,
+ * inside the request that tries to send. Undefined leaves Payload on its
+ * console adapter, which is the right behaviour for local development.
  */
-export function emailAdapter(): Promise<EmailAdapter> | undefined {
-  const host = process.env.SMTP_HOST
-  const pass = process.env.SMTP_PASS
-  const user = process.env.SMTP_USER
+export function emailAdapter(): EmailAdapter | undefined {
+  const apiKey = process.env.RESEND_API_KEY
+  const from = process.env.EMAIL_FROM_ADDRESS
 
-  if (!host || !pass || !user) return undefined
+  if (!apiKey || !from) return undefined
 
-  const port = Number(process.env.SMTP_PORT || 587)
-
-  return nodemailerAdapter({
-    defaultFromAddress: process.env.SMTP_FROM_ADDRESS || user,
+  return resendAdapter({
+    apiKey,
+    defaultFromAddress: from,
     defaultFromName: senderName(),
-    transportOptions: {
-      auth: { pass, user },
-      host,
-      port,
-      secure: port === 465,
-    },
   })
 }
 
 /** Name the transactional emails sign off with. */
 const senderName = (): string =>
-  process.env.SMTP_FROM_NAME || 'Panel de administración'
+  process.env.EMAIL_FROM_NAME || 'Panel de administración'
 
 /**
  * Build the admin password-reset URL for a token.
