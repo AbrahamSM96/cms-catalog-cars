@@ -25,7 +25,7 @@ export const CarVersions: CollectionConfig = {
   fields: [
     {
       admin: {
-        description: 'Modelo al que pertenece la versión',
+        description: 'Model this version belongs to',
       },
       hasMany: false,
       name: 'model',
@@ -40,8 +40,9 @@ export const CarVersions: CollectionConfig = {
     },
     {
       admin: {
-        description: 'Clave vehicular (identificador único de la versión)',
+        description: 'Vehicle key (unique identifier for the version)',
       },
+      label: 'Vehicle key',
       name: 'clave',
       required: true,
       type: 'text',
@@ -49,7 +50,7 @@ export const CarVersions: CollectionConfig = {
     },
     {
       admin: {
-        description: 'Años en los que se comercializó esta versión',
+        description: 'Years this version was sold',
       },
       hasMany: true,
       name: 'years',

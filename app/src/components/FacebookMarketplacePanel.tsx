@@ -184,10 +184,10 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
         }}
       >
         <strong style={{ fontSize: '0.95rem' }}>
-          📋 Copiar información para Facebook Marketplace
+          📋 Copy data for Facebook Marketplace
         </strong>
         <span style={{ fontSize: '0.75rem', opacity: 0.9 }}>
-          {photoCount} foto{photoCount === 1 ? '' : 's'} · sube hasta 20 en
+          {photoCount} photo{photoCount === 1 ? '' : 's'} · upload up to 20 on
           Facebook
         </span>
       </div>
@@ -200,9 +200,9 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
             margin: '0 0 0.75rem',
           }}
         >
-          Copia cada dato en su campo correspondiente del formulario de
-          Facebook, y pega la descripción en el campo de texto. Los valores usan
-          las mismas opciones que Facebook.
+          Copy each value into its matching field in the Facebook form, and
+          paste the description into the text field. The values use the same
+          options as Facebook.
         </p>
 
         {/* Per-field rows */}
@@ -241,7 +241,7 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
                   fontSize: '0.85rem',
                 }}
               >
-                {f.value || '— sin dato —'}
+                {f.value || '— no data —'}
               </span>
               <CopyBtn
                 copiedKey={copiedKey}
@@ -272,7 +272,7 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
           }}
           type="button"
         >
-          {copiedKey === '__all__' ? '✓ Copiado' : 'Copiar todos los campos'}
+          {copiedKey === '__all__' ? '✓ Copied' : 'Copy all fields'}
         </button>
 
         {/* Description */}
@@ -291,7 +291,7 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
                 fontSize: '0.85rem',
               }}
             >
-              Descripción (para el campo de texto de Facebook)
+              Description (for Facebook's text field)
             </strong>
             <CopyBtn
               copiedKey={copiedKey}
@@ -324,8 +324,8 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
               margin: '0.4rem 0 0',
             }}
           >
-            Generada automáticamente a partir de los datos del auto.
-            (Próximamente: opción de redactarla con IA.)
+            Generated automatically from the car data. (Coming soon: an option
+            to write it with AI.)
           </p>
         </div>
       </div>

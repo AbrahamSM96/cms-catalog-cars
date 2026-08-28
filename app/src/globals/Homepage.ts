@@ -9,7 +9,7 @@ export const Homepage: GlobalConfig = {
     /**
      * read
      */
-    read: () => true, // Público: el frontend lo consume sin auth
+    read: () => true, // Public: the frontend reads it without auth
     update: editorsAndAdmins,
   },
   admin: {
@@ -19,7 +19,7 @@ export const Homepage: GlobalConfig = {
     {
       admin: {
         description:
-          'Imágenes del carrusel principal (header). Se muestran en el orden de la lista.',
+          'Main carousel (header) images. Shown in list order.',
         initCollapsed: true,
       },
       fields: [
@@ -33,7 +33,7 @@ export const Homepage: GlobalConfig = {
         {
           admin: {
             description:
-              'Texto opcional que aparece sobre la imagen. También se usa como texto alternativo (SEO) del slide si la imagen no tiene uno propio.',
+              'Optional text shown over the image. Also used as the slide alt text (SEO) when the image has none of its own.',
           },
           label: 'Caption',
           name: 'caption',
@@ -52,7 +52,7 @@ export const Homepage: GlobalConfig = {
     },
     {
       admin: {
-        description: 'Título y textos del encabezado principal.',
+        description: 'Title and copy for the main header.',
       },
       fields: [
         {
@@ -69,7 +69,7 @@ export const Homepage: GlobalConfig = {
         },
         {
           admin: {
-            description: 'Parte resaltada en rojo del título.',
+            description: 'Part of the title highlighted in red.',
           },
           defaultValue: 'Seminuevo Ideal',
           label: 'Heading highlight',

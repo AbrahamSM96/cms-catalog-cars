@@ -68,7 +68,7 @@ describe('ensureBrandExists', () => {
     const findByID = vi.fn().mockRejectedValue(new Error('not found'))
     const props = makeHookProps({ brand: 'bad-id', name: 'X' }, findByID)
     await expect(ensureBrandExists(props)).rejects.toThrow(
-      'La marca seleccionada no existe (id: bad-id).'
+      'The selected brand does not exist (id: bad-id).'
     )
   })
 
@@ -76,7 +76,7 @@ describe('ensureBrandExists', () => {
     const findByID = vi.fn().mockRejectedValue(new Error('not found'))
     const props = makeHookProps({ brand: 99, name: 'X' }, findByID)
     await expect(ensureBrandExists(props)).rejects.toThrow(
-      'La marca seleccionada no existe (id: 99).'
+      'The selected brand does not exist (id: 99).'
     )
   })
 

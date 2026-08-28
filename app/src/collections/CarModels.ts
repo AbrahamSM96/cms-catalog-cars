@@ -27,7 +27,7 @@ export const ensureBrandExists: CollectionBeforeValidateHook = async (
   try {
     await req.payload.findByID({ collection: 'brands', depth: 0, id })
   } catch {
-    throw new Error(`La marca seleccionada no existe (id: ${String(id)}).`)
+    throw new Error(`The selected brand does not exist (id: ${String(id)}).`)
   }
 
   return data
@@ -51,7 +51,7 @@ export const CarModels: CollectionConfig = {
   fields: [
     {
       admin: {
-        description: 'Marca a la que pertenece el modelo',
+        description: 'Brand this model belongs to',
       },
       hasMany: false,
       name: 'brand',

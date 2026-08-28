@@ -17,110 +17,110 @@ export const SiteSettings: GlobalConfig = {
     /**
      * read
      */
-    read: () => true, // Público: el frontend lo consume sin auth
+    read: () => true, // Public: the frontend reads it without auth
     update: editorsAndAdmins,
   },
   admin: {
     description:
-      'Identidad del sitio: marca, SEO, favicon, imagen para compartir y colores.',
+      'Site identity: brand, SEO, favicon, share image and colors.',
     group: 'Settings',
   },
   fields: [
     {
       admin: {
-        description: 'Nombre y textos de marca que se muestran en el sitio.',
+        description: 'Brand name and copy shown on the site.',
       },
       fields: [
         {
           admin: { placeholder: 'AutoCatálogo' },
-          label: 'Nombre de la marca',
+          label: 'Brand name',
           name: 'name',
           required: true,
           type: 'text',
         },
         {
           admin: { placeholder: 'Autos seminuevos de calidad' },
-          label: 'Eslogan',
+          label: 'Tagline',
           name: 'tagline',
           type: 'text',
         },
         {
           admin: {
-            description: 'Descripción corta usada en el footer.',
+            description: 'Short description used in the footer.',
           },
-          label: 'Descripción',
+          label: 'Description',
           name: 'description',
           type: 'textarea',
         },
         {
           admin: {
             description:
-              'Muestra el nombre de la marca junto al logo en la barra superior y el pie de página. Desactívalo si tu logo ya incluye el nombre.',
+              'Shows the brand name next to the logo in the top bar and footer. Turn it off if your logo already includes the name.',
           },
           defaultValue: true,
-          label: 'Mostrar el nombre junto al logo',
+          label: 'Show name next to logo',
           name: 'showName',
           type: 'checkbox',
         },
       ],
-      label: 'Marca',
+      label: 'Brand',
       name: 'brand',
       type: 'group',
     },
     {
       admin: {
         description:
-          'Textos que ven los buscadores (Google) y las redes al compartir el sitio.',
+          'Text seen by search engines (Google) and social networks when the site is shared.',
       },
       fields: [
         {
           admin: {
-            description: 'Título por defecto y de la portada.',
+            description: 'Default title, also used on the home page.',
             placeholder: 'AutoCatálogo - Autos Seminuevos de Calidad',
           },
-          label: 'Título por defecto',
+          label: 'Default title',
           name: 'titleDefault',
           type: 'text',
         },
         {
           admin: {
             description:
-              'Plantilla para páginas internas. Usa %s donde va el título de la página.',
+              'Template for inner pages. Use %s where the page title goes.',
             placeholder: '%s | AutoCatálogo',
           },
-          label: 'Plantilla de título',
+          label: 'Title template',
           name: 'titleTemplate',
           type: 'text',
         },
         {
           admin: {
-            description: 'Descripción larga (meta description).',
+            description: 'Long description (meta description).',
           },
-          label: 'Descripción SEO',
+          label: 'SEO description',
           name: 'description',
           type: 'textarea',
         },
         {
           admin: {
-            description: 'Descripción corta para redes sociales (Open Graph).',
+            description: 'Short description for social media (Open Graph).',
           },
-          label: 'Descripción para redes',
+          label: 'Social description',
           name: 'ogDescription',
           type: 'textarea',
         },
         {
           admin: {
-            description: 'Palabras clave (una por fila).',
+            description: 'Keywords (one per row).',
           },
           fields: [
             {
-              label: 'Palabra clave',
+              label: 'Keyword',
               name: 'value',
               required: true,
               type: 'text',
             },
           ],
-          label: 'Palabras clave',
+          label: 'Keywords',
           name: 'keywords',
           type: 'array',
         },
@@ -132,13 +132,13 @@ export const SiteSettings: GlobalConfig = {
     {
       admin: {
         description:
-          'Imágenes de marca. El logo se muestra en la barra superior y el pie de página; el favicon es el ícono de la pestaña; la imagen para compartir aparece al pegar el enlace en redes.',
+          'Brand images. The logo shows in the top bar and footer; the favicon is the browser tab icon; the share image appears when the link is pasted on social media.',
       },
       fields: [
         {
           admin: {
             description:
-              'Logo de la marca (SVG, PNG o WebP). Se muestra a una altura de 36 px, así que usa un archivo con fondo transparente. Si lo dejas vacío se usa el ícono por defecto.',
+              'Brand logo (SVG, PNG or WebP). Displayed at 36 px tall, so use a file with a transparent background. If left empty the default icon is used.',
           },
           label: 'Logo',
           name: 'logo',
@@ -147,7 +147,7 @@ export const SiteSettings: GlobalConfig = {
         },
         {
           admin: {
-            description: 'Ícono de la pestaña del navegador (PNG o ICO).',
+            description: 'Browser tab icon (PNG or ICO).',
           },
           label: 'Favicon',
           name: 'favicon',
@@ -157,35 +157,35 @@ export const SiteSettings: GlobalConfig = {
         {
           admin: {
             description:
-              'Imagen que se muestra al compartir el sitio (recomendado 1200×630).',
+              'Image shown when the site is shared (1200×630 recommended).',
           },
-          label: 'Imagen para compartir (Open Graph)',
+          label: 'Share image (Open Graph)',
           name: 'ogImage',
           relationTo: 'media',
           type: 'upload',
         },
       ],
-      label: 'Imágenes',
+      label: 'Images',
       name: 'media',
       type: 'group',
     },
     {
       admin: {
         description:
-          'Colores de marca. Se aplican en botones, resaltados y la barra de carga.',
+          'Brand colors. Applied to buttons, highlights and the loading bar.',
       },
       fields: [
         {
           fields: [
             {
               admin: { placeholder: '#276CF5', width: '50%' },
-              label: 'Acento',
+              label: 'Accent',
               name: 'accent',
               type: 'text',
             },
             {
               admin: { placeholder: '#1D4ED8', width: '50%' },
-              label: 'Acento (hover)',
+              label: 'Accent (hover)',
               name: 'accentStrong',
               type: 'text',
             },
@@ -194,15 +194,15 @@ export const SiteSettings: GlobalConfig = {
         },
         {
           admin: {
-            description: 'Color neutro principal (texto, superficies oscuras).',
+            description: 'Main neutral color (text, dark surfaces).',
             placeholder: '#0f172a',
           },
-          label: 'Primario',
+          label: 'Primary',
           name: 'primary',
           type: 'text',
         },
       ],
-      label: 'Colores',
+      label: 'Colors',
       name: 'theme',
       type: 'group',
     },
@@ -210,6 +210,6 @@ export const SiteSettings: GlobalConfig = {
   hooks: {
     afterChange: [revalidateGlobalAfterChange(CACHE_TAGS.siteSettings)],
   },
-  label: 'Configuración del sitio',
+  label: 'Site settings',
   slug: 'site-settings',
 }

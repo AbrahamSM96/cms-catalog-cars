@@ -196,7 +196,7 @@ export async function getCarById(id: string): Promise<Car> {
 }
 
 /**
- * Fetch a single car by its SEO slug (marca-modelo-version-año-id).
+ * Fetch a single car by its SEO slug (brand-model-version-year-id).
  * The id is parsed from the last segment of the slug.
  *
  * @param slug - the car slug to fetch

@@ -22,7 +22,7 @@ export function CopyBtn({
 }): React.JSX.Element {
   return (
     <button
-      aria-label={`Copiar ${id} al portapapeles`}
+      aria-label={`Copy ${id} to clipboard`}
       disabled={!text}
       onClick={() => onCopy(id, text)}
       style={{
@@ -39,7 +39,7 @@ export function CopyBtn({
       }}
       type="button"
     >
-      {copiedKey === id ? '✓ Copiado' : 'Copiar'}
+      {copiedKey === id ? '✓ Copied' : 'Copy'}
     </button>
   )
 }

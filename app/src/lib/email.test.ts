@@ -81,7 +81,7 @@ describe('forgotPasswordHTML', () => {
     const html = forgotPasswordHTML({ req: fakeRequest('https://x.test') })
 
     expect(html).not.toContain('/reset/')
-    expect(html).toContain('Vuelve a solicitar')
+    expect(html).toContain('Request the reset again')
   })
 
   it('survives being called with no arguments at all', () => {

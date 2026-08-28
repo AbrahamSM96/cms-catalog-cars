@@ -52,7 +52,7 @@ export function emailAdapter(): EmailAdapter | undefined {
 
 /** Name the transactional emails sign off with. */
 const senderName = (): string =>
-  process.env.EMAIL_FROM_NAME || 'Panel de administración'
+  process.env.EMAIL_FROM_NAME || 'Admin panel'
 
 /**
  * Build the admin password-reset URL for a token.
@@ -79,11 +79,11 @@ function resetURL(req: PayloadRequest, token: string): string {
  * Subject line of the password-reset email.
  */
 export function forgotPasswordSubject(): string {
-  return `Restablece tu contraseña — ${senderName()}`
+  return `Reset your password — ${senderName()}`
 }
 
 /**
- * Body of the password-reset email, in Spanish and with the reset link.
+ * Body of the password-reset email, with the reset link.
  *
  * Payload types every argument as optional because the same signature is
  * reused across operations, so a missing req or token degrades to a message
@@ -102,13 +102,13 @@ export function forgotPasswordHTML(args?: {
   const expiration = Math.round(RESET_TOKEN_EXPIRATION / 60_000)
 
   return `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:#111">
-  <p>Recibiste este correo porque se solicitó restablecer la contraseña de tu cuenta en ${senderName()}.</p>
+  <p>You received this email because a password reset was requested for your account on ${senderName()}.</p>
   ${url
-      ? `<p><a href="${url}" style="display:inline-block;padding:12px 20px;background:#111;color:#fff;border-radius:8px;text-decoration:none">Restablecer contraseña</a></p>
-  <p style="font-size:13px;color:#555">Si el botón no funciona, copia y pega esta dirección en tu navegador:<br /><a href="${url}">${url}</a></p>`
-      : '<p>Vuelve a solicitar el restablecimiento desde el panel para obtener un enlace válido.</p>'
+      ? `<p><a href="${url}" style="display:inline-block;padding:12px 20px;background:#111;color:#fff;border-radius:8px;text-decoration:none">Reset password</a></p>
+  <p style="font-size:13px;color:#555">If the button does not work, copy and paste this address into your browser:<br /><a href="${url}">${url}</a></p>`
+      : '<p>Request the reset again from the panel to get a valid link.</p>'
     }
-  <p style="font-size:13px;color:#555">El enlace caduca en ${expiration} minutos y solo puede usarse una vez.</p>
-  <p style="font-size:13px;color:#555">Si no solicitaste este cambio, ignora este correo: tu contraseña seguirá siendo la misma.</p>
+  <p style="font-size:13px;color:#555">The link expires in ${expiration} minutes and can only be used once.</p>
+  <p style="font-size:13px;color:#555">If you did not request this change, ignore this email: your password stays the same.</p>
 </div>`
 }

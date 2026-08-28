@@ -20,7 +20,7 @@ export const Colors: CollectionConfig = {
   admin: {
     defaultColumns: ['name', 'hex'],
     description:
-      'Catálogo de colores (exterior e interior). Agrega los que necesites.',
+      'Color catalog (exterior and interior). Add as many as you need.',
     group: 'Settings',
     useAsTitle: 'name',
   },
@@ -28,7 +28,7 @@ export const Colors: CollectionConfig = {
     {
       admin: {
         description:
-          'Nombre del color en español (ej: Negro, Blanco, Gris Oxford)',
+          'Color name in Spanish, as shown on the site (e.g. Negro, Blanco, Gris Oxford)',
         placeholder: 'Negro',
       },
       label: 'Color',
@@ -39,10 +39,10 @@ export const Colors: CollectionConfig = {
     },
     {
       admin: {
-        description: 'Código hexadecimal para la muestra visual (ej: #000000)',
+        description: 'Hex code for the visual swatch (e.g. #000000)',
         placeholder: '#000000',
       },
-      label: 'Código de color (opcional)',
+      label: 'Color code (optional)',
       name: 'hex',
       type: 'text',
     },

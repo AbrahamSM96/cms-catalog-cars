@@ -53,7 +53,7 @@ export function YearField(props: YearFieldProps): React.JSX.Element {
       onChange={handleChange}
       options={years.map((y) => ({ label: String(y), value: String(y) }))}
       path={path}
-      placeholder="Selecciona año"
+      placeholder="Select a year"
       required={field?.required}
       style={{ '--field-width': field?.admin?.width } as React.CSSProperties}
       value={typeof value === 'number' ? String(value) : ''}

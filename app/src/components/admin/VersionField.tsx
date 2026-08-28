@@ -123,7 +123,7 @@ export function VersionField(props: VersionFieldProps): React.JSX.Element {
       options={descriptions.map((desc) => ({ label: desc, value: desc }))}
       path={path}
       placeholder={
-        ready ? 'Selecciona versión' : 'Elige marca, modelo y año primero'
+        ready ? 'Select a version' : 'Pick brand, model and year first'
       }
       readOnly={!ready}
       required={field?.required}

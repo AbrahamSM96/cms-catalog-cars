@@ -14,7 +14,7 @@ export const Media: CollectionConfig = {
     /**
      * read
      */
-    read: () => true, // Todos pueden ver las imágenes
+    read: () => true, // Public read access for frontend
     update: editorsAndAdmins,
   },
   admin: {
@@ -24,8 +24,9 @@ export const Media: CollectionConfig = {
     {
       admin: {
         description:
-          'Opcional. Si lo dejas vacío, la web genera un texto alternativo descriptivo automáticamente: en las fotos de autos usa marca, modelo, versión, año y ciudad; en los slides usa el pie de foto o un texto por defecto. Complétalo solo si quieres un texto específico.',
+          'Optional. If left empty, the site generates a descriptive alt text automatically: car photos use brand, model, version, year and city; slides use the caption or a default text. Fill it in only if you want a specific text.',
       },
+      label: 'Alt text',
       name: 'alt',
       type: 'text',
     },

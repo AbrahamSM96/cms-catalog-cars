@@ -9,12 +9,12 @@ export const Contact: GlobalConfig = {
     /**
      * read
      */
-    read: () => true, // Público: el frontend lo consume sin auth
+    read: () => true, // Public: the frontend reads it without auth
     update: editorsAndAdmins,
   },
   admin: {
     description:
-      'Datos de contacto que se muestran en el footer y en la página de contacto.',
+      'Contact details shown in the footer and on the contact page.',
     group: 'Content',
   },
   fields: [
@@ -22,14 +22,14 @@ export const Contact: GlobalConfig = {
       fields: [
         {
           admin: { placeholder: '+52 55 5001 0000', width: '50%' },
-          label: 'Teléfono',
+          label: 'Phone',
           name: 'phone',
           type: 'text',
         },
         {
           admin: {
             description:
-              'Solo dígitos con lada país (ej. 5255...). Se usa para el enlace de WhatsApp.',
+              'Digits only, including country code (e.g. 5255...). Used for the WhatsApp link.',
             placeholder: '525550010000',
             width: '50%',
           },
@@ -42,7 +42,7 @@ export const Contact: GlobalConfig = {
     },
     {
       admin: { placeholder: 'contacto@tu-negocio.com' },
-      label: 'Correo electrónico',
+      label: 'Email',
       name: 'email',
       type: 'email',
     },
@@ -50,7 +50,7 @@ export const Contact: GlobalConfig = {
       fields: [
         {
           admin: { placeholder: 'Av. Universidad 2060, Copilco Universidad' },
-          label: 'Calle y número',
+          label: 'Street and number',
           name: 'line1',
           type: 'text',
         },
@@ -58,13 +58,13 @@ export const Contact: GlobalConfig = {
           fields: [
             {
               admin: { placeholder: 'Ciudad de México', width: '50%' },
-              label: 'Ciudad',
+              label: 'City',
               name: 'city',
               type: 'text',
             },
             {
               admin: { placeholder: 'CDMX', width: '50%' },
-              label: 'Estado',
+              label: 'State',
               name: 'state',
               type: 'text',
             },
@@ -75,14 +75,14 @@ export const Contact: GlobalConfig = {
           fields: [
             {
               admin: { placeholder: '04360', width: '50%' },
-              label: 'Código postal',
+              label: 'Postal code',
               name: 'postalCode',
               type: 'text',
             },
             {
               admin: { width: '50%' },
               defaultValue: 'México',
-              label: 'País',
+              label: 'Country',
               name: 'country',
               type: 'text',
             },
@@ -91,30 +91,30 @@ export const Contact: GlobalConfig = {
         },
         {
           admin: { placeholder: 'https://maps.app.goo.gl/...' },
-          label: 'Enlace de Google Maps (opcional)',
+          label: 'Google Maps link (optional)',
           name: 'googleMapsUrl',
           type: 'text',
         },
       ],
-      label: 'Dirección',
+      label: 'Address',
       name: 'address',
       type: 'group',
     },
     {
       admin: {
         description:
-          'Horario general que se muestra en la página de contacto (opcional).',
+          'General opening hours shown on the contact page (optional).',
         placeholder:
           'Lun a Vie 9:00 a.m. – 7:00 p.m. · Sáb 9:00 a.m. – 2:00 p.m.',
       },
-      label: 'Horario (texto)',
+      label: 'Hours (text)',
       name: 'hoursNote',
       type: 'textarea',
     },
     {
       admin: {
         description:
-          'Enlaces completos (https://...). Deja vacío lo que no uses.',
+          'Full links (https://...). Leave empty what you do not use.',
       },
       fields: [
         {
@@ -142,7 +142,7 @@ export const Contact: GlobalConfig = {
           type: 'text',
         },
       ],
-      label: 'Redes sociales',
+      label: 'Social media',
       name: 'social',
       type: 'group',
     },
@@ -150,6 +150,6 @@ export const Contact: GlobalConfig = {
   hooks: {
     afterChange: [revalidateGlobalAfterChange(CACHE_TAGS.contact)],
   },
-  label: 'Contacto',
+  label: 'Contact',
   slug: 'contact',
 }

@@ -9,16 +9,16 @@ import { validateLatitude, validateLongitude } from '../lib/coordinates'
 import { CACHE_TAGS } from '../lib/cache-tags'
 
 const DAYS: { label: string; name: string }[] = [
-  { label: 'Lunes', name: 'monday' },
-  { label: 'Martes', name: 'tuesday' },
-  { label: 'Miércoles', name: 'wednesday' },
-  { label: 'Jueves', name: 'thursday' },
-  { label: 'Viernes', name: 'friday' },
-  { label: 'Sábado', name: 'saturday' },
-  { label: 'Domingo', name: 'sunday' },
+  { label: 'Monday', name: 'monday' },
+  { label: 'Tuesday', name: 'tuesday' },
+  { label: 'Wednesday', name: 'wednesday' },
+  { label: 'Thursday', name: 'thursday' },
+  { label: 'Friday', name: 'friday' },
+  { label: 'Saturday', name: 'saturday' },
+  { label: 'Sunday', name: 'sunday' },
 ]
 
-// One row per weekday: a "Cerrado" toggle plus opening/closing time (HH:MM, 24h).
+// One row per weekday: a "Closed" toggle plus opening/closing time (HH:MM, 24h).
 const dayFields: Field[] = DAYS.map((day) => ({
   fields: [
     {
@@ -26,7 +26,7 @@ const dayFields: Field[] = DAYS.map((day) => ({
         {
           admin: { width: '34%' },
           defaultValue: false,
-          label: 'Cerrado',
+          label: 'Closed',
           name: 'closed',
           type: 'checkbox',
         },
@@ -40,11 +40,11 @@ const dayFields: Field[] = DAYS.map((day) => ({
              * @returns Whether to show the field
              */
             condition: (_, siblingData) => !siblingData?.closed,
-            description: 'Formato 24h',
+            description: '24h format',
             placeholder: '09:00',
             width: '33%',
           },
-          label: 'Abre',
+          label: 'Opens',
           name: 'open',
           type: 'text',
         },
@@ -58,11 +58,11 @@ const dayFields: Field[] = DAYS.map((day) => ({
              * @returns Whether to show the field
              */
             condition: (_, siblingData) => !siblingData?.closed,
-            description: 'Formato 24h',
+            description: '24h format',
             placeholder: '19:00',
             width: '33%',
           },
-          label: 'Cierra',
+          label: 'Closes',
           name: 'close',
           type: 'text',
         },
@@ -95,11 +95,11 @@ export const Dealerships: CollectionConfig = {
       tabs: [
         // GENERAL
         {
-          description: 'Datos principales del concesionario.',
+          description: 'Main dealership data.',
           fields: [
             {
               admin: { placeholder: 'Seminuevos Centro Magno' },
-              label: 'Nombre',
+              label: 'Name',
               name: 'name',
               required: true,
               type: 'text',
@@ -107,9 +107,9 @@ export const Dealerships: CollectionConfig = {
             {
               admin: {
                 description:
-                  'Imagen que se muestra en la tarjeta de ubicación.',
+                  'Image shown on the location card.',
               },
-              label: 'Foto del concesionario',
+              label: 'Dealership photo',
               name: 'image',
               relationTo: 'media',
               type: 'upload',
@@ -118,14 +118,14 @@ export const Dealerships: CollectionConfig = {
               fields: [
                 {
                   admin: { placeholder: '+52 33 3002 5050', width: '50%' },
-                  label: 'Teléfono',
+                  label: 'Phone',
                   name: 'phone',
                   type: 'text',
                 },
                 {
                   admin: {
                     description:
-                      'Solo dígitos con lada país (ej. 5233...). Opcional.',
+                      'Digits only, including country code (e.g. 5233...). Optional.',
                     placeholder: '5233 3002 5050',
                     width: '50%',
                   },
@@ -140,15 +140,15 @@ export const Dealerships: CollectionConfig = {
           label: 'General',
         },
 
-        // UBICACIÓN
+        // LOCATION
         {
-          description: 'Dirección y coordenadas para el mapa.',
+          description: 'Address and coordinates for the map.',
           fields: [
             {
               fields: [
                 {
                   admin: { placeholder: 'Av. Adolfo López Mateos Sur 4247-B' },
-                  label: 'Calle y número',
+                  label: 'Street and number',
                   name: 'line1',
                   type: 'text',
                 },
@@ -156,13 +156,13 @@ export const Dealerships: CollectionConfig = {
                   fields: [
                     {
                       admin: { placeholder: 'Loma Bonita', width: '50%' },
-                      label: 'Colonia',
+                      label: 'Neighborhood',
                       name: 'neighborhood',
                       type: 'text',
                     },
                     {
                       admin: { placeholder: '45086', width: '50%' },
-                      label: 'Código postal',
+                      label: 'Postal code',
                       name: 'postalCode',
                       type: 'text',
                     },
@@ -173,13 +173,13 @@ export const Dealerships: CollectionConfig = {
                   fields: [
                     {
                       admin: { placeholder: 'Zapopan', width: '50%' },
-                      label: 'Ciudad',
+                      label: 'City',
                       name: 'city',
                       type: 'text',
                     },
                     {
                       admin: { placeholder: 'Jalisco', width: '50%' },
-                      label: 'Estado',
+                      label: 'State',
                       name: 'state',
                       type: 'text',
                     },
@@ -188,19 +188,19 @@ export const Dealerships: CollectionConfig = {
                 },
                 {
                   defaultValue: 'México',
-                  label: 'País',
+                  label: 'Country',
                   name: 'country',
                   type: 'text',
                 },
               ],
-              label: 'Dirección',
+              label: 'Address',
               name: 'address',
               type: 'group',
             },
             {
               admin: {
                 description:
-                  'Usa grados DECIMALES (ej. 20.6597 y -103.3496), no grados-minutos-segundos. En Google Maps: clic derecho sobre el lugar → clic en las coordenadas para copiarlas (vienen en decimal).',
+                  'Use DECIMAL degrees (e.g. 20.6597 and -103.3496), not degrees-minutes-seconds. In Google Maps: right-click the place → click the coordinates to copy them (they come in decimal).',
               },
               fields: [
                 {
@@ -211,7 +211,7 @@ export const Dealerships: CollectionConfig = {
                         step: 0.000001,
                         width: '50%',
                       },
-                      label: 'Latitud',
+                      label: 'Latitude',
                       name: 'latitude',
                       type: 'number',
                       validate: validateLatitude,
@@ -222,7 +222,7 @@ export const Dealerships: CollectionConfig = {
                         step: 0.000001,
                         width: '50%',
                       },
-                      label: 'Longitud',
+                      label: 'Longitude',
                       name: 'longitude',
                       type: 'number',
                       validate: validateLongitude,
@@ -231,27 +231,27 @@ export const Dealerships: CollectionConfig = {
                   type: 'row',
                 },
               ],
-              label: 'Coordenadas (para el mapa)',
+              label: 'Coordinates (for the map)',
               name: 'coordinates',
               type: 'group',
             },
             {
               admin: {
-                description: "Para el botón 'Cómo llegar'.",
+                description: "For the 'Get directions' button.",
                 placeholder: 'https://maps.app.goo.gl/...',
               },
-              label: 'Enlace de Google Maps (opcional)',
+              label: 'Google Maps link (optional)',
               name: 'googleMapsUrl',
               type: 'text',
             },
           ],
-          label: 'Ubicación',
+          label: 'Location',
         },
 
-        // HORARIO
+        // HOURS
         {
           description:
-            'Horario de atención por día. Se usa para mostrar Abierto/Cerrado.',
+            'Opening hours per day. Used to show Open/Closed.',
           fields: [
             {
               fields: dayFields,
@@ -260,7 +260,7 @@ export const Dealerships: CollectionConfig = {
               type: 'group',
             },
           ],
-          label: 'Horario',
+          label: 'Hours',
         },
       ],
       type: 'tabs',

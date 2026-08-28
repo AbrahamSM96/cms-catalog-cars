@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest'
 import { validateLatitude, validateLongitude } from './coordinates'
 
 const LAT_ERROR =
-  'La latitud debe estar entre -90 y 90 en grados decimales (ej. 20.6597).'
+  'Latitude must be between -90 and 90 in decimal degrees (e.g. 20.6597).'
 const LNG_ERROR =
-  'La longitud debe estar entre -180 y 180 en grados decimales (ej. -103.3496).'
+  'Longitude must be between -180 and 180 in decimal degrees (e.g. -103.3496).'
 
 // ---------------------------------------------------------------------------
 // validateLatitude

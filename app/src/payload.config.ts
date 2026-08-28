@@ -2,6 +2,8 @@ import { fileURLToPath } from 'url'
 import path from 'path'
 
 import { buildConfig } from 'payload'
+import { en } from '@payloadcms/translations/languages/en'
+import { es } from '@payloadcms/translations/languages/es'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { s3Storage } from '@payloadcms/storage-s3'
@@ -94,6 +96,10 @@ export default buildConfig({
   editor: lexicalEditor(),
   email: emailAdapter(),
   globals: [Homepage, Contact, SiteSettings],
+  i18n: {
+    fallbackLanguage: 'en',
+    supportedLanguages: { en, es },
+  },
   plugins: [
     s3Storage({
       bucket: process.env.R2_BUCKET ?? '',
