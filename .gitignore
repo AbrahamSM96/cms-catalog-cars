@@ -64,3 +64,6 @@ dump.rdb
 # graphify output — vive fuera del repo (~/.claude/projects/.../graphify-out),
 # aquí es solo un symlink que no se commitea.
 graphify-out
+
+# maplibre-gl worker copiado desde node_modules por `bun run maplibre:worker`
+/public/maplibre/

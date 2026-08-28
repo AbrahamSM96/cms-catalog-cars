@@ -18,6 +18,8 @@ import { DefaultLoader } from './DefaultLoader'
 import { MapContext } from './context'
 import { useResolvedTheme } from './theme'
 
+MapLibreGL.setWorkerUrl('/maplibre/maplibre-gl-worker.mjs')
+
 const defaultStyles = {
   dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
   light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
