@@ -5,17 +5,20 @@ import {
   revalidateAfterChange,
   revalidateAfterDelete,
 } from '../hooks/revalidate'
+import { common, dealerships, groups } from '../i18n/labels'
 import { validateLatitude, validateLongitude } from '../lib/coordinates'
 import { CACHE_TAGS } from '../lib/cache-tags'
 
-const DAYS: { label: string; name: string }[] = [
-  { label: 'Monday', name: 'monday' },
-  { label: 'Tuesday', name: 'tuesday' },
-  { label: 'Wednesday', name: 'wednesday' },
-  { label: 'Thursday', name: 'thursday' },
-  { label: 'Friday', name: 'friday' },
-  { label: 'Saturday', name: 'saturday' },
-  { label: 'Sunday', name: 'sunday' },
+import type { Translated } from '../i18n/locales'
+
+const DAYS: { label: Translated; name: string }[] = [
+  { label: dealerships.fields.monday.label, name: 'monday' },
+  { label: dealerships.fields.tuesday.label, name: 'tuesday' },
+  { label: dealerships.fields.wednesday.label, name: 'wednesday' },
+  { label: dealerships.fields.thursday.label, name: 'thursday' },
+  { label: dealerships.fields.friday.label, name: 'friday' },
+  { label: dealerships.fields.saturday.label, name: 'saturday' },
+  { label: dealerships.fields.sunday.label, name: 'sunday' },
 ]
 
 // One row per weekday: a "Closed" toggle plus opening/closing time (HH:MM, 24h).
@@ -26,7 +29,7 @@ const dayFields: Field[] = DAYS.map((day) => ({
         {
           admin: { width: '34%' },
           defaultValue: false,
-          label: 'Closed',
+          label: dealerships.fields.closed.label,
           name: 'closed',
           type: 'checkbox',
         },
@@ -40,11 +43,11 @@ const dayFields: Field[] = DAYS.map((day) => ({
              * @returns Whether to show the field
              */
             condition: (_, siblingData) => !siblingData?.closed,
-            description: '24h format',
+            description: dealerships.fields.opens.description,
             placeholder: '09:00',
             width: '33%',
           },
-          label: 'Opens',
+          label: dealerships.fields.opens.label,
           name: 'open',
           type: 'text',
         },
@@ -58,11 +61,11 @@ const dayFields: Field[] = DAYS.map((day) => ({
              * @returns Whether to show the field
              */
             condition: (_, siblingData) => !siblingData?.closed,
-            description: '24h format',
+            description: dealerships.fields.opens.description,
             placeholder: '19:00',
             width: '33%',
           },
-          label: 'Closes',
+          label: dealerships.fields.closes.label,
           name: 'close',
           type: 'text',
         },
@@ -87,7 +90,7 @@ export const Dealerships: CollectionConfig = {
   },
   admin: {
     defaultColumns: ['name', 'phone', 'updatedAt'],
-    group: 'Content',
+    group: groups.content,
     useAsTitle: 'name',
   },
   fields: [
@@ -95,21 +98,20 @@ export const Dealerships: CollectionConfig = {
       tabs: [
         // GENERAL
         {
-          description: 'Main dealership data.',
+          description: dealerships.tabs.general.description,
           fields: [
             {
               admin: { placeholder: 'Seminuevos Centro Magno' },
-              label: 'Name',
+              label: common.name,
               name: 'name',
               required: true,
               type: 'text',
             },
             {
               admin: {
-                description:
-                  'Image shown on the location card.',
+                description: dealerships.fields.dealershipPhoto.description,
               },
-              label: 'Dealership photo',
+              label: dealerships.fields.dealershipPhoto.label,
               name: 'image',
               relationTo: 'media',
               type: 'upload',
@@ -118,18 +120,17 @@ export const Dealerships: CollectionConfig = {
               fields: [
                 {
                   admin: { placeholder: '+52 33 3002 5050', width: '50%' },
-                  label: 'Phone',
+                  label: common.phone,
                   name: 'phone',
                   type: 'text',
                 },
                 {
                   admin: {
-                    description:
-                      'Digits only, including country code (e.g. 5233...). Optional.',
+                    description: dealerships.fields.whatsapp.description,
                     placeholder: '5233 3002 5050',
                     width: '50%',
                   },
-                  label: 'WhatsApp',
+                  label: common.whatsapp,
                   name: 'whatsapp',
                   type: 'text',
                 },
@@ -137,18 +138,18 @@ export const Dealerships: CollectionConfig = {
               type: 'row',
             },
           ],
-          label: 'General',
+          label: dealerships.tabs.general.label,
         },
 
         // LOCATION
         {
-          description: 'Address and coordinates for the map.',
+          description: dealerships.tabs.location.description,
           fields: [
             {
               fields: [
                 {
                   admin: { placeholder: 'Av. Adolfo López Mateos Sur 4247-B' },
-                  label: 'Street and number',
+                  label: dealerships.fields.line1.label,
                   name: 'line1',
                   type: 'text',
                 },
@@ -156,13 +157,13 @@ export const Dealerships: CollectionConfig = {
                   fields: [
                     {
                       admin: { placeholder: 'Loma Bonita', width: '50%' },
-                      label: 'Neighborhood',
+                      label: dealerships.fields.neighborhood.label,
                       name: 'neighborhood',
                       type: 'text',
                     },
                     {
                       admin: { placeholder: '45086', width: '50%' },
-                      label: 'Postal code',
+                      label: common.postalCode,
                       name: 'postalCode',
                       type: 'text',
                     },
@@ -173,13 +174,13 @@ export const Dealerships: CollectionConfig = {
                   fields: [
                     {
                       admin: { placeholder: 'Zapopan', width: '50%' },
-                      label: 'City',
+                      label: common.city,
                       name: 'city',
                       type: 'text',
                     },
                     {
                       admin: { placeholder: 'Jalisco', width: '50%' },
-                      label: 'State',
+                      label: common.state,
                       name: 'state',
                       type: 'text',
                     },
@@ -188,19 +189,18 @@ export const Dealerships: CollectionConfig = {
                 },
                 {
                   defaultValue: 'México',
-                  label: 'Country',
+                  label: common.country,
                   name: 'country',
                   type: 'text',
                 },
               ],
-              label: 'Address',
+              label: common.address,
               name: 'address',
               type: 'group',
             },
             {
               admin: {
-                description:
-                  'Use DECIMAL degrees (e.g. 20.6597 and -103.3496), not degrees-minutes-seconds. In Google Maps: right-click the place → click the coordinates to copy them (they come in decimal).',
+                description: dealerships.fields.coordinates.description,
               },
               fields: [
                 {
@@ -211,7 +211,7 @@ export const Dealerships: CollectionConfig = {
                         step: 0.000001,
                         width: '50%',
                       },
-                      label: 'Latitude',
+                      label: dealerships.fields.latitude.label,
                       name: 'latitude',
                       type: 'number',
                       validate: validateLatitude,
@@ -222,7 +222,7 @@ export const Dealerships: CollectionConfig = {
                         step: 0.000001,
                         width: '50%',
                       },
-                      label: 'Longitude',
+                      label: dealerships.fields.longitude.label,
                       name: 'longitude',
                       type: 'number',
                       validate: validateLongitude,
@@ -231,27 +231,26 @@ export const Dealerships: CollectionConfig = {
                   type: 'row',
                 },
               ],
-              label: 'Coordinates (for the map)',
+              label: dealerships.fields.coordinates.label,
               name: 'coordinates',
               type: 'group',
             },
             {
               admin: {
-                description: "For the 'Get directions' button.",
+                description: dealerships.fields.googleMapsUrl.description,
                 placeholder: 'https://maps.app.goo.gl/...',
               },
-              label: 'Google Maps link (optional)',
+              label: common.googleMapsUrl,
               name: 'googleMapsUrl',
               type: 'text',
             },
           ],
-          label: 'Location',
+          label: dealerships.tabs.location.label,
         },
 
         // HOURS
         {
-          description:
-            'Opening hours per day. Used to show Open/Closed.',
+          description: dealerships.tabs.hours.description,
           fields: [
             {
               fields: dayFields,
@@ -260,7 +259,7 @@ export const Dealerships: CollectionConfig = {
               type: 'group',
             },
           ],
-          label: 'Hours',
+          label: dealerships.tabs.hours.label,
         },
       ],
       type: 'tabs',
@@ -274,5 +273,6 @@ export const Dealerships: CollectionConfig = {
       revalidateAfterDelete(CACHE_TAGS.cars, CACHE_TAGS.dealerships),
     ],
   },
+  labels: dealerships.labels,
   slug: 'dealerships',
 }

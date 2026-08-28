@@ -12,7 +12,7 @@ const okLat = (n: number): boolean => n >= -90 && n <= 90
 /**
  * okLng
  *
- * @param n - the longitude to check  
+ * @param n - the longitude to check
  */
 const okLng = (n: number): boolean => n >= -180 && n <= 180
 

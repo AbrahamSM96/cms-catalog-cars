@@ -1,3 +1,7 @@
+import type { Translated } from '../i18n/locales'
+
+import { cars, common } from '../i18n/labels'
+
 /**
  * Facebook Marketplace (Vehicles) helpers.
  *
@@ -5,46 +9,74 @@
  * collection (Cars.ts) and by the admin "Copy for Facebook Marketplace" panel,
  * so the copyable values always match Facebook's dropdowns.
  *
- * Every option therefore carries two strings: `label` is what the admin panel
- * shows (English, like the rest of the CMS) and `fbLabel` is what gets pasted
- * into Facebook's Spanish form. They must not be collapsed into one — changing
- * `fbLabel` to English would stop matching Facebook's dropdown entries.
+ * Every option therefore carries two things: `label` is the translated text the
+ * admin panel shows and `fbLabel` is the Spanish string pasted into Facebook's
+ * form. They must not be collapsed into one — `fbLabel` has to keep matching
+ * Facebook's dropdown entries regardless of the admin's language.
  */
 
 export interface Option {
   /** Spanish text pasted into Facebook Marketplace's form. */
   fbLabel: string
-  /** Admin-facing label (English), shown in the Payload select field. */
-  label: string
+  /** Admin-facing label, shown in the Payload select field. */
+  label: Translated
   value: string
 }
 
 // Facebook "Vehicle type"
 export const VEHICLE_TYPE_OPTIONS: Option[] = [
-  { fbLabel: 'Auto', label: 'Car', value: 'car' },
-  { fbLabel: 'Camioneta', label: 'Truck', value: 'truck' },
+  { fbLabel: 'Auto', label: cars.options.vehicleType.car, value: 'car' },
+  {
+    fbLabel: 'Camioneta',
+    label: cars.options.vehicleType.truck,
+    value: 'truck',
+  },
 ]
 
 // Facebook "Body style"
 export const BODY_TYPE_OPTIONS: Option[] = [
-  { fbLabel: 'Coupé', label: 'Coupe', value: 'coupe' },
-  { fbLabel: 'Camioneta', label: 'Truck', value: 'truck' },
-  { fbLabel: 'Sedán', label: 'Sedan', value: 'sedan' },
-  { fbLabel: 'Hatchback', label: 'Hatchback', value: 'hatchback' },
-  { fbLabel: 'SUV', label: 'SUV', value: 'suv' },
-  { fbLabel: 'Convertible', label: 'Convertible', value: 'convertible' },
-  { fbLabel: 'Familiar', label: 'Wagon', value: 'wagon' },
-  { fbLabel: 'Minivan', label: 'Minivan', value: 'minivan' },
-  { fbLabel: 'Auto pequeño', label: 'Small car', value: 'small-car' },
+  { fbLabel: 'Coupé', label: cars.options.bodyType.coupe, value: 'coupe' },
+  { fbLabel: 'Camioneta', label: cars.options.bodyType.truck, value: 'truck' },
+  { fbLabel: 'Sedán', label: cars.options.bodyType.sedan, value: 'sedan' },
+  {
+    fbLabel: 'Hatchback',
+    label: cars.options.bodyType.hatchback,
+    value: 'hatchback',
+  },
+  { fbLabel: 'SUV', label: cars.options.bodyType.suv, value: 'suv' },
+  {
+    fbLabel: 'Convertible',
+    label: cars.options.bodyType.convertible,
+    value: 'convertible',
+  },
+  { fbLabel: 'Familiar', label: cars.options.bodyType.wagon, value: 'wagon' },
+  {
+    fbLabel: 'Minivan',
+    label: cars.options.bodyType.minivan,
+    value: 'minivan',
+  },
+  {
+    fbLabel: 'Auto pequeño',
+    label: cars.options.bodyType.smallCar,
+    value: 'small-car',
+  },
 ]
 
 // Facebook "Vehicle condition"
 export const CONDITION_OPTIONS: Option[] = [
-  { fbLabel: 'Excelente', label: 'Excellent', value: 'excellent' },
-  { fbLabel: 'Muy bueno', label: 'Very good', value: 'very-good' },
-  { fbLabel: 'Bueno', label: 'Good', value: 'good' },
-  { fbLabel: 'Aceptable', label: 'Fair', value: 'fair' },
-  { fbLabel: 'Malo', label: 'Poor', value: 'poor' },
+  {
+    fbLabel: 'Excelente',
+    label: cars.options.condition.excellent,
+    value: 'excellent',
+  },
+  {
+    fbLabel: 'Muy bueno',
+    label: cars.options.condition.veryGood,
+    value: 'very-good',
+  },
+  { fbLabel: 'Bueno', label: cars.options.condition.good, value: 'good' },
+  { fbLabel: 'Aceptable', label: cars.options.condition.fair, value: 'fair' },
+  { fbLabel: 'Malo', label: cars.options.condition.poor, value: 'poor' },
 ]
 
 // Colors are managed in the "colors" collection (Spanish names), not a fixed
@@ -52,21 +84,37 @@ export const CONDITION_OPTIONS: Option[] = [
 
 // Facebook "Fuel type" (matches existing Cars.fuelType values)
 export const FUEL_TYPE_OPTIONS: Option[] = [
-  { fbLabel: 'Gasolina', label: 'Gasoline', value: 'gasoline' },
-  { fbLabel: 'Diésel', label: 'Diesel', value: 'diesel' },
-  { fbLabel: 'Eléctrico', label: 'Electric', value: 'electric' },
-  { fbLabel: 'Híbrido', label: 'Hybrid', value: 'hybrid' },
+  {
+    fbLabel: 'Gasolina',
+    label: cars.options.fuelType.gasoline,
+    value: 'gasoline',
+  },
+  { fbLabel: 'Diésel', label: cars.options.fuelType.diesel, value: 'diesel' },
+  {
+    fbLabel: 'Eléctrico',
+    label: cars.options.fuelType.electric,
+    value: 'electric',
+  },
+  { fbLabel: 'Híbrido', label: cars.options.fuelType.hybrid, value: 'hybrid' },
   {
     fbLabel: 'Híbrido Enchufable',
-    label: 'Plug-in hybrid',
+    label: cars.options.fuelType.plugInHybrid,
     value: 'plug-in-hybrid',
   },
 ]
 
 // Facebook "Transmission" (matches existing Cars.transmission values)
 export const TRANSMISSION_OPTIONS: Option[] = [
-  { fbLabel: 'Automática', label: 'Automatic', value: 'automatic' },
-  { fbLabel: 'Manual', label: 'Manual', value: 'manual' },
+  {
+    fbLabel: 'Automática',
+    label: cars.options.transmission.automatic,
+    value: 'automatic',
+  },
+  {
+    fbLabel: 'Manual',
+    label: cars.options.transmission.manual,
+    value: 'manual',
+  },
 ]
 
 /**
@@ -131,8 +179,8 @@ export interface MarketplaceValues {
 
 export interface MarketplaceField {
   key: string
-  /** Admin-facing row label (English). Not pasted into Facebook. */
-  label: string
+  /** Admin-facing row label. Not pasted into Facebook. */
+  label: Translated
   /** Human value ready to paste into Facebook. Empty string = missing data. */
   value: string
 }
@@ -151,45 +199,57 @@ export function buildMarketplaceFields(
   return [
     {
       key: 'vehicleType',
-      label: 'Vehicle type',
+      label: cars.fields.vehicleType.label,
       value: labelFor(VEHICLE_TYPE_OPTIONS, v.vehicleType),
     },
-    { key: 'year', label: 'Year', value: v.year ? String(v.year) : '' },
-    { key: 'brand', label: 'Brand', value: v.brandName || '' },
-    { key: 'model', label: 'Model', value: v.model || '' },
-    { key: 'mileage', label: 'Mileage', value: formatKm(v.mileage) },
-    { key: 'price', label: 'Price', value: formatPrice(v.price) },
+    {
+      key: 'year',
+      label: cars.fields.year.label,
+      value: v.year ? String(v.year) : '',
+    },
+    { key: 'brand', label: common.brand, value: v.brandName || '' },
+    { key: 'model', label: common.model, value: v.model || '' },
+    {
+      key: 'mileage',
+      label: cars.fields.mileage.label,
+      value: formatKm(v.mileage),
+    },
+    {
+      key: 'price',
+      label: cars.fields.price.label,
+      value: formatPrice(v.price),
+    },
     {
       key: 'bodyType',
-      label: 'Body style',
+      label: cars.fields.bodyStyle.label,
       value: labelFor(BODY_TYPE_OPTIONS, v.bodyType),
     },
     {
       key: 'exteriorColor',
-      label: 'Exterior color',
+      label: cars.fields.exteriorColor.label,
       value: v.exteriorColor || '',
     },
     {
       key: 'interiorColor',
-      label: 'Interior color',
+      label: cars.fields.interiorColor.label,
       value: v.interiorColor || '',
     },
     {
       key: 'condition',
-      label: 'Vehicle condition',
+      label: cars.fields.vehicleCondition.label,
       value: labelFor(CONDITION_OPTIONS, v.condition),
     },
     {
       key: 'fuelType',
-      label: 'Fuel type',
+      label: cars.fields.fuelType.label,
       value: labelFor(FUEL_TYPE_OPTIONS, v.fuelType),
     },
     {
       key: 'transmission',
-      label: 'Transmission',
+      label: cars.fields.transmission.label,
       value: labelFor(TRANSMISSION_OPTIONS, v.transmission),
     },
-    { key: 'location', label: 'Location', value: location },
+    { key: 'location', label: cars.fields.location.label, value: location },
   ]
 }
 

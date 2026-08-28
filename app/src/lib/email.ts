@@ -51,8 +51,7 @@ export function emailAdapter(): EmailAdapter | undefined {
 }
 
 /** Name the transactional emails sign off with. */
-const senderName = (): string =>
-  process.env.EMAIL_FROM_NAME || 'Admin panel'
+const senderName = (): string => process.env.EMAIL_FROM_NAME || 'Admin panel'
 
 /**
  * Build the admin password-reset URL for a token.

@@ -2,13 +2,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { useEffect, useMemo, useState } from 'react'
 import { reduceFieldsToValues } from 'payload/shared'
-import { useAllFormFields } from '@payloadcms/ui'
+import { useAllFormFields, useTranslation } from '@payloadcms/ui'
 
 import {
   buildMarketplaceDescription,
   buildMarketplaceFields,
   type MarketplaceValues,
 } from '../lib/marketplace'
+import { fill, pick } from '../i18n/locales'
+import { ui } from '../i18n/labels'
 
 import { CopyBtn } from './CopyBtn'
 
@@ -26,8 +28,8 @@ interface FeatureRow {
 function useRelationName(collection: string, value: unknown): string {
   const id =
     value &&
-    typeof value === 'object' &&
-    'value' in (value as Record<string, unknown>)
+      typeof value === 'object' &&
+      'value' in (value as Record<string, unknown>)
       ? (value as { value: unknown }).value
       : value
 
@@ -75,6 +77,7 @@ function useRelationName(collection: string, value: unknown): string {
  */
 export function FacebookMarketplacePanel(): React.JSX.Element {
   const [fields] = useAllFormFields()
+  const { i18n } = useTranslation()
   const data = reduceFieldsToValues(fields, true) as Record<string, unknown>
 
   const brandName = useRelationName('brands', data.brand)
@@ -156,7 +159,7 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
   const copyAllFields = (): void => {
     const text = marketplaceFields
       .filter((f) => f.value)
-      .map((f) => `${f.label}: ${f.value}`)
+      .map((f) => `${pick(f.label, i18n.language)}: ${f.value}`)
       .join('\n')
     copy('__all__', text)
   }
@@ -184,11 +187,19 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
         }}
       >
         <strong style={{ fontSize: '0.95rem' }}>
-          📋 Copy data for Facebook Marketplace
+          {pick(ui.marketplacePanel.heading, i18n.language)}
         </strong>
         <span style={{ fontSize: '0.75rem', opacity: 0.9 }}>
-          {photoCount} photo{photoCount === 1 ? '' : 's'} · upload up to 20 on
-          Facebook
+          {fill(
+            pick(
+              photoCount === 1
+                ? ui.marketplacePanel.photoCountSingular
+                : ui.marketplacePanel.photoCountPlural,
+              i18n.language
+            ),
+            { count: String(photoCount) }
+          )}{' '}
+          · {pick(ui.marketplacePanel.uploadNote, i18n.language)}
         </span>
       </div>
 
@@ -200,9 +211,7 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
             margin: '0 0 0.75rem',
           }}
         >
-          Copy each value into its matching field in the Facebook form, and
-          paste the description into the text field. The values use the same
-          options as Facebook.
+          {pick(ui.marketplacePanel.copyInstructions, i18n.language)}
         </p>
 
         {/* Per-field rows */}
@@ -230,7 +239,7 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
                   minWidth: '130px',
                 }}
               >
-                {f.label}
+                {pick(f.label, i18n.language)}
               </span>
               <span
                 style={{
@@ -241,7 +250,7 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
                   fontSize: '0.85rem',
                 }}
               >
-                {f.value || '— no data —'}
+                {f.value || pick(ui.marketplacePanel.noData, i18n.language)}
               </span>
               <CopyBtn
                 copiedKey={copiedKey}
@@ -272,7 +281,9 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
           }}
           type="button"
         >
-          {copiedKey === '__all__' ? '✓ Copied' : 'Copy all fields'}
+          {copiedKey === '__all__'
+            ? pick(ui.copyBtn.copied, i18n.language)
+            : pick(ui.marketplacePanel.copyAllFields, i18n.language)}
         </button>
 
         {/* Description */}
@@ -291,7 +302,7 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
                 fontSize: '0.85rem',
               }}
             >
-              Description (for Facebook's text field)
+              {pick(ui.marketplacePanel.descriptionFor, i18n.language)}
             </strong>
             <CopyBtn
               copiedKey={copiedKey}
@@ -324,8 +335,7 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
               margin: '0.4rem 0 0',
             }}
           >
-            Generated automatically from the car data. (Coming soon: an option
-            to write it with AI.)
+            {pick(ui.marketplacePanel.comingSoonAI, i18n.language)}
           </p>
         </div>
       </div>

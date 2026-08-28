@@ -32,7 +32,7 @@ export function ScrollToResults(): null {
             resultsSection.getBoundingClientRect().top +
             window.pageYOffset +
             yOffset
-          window.scrollTo({ behavior: 'smooth', top: y, })
+          window.scrollTo({ behavior: 'smooth', top: y })
         }
       }, 150)
     }

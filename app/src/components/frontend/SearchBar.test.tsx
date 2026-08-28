@@ -31,9 +31,7 @@ describe('SearchBar', () => {
   it('renders the submit button', () => {
     mockGet.mockReturnValue(null)
     render(<SearchBar />)
-    expect(
-      screen.getByRole('button', { name: 'Buscar' })
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Buscar' })).toBeInTheDocument()
   })
 
   it('navigates with search query on submit', async () => {
@@ -42,10 +40,9 @@ describe('SearchBar', () => {
     render(<SearchBar />)
     await user.type(screen.getByPlaceholderText(/buscar por marca/i), 'versa')
     await user.click(screen.getByRole('button', { name: 'Buscar' }))
-    expect(mockPush).toHaveBeenCalledWith(
-      '/catalogo?search=versa',
-      { scroll: false }
-    )
+    expect(mockPush).toHaveBeenCalledWith('/catalogo?search=versa', {
+      scroll: false,
+    })
   })
 
   it('navigates to clean path when submitting empty search', async () => {
@@ -62,9 +59,7 @@ describe('SearchBar', () => {
     render(<SearchBar />)
     expect(screen.queryByRole('button', { name: /limpiar/i })).toBeNull()
     await user.type(screen.getByPlaceholderText(/buscar por marca/i), 'toyota')
-    expect(
-      screen.getByRole('button', { name: /limpiar/i })
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /limpiar/i })).toBeInTheDocument()
   })
 
   it('clears input and navigates on clear', async () => {

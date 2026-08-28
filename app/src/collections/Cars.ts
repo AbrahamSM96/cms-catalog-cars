@@ -11,6 +11,7 @@ import {
   revalidateAfterChange,
   revalidateAfterDelete,
 } from '../hooks/revalidate'
+import { cars, common, groups } from '../i18n/labels'
 import { CACHE_TAGS } from '../lib/cache-tags'
 import { renameCarMedia } from '../hooks/renameCarMedia'
 
@@ -26,7 +27,7 @@ export const Cars: CollectionConfig = {
   },
   admin: {
     defaultColumns: ['title', 'brand', 'year', 'status'],
-    group: 'Content',
+    group: groups.content,
     useAsTitle: 'title',
   },
   fields: [
@@ -68,7 +69,9 @@ export const Cars: CollectionConfig = {
         // GENERAL
         // ========================================
         {
-          description: 'Core vehicle data.',
+          admin: {
+            description: cars.tabs.general.description,
+          },
           fields: [
             {
               fields: [
@@ -80,6 +83,7 @@ export const Cars: CollectionConfig = {
                     width: '50%',
                   },
                   hasMany: false,
+                  label: common.brand,
                   name: 'brand',
                   relationTo: 'brands',
                   required: true,
@@ -92,6 +96,7 @@ export const Cars: CollectionConfig = {
                     },
                     width: '50%',
                   },
+                  label: common.model,
                   name: 'model',
                   required: true,
                   type: 'text',
@@ -108,6 +113,7 @@ export const Cars: CollectionConfig = {
                     },
                     width: '50%',
                   },
+                  label: cars.fields.year.label,
                   name: 'year',
                   required: true,
                   type: 'number',
@@ -119,6 +125,7 @@ export const Cars: CollectionConfig = {
                     },
                     width: '50%',
                   },
+                  label: cars.fields.version.label,
                   name: 'version',
                   required: true,
                   type: 'text',
@@ -131,14 +138,15 @@ export const Cars: CollectionConfig = {
                 {
                   admin: { width: '50%' },
                   defaultValue: 'manual',
+                  label: cars.fields.transmission.label,
                   name: 'transmission',
                   options: [
                     {
-                      label: 'Automatic',
+                      label: cars.options.transmission.automatic,
                       value: 'automatic',
                     },
                     {
-                      label: 'Manual',
+                      label: cars.options.transmission.manual,
                       value: 'manual',
                     },
                   ],
@@ -147,16 +155,26 @@ export const Cars: CollectionConfig = {
                 },
                 {
                   admin: {
-                    description: 'Fuel type',
+                    description: cars.fields.fuelType.description,
                     width: '50%',
                   },
+                  label: cars.fields.fuelType.label,
                   name: 'fuelType',
                   options: [
-                    { label: 'Gasoline', value: 'gasoline' },
-                    { label: 'Diesel', value: 'diesel' },
-                    { label: 'Electric', value: 'electric' },
-                    { label: 'Hybrid', value: 'hybrid' },
-                    { label: 'Plug-in hybrid', value: 'plug-in-hybrid' },
+                    {
+                      label: cars.options.fuelType.gasoline,
+                      value: 'gasoline',
+                    },
+                    { label: cars.options.fuelType.diesel, value: 'diesel' },
+                    {
+                      label: cars.options.fuelType.electric,
+                      value: 'electric',
+                    },
+                    { label: cars.options.fuelType.hybrid, value: 'hybrid' },
+                    {
+                      label: cars.options.fuelType.plugInHybrid,
+                      value: 'plug-in-hybrid',
+                    },
                   ],
                   type: 'select',
                 },
@@ -167,22 +185,23 @@ export const Cars: CollectionConfig = {
               fields: [
                 {
                   admin: {
-                    description: 'Current availability status of the vehicle',
+                    description: cars.fields.status.description,
                     width: '50%',
                   },
                   defaultValue: 'available',
+                  label: cars.fields.status.label,
                   name: 'status',
                   options: [
                     {
-                      label: '🟢 Available',
+                      label: cars.options.status.available,
                       value: 'available',
                     },
                     {
-                      label: '🟡 Reserved',
+                      label: cars.options.status.reserved,
                       value: 'reserved',
                     },
                     {
-                      label: '🔴 Sold',
+                      label: cars.options.status.sold,
                       value: 'sold',
                     },
                   ],
@@ -191,64 +210,70 @@ export const Cars: CollectionConfig = {
                 },
                 {
                   admin: { width: '50%' },
-                  label: 'Featured',
+                  label: cars.fields.featured.label,
                   name: 'featured',
                   type: 'checkbox',
                 },
               ],
               type: 'row',
             },
-            { name: 'description', type: 'textarea' },
+            {
+              label: common.description,
+              name: 'description',
+              type: 'textarea',
+            },
           ],
-          label: 'General',
+          label: cars.tabs.general.label,
         },
 
         // ========================================
         // PHOTOS
         // ========================================
         {
-          description: 'Featured image and vehicle galleries.',
+          admin: {
+            description: cars.tabs.photos.description,
+          },
           fields: [
             {
               admin: {
-                description: 'Image shown in the preview',
+                description: cars.fields.featuredImage.description,
               },
-              label: 'Featured image',
+              label: cars.fields.featuredImage.label,
               name: 'featuredImage',
               relationTo: 'media',
               type: 'upload',
             },
             {
               admin: {
-                description:
-                  'Exterior photos of the vehicle (body, front, sides)',
+                description: cars.fields.exteriorImages.description,
               },
               hasMany: true,
-              label: 'Exterior images',
+              label: cars.fields.exteriorImages.label,
               name: 'exteriorImages',
               relationTo: 'media',
               type: 'upload',
             },
             {
               admin: {
-                description:
-                  'Interior photos of the vehicle (cabin, seats, dashboard)',
+                description: cars.fields.interiorImages.description,
               },
               hasMany: true,
-              label: 'Interior images',
+              label: cars.fields.interiorImages.label,
               name: 'interiorImages',
               relationTo: 'media',
               type: 'upload',
             },
           ],
-          label: 'Photos',
+          label: cars.tabs.photos.label,
         },
 
         // ========================================
         // PRICE AND FINANCING
         // ========================================
         {
-          description: 'Sale price and financing options.',
+          admin: {
+            description: cars.tabs.price.description,
+          },
           fields: [
             {
               fields: [
@@ -258,22 +283,22 @@ export const Cars: CollectionConfig = {
                       Description:
                         '/components/PriceDescription#PriceDescription',
                     },
-                    description: 'Enter price in dollars (e.g., 25000)',
-                    placeholder: 'e.g., 25000',
+                    description: cars.fields.price.description,
+                    placeholder: cars.fields.price.placeholder,
                     width: '50%',
                   },
+                  label: cars.fields.price.label,
                   name: 'price',
                   required: true,
                   type: 'number',
                 },
                 {
                   admin: {
-                    description:
-                      'Does the price include/invoice VAT? (shown as Yes/No)',
+                    description: cars.fields.hasVAT.description,
                     width: '50%',
                   },
                   defaultValue: false,
-                  label: 'VAT',
+                  label: cars.fields.hasVAT.label,
                   name: 'hasVAT',
                   type: 'checkbox',
                 },
@@ -282,11 +307,10 @@ export const Cars: CollectionConfig = {
             },
             {
               admin: {
-                description:
-                  'Turn it off for cash-only cars; hides the calculator on the vehicle detail page.',
+                description: cars.fields.showFinancing.description,
               },
               defaultValue: true,
-              label: 'Show financing calculator',
+              label: cars.fields.showFinancing.label,
               name: 'showFinancing',
               type: 'checkbox',
             },
@@ -309,20 +333,22 @@ export const Cars: CollectionConfig = {
                         {
                           admin: {
                             description:
-                              'Minimum down payment percentage (e.g. 20%)',
+                              cars.fields.minDownPaymentPercentage.description,
                             width: '50%',
                           },
                           defaultValue: 20,
+                          label: cars.fields.minDownPaymentPercentage.label,
                           name: 'minDownPaymentPercentage',
                           type: 'number',
                         },
                         {
                           admin: {
                             description:
-                              'Maximum down payment percentage (e.g. 80%)',
+                              cars.fields.maxDownPaymentPercentage.description,
                             width: '50%',
                           },
                           defaultValue: 80,
+                          label: cars.fields.maxDownPaymentPercentage.label,
                           name: 'maxDownPaymentPercentage',
                           type: 'number',
                         },
@@ -332,28 +358,29 @@ export const Cars: CollectionConfig = {
                     {
                       admin: {
                         description:
-                          'Default suggested down payment percentage',
+                          cars.fields.defaultDownPaymentPercentage.description,
                       },
                       defaultValue: 20,
+                      label: cars.fields.defaultDownPaymentPercentage.label,
                       name: 'defaultDownPaymentPercentage',
                       type: 'number',
                     },
                     {
                       admin: {
-                        description:
-                          'List of terms in months you offer (e.g. 6, 12, 24, 36, 48, 60)',
+                        description: cars.fields.availableLoanTerms.description,
                       },
                       fields: [
                         {
                           admin: {
                             placeholder: '36',
                           },
+                          label: cars.fields.months.label,
                           name: 'months',
                           required: true,
                           type: 'number',
                         },
                       ],
-                      label: 'Available terms (months)',
+                      label: cars.fields.availableLoanTerms.label,
                       name: 'availableLoanTerms',
                       type: 'array',
                     },
@@ -362,20 +389,22 @@ export const Cars: CollectionConfig = {
                         {
                           admin: {
                             description:
-                              'Default suggested term in months (must be in the available list)',
+                              cars.fields.defaultLoanTerm.description,
                             width: '50%',
                           },
                           defaultValue: 36,
+                          label: cars.fields.defaultLoanTerm.label,
                           name: 'defaultLoanTerm',
                           type: 'number',
                         },
                         {
                           admin: {
-                            description: 'Annual interest rate (%)',
+                            description: cars.fields.interestRate.description,
                             placeholder: '8.5',
                             width: '50%',
                           },
                           defaultValue: 8.5,
+                          label: cars.fields.interestRate.label,
                           name: 'interestRate',
                           type: 'number',
                         },
@@ -388,18 +417,20 @@ export const Cars: CollectionConfig = {
                   type: 'group',
                 },
               ],
-              label: 'Financing options',
+              label: cars.fields.financingOptions.label,
               type: 'collapsible',
             },
           ],
-          label: 'Price',
+          label: cars.tabs.price.label,
         },
 
         // ========================================
         // TECHNICAL SPECIFICATIONS
         // ========================================
         {
-          description: 'Vehicle spec sheet.',
+          admin: {
+            description: cars.tabs.specifications.description,
+          },
           fields: [
             {
               admin: { initCollapsed: false },
@@ -408,29 +439,34 @@ export const Cars: CollectionConfig = {
                   fields: [
                     {
                       admin: {
-                        description:
-                          'Engine specification (e.g. L4 2.0t, V6 3.5L)',
+                        description: cars.fields.engine.description,
                         placeholder: 'L4 2.0t',
                         width: '50%',
                       },
+                      label: cars.fields.engine.label,
                       name: 'engine',
                       type: 'text',
                     },
                     {
                       admin: {
-                        description: 'Horsepower (HP)',
+                        description: cars.fields.horsepower.description,
                         placeholder: '184',
                         width: '50%',
                       },
+                      label: cars.fields.horsepower.label,
                       name: 'horsepower',
                       type: 'number',
                     },
                   ],
                   type: 'row',
                 },
-                { name: 'cylinders', type: 'number' },
+                {
+                  label: cars.fields.cylinders.label,
+                  name: 'cylinders',
+                  type: 'number',
+                },
               ],
-              label: 'Engine and performance',
+              label: cars.fields.engineAndPerformance.label,
               type: 'collapsible',
             },
             {
@@ -440,21 +476,20 @@ export const Cars: CollectionConfig = {
                   fields: [
                     {
                       admin: {
-                        description: 'Car or truck (Facebook Marketplace)',
+                        description: cars.fields.vehicleType.description,
                         width: '50%',
                       },
-                      label: 'Vehicle type',
+                      label: cars.fields.vehicleType.label,
                       name: 'vehicleType',
                       options: VEHICLE_TYPE_OPTIONS,
                       type: 'select',
                     },
                     {
                       admin: {
-                        description:
-                          'Body style (aligned with Facebook Marketplace)',
+                        description: cars.fields.bodyStyle.description,
                         width: '50%',
                       },
-                      label: 'Body style',
+                      label: cars.fields.bodyStyle.label,
                       name: 'bodyType',
                       options: BODY_TYPE_OPTIONS,
                       type: 'select',
@@ -466,14 +501,16 @@ export const Cars: CollectionConfig = {
                   fields: [
                     {
                       admin: {
-                        description: 'Number of doors (e.g. 4)',
+                        description: cars.fields.doors.description,
                         width: '50%',
                       },
+                      label: cars.fields.doors.label,
                       name: 'doors',
                       type: 'number',
                     },
                     {
                       admin: { width: '50%' },
+                      label: cars.fields.passengers.label,
                       name: 'passengers',
                       type: 'number',
                     },
@@ -481,7 +518,7 @@ export const Cars: CollectionConfig = {
                   type: 'row',
                 },
               ],
-              label: 'Body and capacity',
+              label: cars.fields.bodyAndCapacity.label,
               type: 'collapsible',
             },
             {
@@ -493,24 +530,24 @@ export const Cars: CollectionConfig = {
                       Description:
                         '/components/MileageDescription#MileageDescription',
                     },
-                    description: 'Enter mileage in kilometers (e.g., 150000)',
-                    placeholder: 'e.g., 150000',
+                    description: cars.fields.mileage.description,
+                    placeholder: cars.fields.mileage.placeholder,
                   },
+                  label: cars.fields.mileage.label,
                   name: 'mileage',
                   type: 'number',
                 },
                 {
                   admin: {
-                    description:
-                      'Overall vehicle condition (Facebook Marketplace)',
+                    description: cars.fields.vehicleCondition.description,
                   },
-                  label: 'Vehicle condition',
+                  label: cars.fields.vehicleCondition.label,
                   name: 'condition',
                   options: CONDITION_OPTIONS,
                   type: 'select',
                 },
               ],
-              label: 'Usage and condition',
+              label: cars.fields.usageAndCondition.label,
               type: 'collapsible',
             },
             {
@@ -520,24 +557,22 @@ export const Cars: CollectionConfig = {
                   fields: [
                     {
                       admin: {
-                        description:
-                          'Body color. Not on the list? Add it in the Colors collection.',
+                        description: cars.fields.exteriorColor.description,
                         width: '50%',
                       },
                       hasMany: false,
-                      label: 'Exterior color',
+                      label: cars.fields.exteriorColor.label,
                       name: 'exteriorColor',
                       relationTo: 'colors',
                       type: 'relationship',
                     },
                     {
                       admin: {
-                        description:
-                          'Upholstery color. Not on the list? Add it in the Colors collection.',
+                        description: cars.fields.interiorColor.description,
                         width: '50%',
                       },
                       hasMany: false,
-                      label: 'Interior color',
+                      label: cars.fields.interiorColor.label,
                       name: 'interiorColor',
                       relationTo: 'colors',
                       type: 'relationship',
@@ -546,32 +581,34 @@ export const Cars: CollectionConfig = {
                   type: 'row',
                 },
               ],
-              label: 'Colors',
+              label: cars.fields.colors.label,
               type: 'collapsible',
             },
           ],
-          label: 'Specifications',
+          label: cars.tabs.specifications.label,
         },
 
         // ========================================
         // ADDITIONAL DETAILS
         // ========================================
         {
-          description: 'Features, history and location (optional).',
+          admin: {
+            description: cars.tabs.additionalDetails.description,
+          },
           fields: [
             {
               admin: { initCollapsed: true },
               fields: [
                 {
                   admin: {
-                    description:
-                      'Equipment and special features of the vehicle',
+                    description: cars.fields.features.description,
                   },
                   fields: [
                     {
                       admin: {
-                        placeholder: 'Bluetooth, Backup camera, etc.',
+                        placeholder: cars.fields.feature.placeholder,
                       },
+                      label: cars.fields.feature.label,
                       name: 'feature',
                       required: true,
                       type: 'text',
@@ -582,7 +619,7 @@ export const Cars: CollectionConfig = {
                   type: 'array',
                 },
               ],
-              label: 'Features',
+              label: cars.fields.features.label,
               type: 'collapsible',
             },
             {
@@ -590,27 +627,32 @@ export const Cars: CollectionConfig = {
               fields: [
                 {
                   admin: {
-                    description: 'Vehicle warranty and inspection',
+                    description: cars.fields.carHistory.description,
                   },
                   fields: [
                     {
                       admin: {
-                        description:
-                          'Number of inspected points (e.g. 150 → "+150 points")',
+                        description: cars.fields.inspectionPoints.description,
                       },
                       defaultValue: 150,
-                      label: 'Inspection points',
+                      label: cars.fields.inspectionPoints.label,
                       name: 'inspectionPoints',
                       type: 'number',
                     },
                     {
                       defaultValue: 'single',
-                      label: 'Owner history',
+                      label: cars.fields.ownerHistory.label,
                       name: 'ownerHistory',
                       options: [
-                        { label: 'Single owner', value: 'single' },
-                        { label: '2 owners', value: 'two' },
-                        { label: '3 or more owners', value: 'multiple' },
+                        {
+                          label: cars.options.ownerHistory.single,
+                          value: 'single',
+                        },
+                        { label: cars.options.ownerHistory.two, value: 'two' },
+                        {
+                          label: cars.options.ownerHistory.multiple,
+                          value: 'multiple',
+                        },
                       ],
                       type: 'select',
                     },
@@ -618,22 +660,21 @@ export const Cars: CollectionConfig = {
                       fields: [
                         {
                           admin: {
-                            description:
-                              'Includes duplicate keys? (Yes/No)',
+                            description: cars.fields.duplicateKeys.description,
                             width: '50%',
                           },
                           defaultValue: false,
-                          label: 'Duplicate keys',
+                          label: cars.fields.duplicateKeys.label,
                           name: 'duplicateKeys',
                           type: 'checkbox',
                         },
                         {
                           admin: {
-                            description: 'Includes license plates? (Yes/No)',
+                            description: cars.fields.plates.description,
                             width: '50%',
                           },
                           defaultValue: false,
-                          label: 'License plates',
+                          label: cars.fields.plates.label,
                           name: 'plates',
                           type: 'checkbox',
                         },
@@ -644,22 +685,21 @@ export const Cars: CollectionConfig = {
                       fields: [
                         {
                           admin: {
-                            description: 'Includes manuals? (Yes/No)',
+                            description: cars.fields.manuals.description,
                             width: '50%',
                           },
                           defaultValue: false,
-                          label: 'Manuals',
+                          label: cars.fields.manuals.label,
                           name: 'manuals',
                           type: 'checkbox',
                         },
                         {
                           admin: {
-                            description:
-                              'Received reconditioning/detailing? (Yes/No)',
+                            description: cars.fields.conditioning.description,
                             width: '50%',
                           },
                           defaultValue: false,
-                          label: 'Reconditioning',
+                          label: cars.fields.conditioning.label,
                           name: 'conditioning',
                           type: 'checkbox',
                         },
@@ -672,7 +712,7 @@ export const Cars: CollectionConfig = {
                   type: 'group',
                 },
               ],
-              label: 'Car history',
+              label: cars.fields.carHistory.label,
               type: 'collapsible',
             },
             {
@@ -680,27 +720,25 @@ export const Cars: CollectionConfig = {
               fields: [
                 {
                   admin: {
-                    description:
-                      'Select the dealership where the car is located. Used to show the map on the vehicle detail page.',
+                    description: cars.fields.dealership.description,
                   },
                   hasMany: false,
-                  label: 'Dealership',
+                  label: cars.fields.dealership.label,
                   name: 'dealership',
                   relationTo: 'dealerships',
                   type: 'relationship',
                 },
                 {
                   admin: {
-                    description:
-                      'Use it only if you do not pick a dealership from the list.',
+                    description: cars.fields.manualLocation.description,
                   },
                   fields: [
                     {
                       admin: {
-                        description:
-                          'Dealership name (e.g. Centro Magno)',
+                        description: cars.fields.dealershipName.description,
                         placeholder: 'Centro Magno',
                       },
+                      label: cars.fields.dealershipName.label,
                       name: 'dealership',
                       type: 'text',
                     },
@@ -708,19 +746,19 @@ export const Cars: CollectionConfig = {
                       fields: [
                         {
                           admin: {
-                            description: 'City',
                             placeholder: 'Guadalajara',
                             width: '50%',
                           },
+                          label: common.city,
                           name: 'city',
                           type: 'text',
                         },
                         {
                           admin: {
-                            description: 'State',
                             placeholder: 'Jalisco',
                             width: '50%',
                           },
+                          label: common.state,
                           name: 'state',
                           type: 'text',
                         },
@@ -728,23 +766,25 @@ export const Cars: CollectionConfig = {
                       type: 'row',
                     },
                   ],
-                  label: 'Manual location (optional)',
+                  label: cars.fields.manualLocation.label,
                   name: 'location',
                   type: 'group',
                 },
               ],
-              label: 'Location',
+              label: cars.fields.location.label,
               type: 'collapsible',
             },
           ],
-          label: 'Additional details',
+          label: cars.tabs.additionalDetails.label,
         },
 
         // ========================================
         // FACEBOOK MARKETPLACE
         // ========================================
         {
-          description: 'Generate the Facebook Marketplace listing.',
+          admin: {
+            description: cars.tabs.facebookMarketplace.description,
+          },
           fields: [
             {
               admin: {
@@ -757,7 +797,7 @@ export const Cars: CollectionConfig = {
               type: 'ui',
             },
           ],
-          label: 'Facebook Marketplace',
+          label: cars.tabs.facebookMarketplace.label,
         },
       ],
 
@@ -798,5 +838,6 @@ export const Cars: CollectionConfig = {
       },
     ],
   },
+  labels: cars.labels,
   slug: 'cars',
 }

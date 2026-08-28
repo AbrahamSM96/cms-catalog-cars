@@ -1,7 +1,10 @@
 'use client'
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { SelectInput, useField } from '@payloadcms/ui'
+import { SelectInput, useField, useTranslation } from '@payloadcms/ui'
+
+import { pick } from '../../i18n/locales'
+import { ui } from '../../i18n/labels'
 
 interface YearFieldProps {
   field?: { admin?: { width?: string }; label?: unknown; required?: boolean }
@@ -21,6 +24,7 @@ const START_YEAR = 2018
 export function YearField(props: YearFieldProps): React.JSX.Element {
   const { field, path } = props
   const { setValue, value } = useField<number>({ path })
+  const { i18n } = useTranslation()
 
   const maxYear = new Date().getFullYear() + 1
   const years = Array.from(
@@ -53,7 +57,7 @@ export function YearField(props: YearFieldProps): React.JSX.Element {
       onChange={handleChange}
       options={years.map((y) => ({ label: String(y), value: String(y) }))}
       path={path}
-      placeholder="Select a year"
+      placeholder={pick(ui.fields.selectYear, i18n.language)}
       required={field?.required}
       style={{ '--field-width': field?.admin?.width } as React.CSSProperties}
       value={typeof value === 'number' ? String(value) : ''}

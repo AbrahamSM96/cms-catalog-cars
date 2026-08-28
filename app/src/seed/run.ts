@@ -113,7 +113,11 @@ async function seedColors(payload: Payload): Promise<number> {
   let created = 0
   for (const color of colorsList) {
     if (known.has(color.name)) continue
-    await payload.create({ ...CREATE_OPTIONS, collection: 'colors', data: color })
+    await payload.create({
+      ...CREATE_OPTIONS,
+      collection: 'colors',
+      data: color,
+    })
     created++
   }
 
@@ -182,7 +186,8 @@ async function seedVehicleCatalog(
     const brandId = brandIds.get(brand.slug) as number
     for (const model of brand.models) {
       const key = `${brandId}::${model.name}`
-      if (!modelIds.has(key)) missingModels.push({ brandId, key, name: model.name })
+      if (!modelIds.has(key))
+        missingModels.push({ brandId, key, name: model.name })
     }
   }
   const newModels = await mapWithConcurrency(missingModels, async (model) => {

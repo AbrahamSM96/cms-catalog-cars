@@ -1,8 +1,9 @@
 import type { GlobalConfig } from 'payload'
 
-import { CACHE_TAGS } from '../lib/cache-tags'
 import { editorsAndAdmins } from '../access'
 import { revalidateGlobalAfterChange } from '../hooks/revalidate'
+import { groups, homepage } from '../i18n/labels'
+import { CACHE_TAGS } from '../lib/cache-tags'
 
 export const Homepage: GlobalConfig = {
   access: {
@@ -13,18 +14,17 @@ export const Homepage: GlobalConfig = {
     update: editorsAndAdmins,
   },
   admin: {
-    group: 'Content',
+    group: groups.content,
   },
   fields: [
     {
       admin: {
-        description:
-          'Main carousel (header) images. Shown in list order.',
+        description: homepage.fields.heroSlides.description,
         initCollapsed: true,
       },
       fields: [
         {
-          label: 'Image',
+          label: homepage.fields.heroSlides.fields.image.label,
           name: 'image',
           relationTo: 'media',
           required: true,
@@ -32,19 +32,15 @@ export const Homepage: GlobalConfig = {
         },
         {
           admin: {
-            description:
-              'Optional text shown over the image. Also used as the slide alt text (SEO) when the image has none of its own.',
+            description: homepage.fields.heroSlides.fields.caption.description,
           },
-          label: 'Caption',
+          label: homepage.fields.heroSlides.fields.caption.label,
           name: 'caption',
           type: 'text',
         },
       ],
-      label: 'Hero slides',
-      labels: {
-        plural: 'Slides',
-        singular: 'Slide',
-      },
+      label: homepage.fields.heroSlides.label,
+      labels: homepage.fields.heroSlides.labels,
       maxRows: 8,
       minRows: 0,
       name: 'heroSlides',
@@ -52,39 +48,40 @@ export const Homepage: GlobalConfig = {
     },
     {
       admin: {
-        description: 'Title and copy for the main header.',
+        description: homepage.fields.hero.description,
       },
       fields: [
         {
           defaultValue: 'Nuevos modelos disponibles',
-          label: 'Badge',
+          label: homepage.fields.hero.fields.badge.label,
           name: 'badge',
           type: 'text',
         },
         {
           defaultValue: 'Encuentra Tu Auto',
-          label: 'Heading',
+          label: homepage.fields.hero.fields.heading.label,
           name: 'heading',
           type: 'text',
         },
         {
           admin: {
-            description: 'Part of the title highlighted in red.',
+            description:
+              homepage.fields.hero.fields.headingHighlight.description,
           },
           defaultValue: 'Seminuevo Ideal',
-          label: 'Heading highlight',
+          label: homepage.fields.hero.fields.headingHighlight.label,
           name: 'headingHighlight',
           type: 'text',
         },
         {
           defaultValue:
             'La mejor selección de autos premium con garantía de calidad. Financiamiento disponible y facilidades de pago.',
-          label: 'Subheading',
+          label: homepage.fields.hero.fields.subheading.label,
           name: 'subheading',
           type: 'textarea',
         },
       ],
-      label: 'Hero text',
+      label: homepage.fields.hero.label,
       name: 'hero',
       type: 'group',
     },
@@ -92,6 +89,6 @@ export const Homepage: GlobalConfig = {
   hooks: {
     afterChange: [revalidateGlobalAfterChange(CACHE_TAGS.homepage)],
   },
-  label: 'Homepage',
+  label: homepage.label,
   slug: 'homepage',
 }

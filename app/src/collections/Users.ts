@@ -1,6 +1,12 @@
 import type { CollectionConfig } from 'payload'
 
-import { adminsOnly, adminsOrSelf, adminsOrSelfFieldRead, editorsAndAdmins } from '../access'
+import {
+  adminsOnly,
+  adminsOrSelf,
+  adminsOrSelfFieldRead,
+  editorsAndAdmins,
+} from '../access'
+import { groups, users } from '../i18n/labels'
 import {
   forgotPasswordHTML,
   forgotPasswordSubject,
@@ -18,7 +24,7 @@ export const Users: CollectionConfig = {
     update: adminsOrSelf,
   },
   admin: {
-    group: 'Settings',
+    group: groups.settings,
   },
   auth: {
     forgotPassword: {
@@ -38,11 +44,26 @@ export const Users: CollectionConfig = {
       },
       defaultValue: ['user'],
       hasMany: true,
+      label: users.fields.roles.label,
       name: 'roles',
-      options: ['admin', 'editor', 'user'],
+      options: [
+        {
+          label: users.fields.roles.options.admin,
+          value: 'admin',
+        },
+        {
+          label: users.fields.roles.options.editor,
+          value: 'editor',
+        },
+        {
+          label: users.fields.roles.options.user,
+          value: 'user',
+        },
+      ],
       saveToJWT: true,
       type: 'select',
     },
   ],
+  labels: users.labels,
   slug: 'users',
 }

@@ -25,12 +25,12 @@ describe('detectTransmission', () => {
     expect(detectTransmission('2.5 PRIVILEGE AA EE CD BA QC VP CVT SUV')).toBe(
       'automatic'
     )
-    expect(detectTransmission('1.4L TFSI 35 DYNAMIC AA EE CD BA S TRONIC')).toBe(
-      'automatic'
-    )
-    expect(detectTransmission('200 CGI SPORT 2.0 AA EE VP G-TRONIC SEDAN')).toBe(
-      'automatic'
-    )
+    expect(
+      detectTransmission('1.4L TFSI 35 DYNAMIC AA EE CD BA S TRONIC')
+    ).toBe('automatic')
+    expect(
+      detectTransmission('200 CGI SPORT 2.0 AA EE VP G-TRONIC SEDAN')
+    ).toBe('automatic')
     expect(detectTransmission('LIMITED AA EE CD BA VP AUTOSTICK SUV')).toBe(
       'automatic'
     )

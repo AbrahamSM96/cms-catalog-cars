@@ -42,7 +42,5 @@ export async function moveObject(
       Key: toKey,
     })
   )
-  await client.send(
-    new DeleteObjectCommand({ Bucket: bucket, Key: fromKey })
-  )
+  await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: fromKey }))
 }

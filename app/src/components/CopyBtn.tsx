@@ -1,5 +1,11 @@
 'use client'
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { useTranslation } from '@payloadcms/ui'
+
+import { fill, pick } from '../i18n/locales'
+import { ui } from '../i18n/labels'
+
 /**
  * CopyBtn
  *
@@ -20,9 +26,13 @@ export function CopyBtn({
   onCopy: (id: string, text: string) => void
   text: string
 }): React.JSX.Element {
+  const { i18n } = useTranslation()
+
   return (
     <button
-      aria-label={`Copy ${id} to clipboard`}
+      aria-label={fill(pick(ui.copyBtn.ariaLabel, i18n.language), {
+        field: id,
+      })}
       disabled={!text}
       onClick={() => onCopy(id, text)}
       style={{
@@ -39,7 +49,9 @@ export function CopyBtn({
       }}
       type="button"
     >
-      {copiedKey === id ? '✓ Copied' : 'Copy'}
+      {copiedKey === id
+        ? pick(ui.copyBtn.copied, i18n.language)
+        : pick(ui.copyBtn.copy, i18n.language)}
     </button>
   )
 }

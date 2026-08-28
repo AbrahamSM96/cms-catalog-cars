@@ -40,53 +40,51 @@ export function buildItemListLd(cars: Car[]): Array<Record<string, unknown>> {
 export function buildAutoDealerLd(
   dealerships: Dealership[]
 ): Array<Record<string, unknown>> {
-  return dealerships.map(
-    (dealer): Record<string, unknown> => ({
-      '@context': 'https://schema.org',
-      '@type': 'AutoDealer',
-      ...(dealer.address
-        ? {
-            address: {
-              '@type': 'PostalAddress',
-              addressCountry: dealer.address.country || 'MX',
-              addressLocality: dealer.address.city,
-              addressRegion: dealer.address.state,
-              postalCode: dealer.address.postalCode,
-              streetAddress: dealer.address.line1,
-            },
-          }
-        : {}),
-      ...(dealer.coordinates?.latitude && dealer.coordinates?.longitude
-        ? {
-            geo: {
-              '@type': 'GeoCoordinates',
-              latitude: dealer.coordinates.latitude,
-              longitude: dealer.coordinates.longitude,
-            },
-          }
-        : {}),
-      name: dealer.name,
-      ...(dealer.hours
-        ? {
-            openingHoursSpecification: Object.entries(dealer.hours)
-              .map(([day, hours]): Record<string, unknown> | null => {
-                if (!hours || hours.closed || !hours.open || !hours.close) {
-                  return null
-                }
-                return {
-                  '@type': 'OpeningHoursSpecification',
-                  closes: hours.close,
-                  dayOfWeek: WEEKDAY_NAMES[day as WeekdayKey],
-                  opens: hours.open,
-                }
-              })
-              .filter(
-                (entry): entry is Record<string, unknown> => entry !== null
-              ),
-          }
-        : {}),
-      ...(dealer.phone ? { telephone: dealer.phone } : {}),
-      url: absoluteUrl('/ubicaciones'),
-    })
-  )
+  return dealerships.map((dealer): Record<string, unknown> => ({
+    '@context': 'https://schema.org',
+    '@type': 'AutoDealer',
+    ...(dealer.address
+      ? {
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: dealer.address.country || 'MX',
+          addressLocality: dealer.address.city,
+          addressRegion: dealer.address.state,
+          postalCode: dealer.address.postalCode,
+          streetAddress: dealer.address.line1,
+        },
+      }
+      : {}),
+    ...(dealer.coordinates?.latitude && dealer.coordinates?.longitude
+      ? {
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: dealer.coordinates.latitude,
+          longitude: dealer.coordinates.longitude,
+        },
+      }
+      : {}),
+    name: dealer.name,
+    ...(dealer.hours
+      ? {
+        openingHoursSpecification: Object.entries(dealer.hours)
+          .map(([day, hours]): Record<string, unknown> | null => {
+            if (!hours || hours.closed || !hours.open || !hours.close) {
+              return null
+            }
+            return {
+              '@type': 'OpeningHoursSpecification',
+              closes: hours.close,
+              dayOfWeek: WEEKDAY_NAMES[day as WeekdayKey],
+              opens: hours.open,
+            }
+          })
+          .filter(
+            (entry): entry is Record<string, unknown> => entry !== null
+          ),
+      }
+      : {}),
+    ...(dealer.phone ? { telephone: dealer.phone } : {}),
+    url: absoluteUrl('/ubicaciones'),
+  }))
 }

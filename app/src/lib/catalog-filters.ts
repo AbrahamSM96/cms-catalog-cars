@@ -1,4 +1,9 @@
-export type FilterKey = 'brand' | 'minYear' | 'search' | 'status' | 'transmission'
+export type FilterKey =
+  | 'brand'
+  | 'minYear'
+  | 'search'
+  | 'status'
+  | 'transmission'
 
 const FILTER_KEYS: FilterKey[] = [
   'brand',

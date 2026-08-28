@@ -1,10 +1,17 @@
 'use client'
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { SelectInput, useField, useFormFields } from '@payloadcms/ui'
+import {
+  SelectInput,
+  useField,
+  useFormFields,
+  useTranslation,
+} from '@payloadcms/ui'
 import { useEffect, useRef, useState } from 'react'
 
 import { detectTransmission } from '../../lib/transmission'
+import { pick } from '../../i18n/locales'
+import { ui } from '../../i18n/labels'
 
 interface VersionFieldProps {
   field?: { admin?: { width?: string }; label?: unknown; required?: boolean }
@@ -34,6 +41,7 @@ export function VersionField(props: VersionFieldProps): React.JSX.Element {
   const { setValue: setTransmission } = useField<string>({
     path: 'transmission',
   })
+  const { i18n } = useTranslation()
   const brandId = useFormFields(([fields]) => fields?.brand?.value)
   const modelName = useFormFields(([fields]) => fields?.model?.value)
   const year = useFormFields(([fields]) => fields?.year?.value)
@@ -123,7 +131,9 @@ export function VersionField(props: VersionFieldProps): React.JSX.Element {
       options={descriptions.map((desc) => ({ label: desc, value: desc }))}
       path={path}
       placeholder={
-        ready ? 'Select a version' : 'Pick brand, model and year first'
+        ready
+          ? pick(ui.fields.selectVersion, i18n.language)
+          : pick(ui.fields.pickBrandModelYearFirst, i18n.language)
       }
       readOnly={!ready}
       required={field?.required}

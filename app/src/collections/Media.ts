@@ -5,6 +5,7 @@ import {
   revalidateAfterChange,
   revalidateAfterDelete,
 } from '../hooks/revalidate'
+import { groups, media } from '../i18n/labels'
 import { CACHE_TAGS } from '../lib/cache-tags'
 
 export const Media: CollectionConfig = {
@@ -18,15 +19,14 @@ export const Media: CollectionConfig = {
     update: editorsAndAdmins,
   },
   admin: {
-    group: 'Content',
+    group: groups.content,
   },
   fields: [
     {
       admin: {
-        description:
-          'Optional. If left empty, the site generates a descriptive alt text automatically: car photos use brand, model, version, year and city; slides use the caption or a default text. Fill it in only if you want a specific text.',
+        description: media.fields.alt.description,
       },
-      label: 'Alt text',
+      label: media.fields.alt.label,
       name: 'alt',
       type: 'text',
     },
@@ -50,6 +50,7 @@ export const Media: CollectionConfig = {
       ),
     ],
   },
+  labels: media.labels,
   slug: 'media',
   upload: {
     mimeTypes: ['image/*', 'video/*'],

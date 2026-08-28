@@ -1,7 +1,13 @@
 // @vitest-environment jsdom
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react'
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import type { Brand } from '../../types/car'
@@ -16,9 +22,7 @@ vi.mock('../../lib/catalog-actions', () => ({
   getCatalogVersions: (...args: unknown[]) => mockGetCatalogVersions(...args),
 }))
 
-const BRANDS: Brand[] = [
-  { id: '1', name: 'Nissan', slug: 'nissan' },
-]
+const BRANDS: Brand[] = [{ id: '1', name: 'Nissan', slug: 'nissan' }]
 
 afterEach(() => {
   cleanup()
@@ -57,8 +61,9 @@ describe('CatalogFinder', () => {
     await user.selectOptions(screen.getByLabelText('Versión'), '100')
 
     await waitFor(() => {
-      const summary = screen.getByText('Tu vehículo').closest('div')!
-        .parentElement!
+      const summary = screen
+        .getByText('Tu vehículo')
+        .closest('div')!.parentElement!
       expect(summary).toBeInTheDocument()
       expect(within(summary).getByText('Clave: ABC-123')).toBeInTheDocument()
     })

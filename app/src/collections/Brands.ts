@@ -5,6 +5,7 @@ import {
   revalidateAfterChange,
   revalidateAfterDelete,
 } from '../hooks/revalidate'
+import { brands, common, groups } from '../i18n/labels'
 import { CACHE_TAGS } from '../lib/cache-tags'
 
 export const Brands: CollectionConfig = {
@@ -18,11 +19,12 @@ export const Brands: CollectionConfig = {
     update: editorsAndAdmins,
   },
   admin: {
-    group: 'Settings',
+    group: groups.settings,
     useAsTitle: 'name',
   },
   fields: [
     {
+      label: common.name,
       name: 'name',
       required: true,
       type: 'text',
@@ -30,8 +32,9 @@ export const Brands: CollectionConfig = {
     },
     {
       admin: {
-        description: 'URL-friendly version of the brand name',
+        description: brands.fields.slug.description,
       },
+      label: brands.fields.slug.label,
       name: 'slug',
       required: true,
       type: 'text',
@@ -42,5 +45,6 @@ export const Brands: CollectionConfig = {
     afterChange: [revalidateAfterChange(CACHE_TAGS.brands, CACHE_TAGS.cars)],
     afterDelete: [revalidateAfterDelete(CACHE_TAGS.brands, CACHE_TAGS.cars)],
   },
+  labels: brands.labels,
   slug: 'brands',
 }

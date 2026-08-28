@@ -1,8 +1,9 @@
 import type { GlobalConfig } from 'payload'
 
-import { CACHE_TAGS } from '../lib/cache-tags'
 import { editorsAndAdmins } from '../access'
 import { revalidateGlobalAfterChange } from '../hooks/revalidate'
+import { common, groups, siteSettings } from '../i18n/labels'
+import { CACHE_TAGS } from '../lib/cache-tags'
 
 /**
  * Per-client site configuration, editable from the admin panel.
@@ -21,171 +22,167 @@ export const SiteSettings: GlobalConfig = {
     update: editorsAndAdmins,
   },
   admin: {
-    description:
-      'Site identity: brand, SEO, favicon, share image and colors.',
-    group: 'Settings',
+    description: siteSettings.description,
+    group: groups.settings,
   },
   fields: [
     {
       admin: {
-        description: 'Brand name and copy shown on the site.',
+        description: siteSettings.fields.brand.description,
       },
       fields: [
         {
           admin: { placeholder: 'AutoCatálogo' },
-          label: 'Brand name',
+          label: siteSettings.fields.brand.fields.brandName.label,
           name: 'name',
           required: true,
           type: 'text',
         },
         {
           admin: { placeholder: 'Autos seminuevos de calidad' },
-          label: 'Tagline',
+          label: siteSettings.fields.brand.fields.tagline.label,
           name: 'tagline',
           type: 'text',
         },
         {
           admin: {
-            description: 'Short description used in the footer.',
+            description:
+              siteSettings.fields.brand.fields.description.description,
           },
-          label: 'Description',
+          label: common.description,
           name: 'description',
           type: 'textarea',
         },
         {
           admin: {
-            description:
-              'Shows the brand name next to the logo in the top bar and footer. Turn it off if your logo already includes the name.',
+            description: siteSettings.fields.brand.fields.showName.description,
           },
           defaultValue: true,
-          label: 'Show name next to logo',
+          label: siteSettings.fields.brand.fields.showName.label,
           name: 'showName',
           type: 'checkbox',
         },
       ],
-      label: 'Brand',
+      label: siteSettings.fields.brand.label,
       name: 'brand',
       type: 'group',
     },
     {
       admin: {
-        description:
-          'Text seen by search engines (Google) and social networks when the site is shared.',
+        description: siteSettings.fields.seo.description,
       },
       fields: [
         {
           admin: {
-            description: 'Default title, also used on the home page.',
+            description:
+              siteSettings.fields.seo.fields.titleDefault.description,
             placeholder: 'AutoCatálogo - Autos Seminuevos de Calidad',
           },
-          label: 'Default title',
+          label: siteSettings.fields.seo.fields.titleDefault.label,
           name: 'titleDefault',
           type: 'text',
         },
         {
           admin: {
             description:
-              'Template for inner pages. Use %s where the page title goes.',
+              siteSettings.fields.seo.fields.titleTemplate.description,
             placeholder: '%s | AutoCatálogo',
           },
-          label: 'Title template',
+          label: siteSettings.fields.seo.fields.titleTemplate.label,
           name: 'titleTemplate',
           type: 'text',
         },
         {
           admin: {
-            description: 'Long description (meta description).',
+            description: siteSettings.fields.seo.fields.description.description,
           },
-          label: 'SEO description',
+          label: siteSettings.fields.seo.fields.description.label,
           name: 'description',
           type: 'textarea',
         },
         {
           admin: {
-            description: 'Short description for social media (Open Graph).',
+            description:
+              siteSettings.fields.seo.fields.ogDescription.description,
           },
-          label: 'Social description',
+          label: siteSettings.fields.seo.fields.ogDescription.label,
           name: 'ogDescription',
           type: 'textarea',
         },
         {
           admin: {
-            description: 'Keywords (one per row).',
+            description: siteSettings.fields.seo.fields.keywords.description,
           },
           fields: [
             {
-              label: 'Keyword',
+              label: siteSettings.fields.seo.fields.keywords.fields.value.label,
               name: 'value',
               required: true,
               type: 'text',
             },
           ],
-          label: 'Keywords',
+          label: siteSettings.fields.seo.fields.keywords.label,
           name: 'keywords',
           type: 'array',
         },
       ],
-      label: 'SEO',
+      label: siteSettings.fields.seo.label,
       name: 'seo',
       type: 'group',
     },
     {
       admin: {
-        description:
-          'Brand images. The logo shows in the top bar and footer; the favicon is the browser tab icon; the share image appears when the link is pasted on social media.',
+        description: siteSettings.fields.media.description,
       },
       fields: [
         {
           admin: {
-            description:
-              'Brand logo (SVG, PNG or WebP). Displayed at 36 px tall, so use a file with a transparent background. If left empty the default icon is used.',
+            description: siteSettings.fields.media.fields.logo.description,
           },
-          label: 'Logo',
+          label: siteSettings.fields.media.fields.logo.label,
           name: 'logo',
           relationTo: 'media',
           type: 'upload',
         },
         {
           admin: {
-            description: 'Browser tab icon (PNG or ICO).',
+            description: siteSettings.fields.media.fields.favicon.description,
           },
-          label: 'Favicon',
+          label: siteSettings.fields.media.fields.favicon.label,
           name: 'favicon',
           relationTo: 'media',
           type: 'upload',
         },
         {
           admin: {
-            description:
-              'Image shown when the site is shared (1200×630 recommended).',
+            description: siteSettings.fields.media.fields.ogImage.description,
           },
-          label: 'Share image (Open Graph)',
+          label: siteSettings.fields.media.fields.ogImage.label,
           name: 'ogImage',
           relationTo: 'media',
           type: 'upload',
         },
       ],
-      label: 'Images',
+      label: siteSettings.fields.media.label,
       name: 'media',
       type: 'group',
     },
     {
       admin: {
-        description:
-          'Brand colors. Applied to buttons, highlights and the loading bar.',
+        description: siteSettings.fields.theme.description,
       },
       fields: [
         {
           fields: [
             {
               admin: { placeholder: '#276CF5', width: '50%' },
-              label: 'Accent',
+              label: siteSettings.fields.theme.fields.accent.label,
               name: 'accent',
               type: 'text',
             },
             {
               admin: { placeholder: '#1D4ED8', width: '50%' },
-              label: 'Accent (hover)',
+              label: siteSettings.fields.theme.fields.accentStrong.label,
               name: 'accentStrong',
               type: 'text',
             },
@@ -194,15 +191,15 @@ export const SiteSettings: GlobalConfig = {
         },
         {
           admin: {
-            description: 'Main neutral color (text, dark surfaces).',
+            description: siteSettings.fields.theme.fields.primary.description,
             placeholder: '#0f172a',
           },
-          label: 'Primary',
+          label: siteSettings.fields.theme.fields.primary.label,
           name: 'primary',
           type: 'text',
         },
       ],
-      label: 'Colors',
+      label: siteSettings.fields.theme.label,
       name: 'theme',
       type: 'group',
     },
@@ -210,6 +207,6 @@ export const SiteSettings: GlobalConfig = {
   hooks: {
     afterChange: [revalidateGlobalAfterChange(CACHE_TAGS.siteSettings)],
   },
-  label: 'Site settings',
+  label: siteSettings.label,
   slug: 'site-settings',
 }

@@ -5,6 +5,7 @@ import {
   revalidateAfterChange,
   revalidateAfterDelete,
 } from '../hooks/revalidate'
+import { carVersions, common, groups } from '../i18n/labels'
 import { CACHE_TAGS } from '../lib/cache-tags'
 
 export const CarVersions: CollectionConfig = {
@@ -19,30 +20,32 @@ export const CarVersions: CollectionConfig = {
   },
   admin: {
     defaultColumns: ['description', 'model', 'years'],
-    group: 'Settings',
+    group: groups.settings,
     useAsTitle: 'description',
   },
   fields: [
     {
       admin: {
-        description: 'Model this version belongs to',
+        description: carVersions.fields.model.description,
       },
       hasMany: false,
+      label: common.model,
       name: 'model',
       relationTo: 'car-models',
       required: true,
       type: 'relationship',
     },
     {
+      label: common.description,
       name: 'description',
       required: true,
       type: 'text',
     },
     {
       admin: {
-        description: 'Vehicle key (unique identifier for the version)',
+        description: carVersions.fields.clave.description,
       },
-      label: 'Vehicle key',
+      label: carVersions.fields.clave.label,
       name: 'clave',
       required: true,
       type: 'text',
@@ -50,9 +53,10 @@ export const CarVersions: CollectionConfig = {
     },
     {
       admin: {
-        description: 'Years this version was sold',
+        description: carVersions.fields.years.description,
       },
       hasMany: true,
+      label: carVersions.fields.years.label,
       name: 'years',
       required: true,
       type: 'number',
@@ -62,5 +66,6 @@ export const CarVersions: CollectionConfig = {
     afterChange: [revalidateAfterChange(CACHE_TAGS.cars)],
     afterDelete: [revalidateAfterDelete(CACHE_TAGS.cars)],
   },
+  labels: carVersions.labels,
   slug: 'car-versions',
 }

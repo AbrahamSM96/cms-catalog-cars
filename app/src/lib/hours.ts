@@ -139,7 +139,7 @@ export function getOpenStatus(hours?: WeeklyHours): OpenStatus | null {
     }
   }
 
-  return { label: 'Cerrado', open: false, }
+  return { label: 'Cerrado', open: false }
 }
 
 /**

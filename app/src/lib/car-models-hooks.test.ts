@@ -5,10 +5,11 @@ import { ensureBrandExists } from '../collections/CarModels'
 function makeHookProps(
   data: Record<string, unknown> = {},
   // oxlint-disable-next-line typescript/no-explicit-any
-  findByID: ReturnType<typeof vi.fn> = vi.fn()
+  findByID: ReturnType<typeof vi.fn> = vi.fn(),
+  language = 'en'
   // oxlint-disable-next-line typescript/no-explicit-any
 ): any {
-  return { data, req: { payload: { findByID } } }
+  return { data, req: { i18n: { language }, payload: { findByID } } }
 }
 
 describe('ensureBrandExists', () => {
@@ -38,7 +39,10 @@ describe('ensureBrandExists', () => {
 
   it('calls findByID when brand is an object with id', async () => {
     const findByID = vi.fn().mockResolvedValue({ id: 'xyz', name: 'Honda' })
-    const props = makeHookProps({ brand: { id: 'xyz' }, name: 'Civic' }, findByID)
+    const props = makeHookProps(
+      { brand: { id: 'xyz' }, name: 'Civic' },
+      findByID
+    )
     const result = await ensureBrandExists(props)
     expect(result).toEqual({ brand: { id: 'xyz' }, name: 'Civic' })
     expect(findByID).toHaveBeenCalledWith({
@@ -80,11 +84,34 @@ describe('ensureBrandExists', () => {
     )
   })
 
+  it('throws the localized error in Spanish when request language is es', async () => {
+    const findByID = vi.fn().mockRejectedValue(new Error('not found'))
+    const props = makeHookProps({ brand: 'bad-id', name: 'X' }, findByID, 'es')
+    await expect(ensureBrandExists(props)).rejects.toThrow(
+      'La marca seleccionada no existe (id: bad-id).'
+    )
+  })
+
+  it('falls back to English when req has no i18n', async () => {
+    const findByID = vi.fn().mockRejectedValue(new Error('not found'))
+    // oxlint-disable-next-line typescript/no-explicit-any
+    const props: any = {
+      data: { brand: 'bad-id', name: 'X' },
+      req: { payload: { findByID } },
+    }
+    await expect(ensureBrandExists(props)).rejects.toThrow(
+      'The selected brand does not exist (id: bad-id).'
+    )
+  })
+
   it('returns data (undefined) when data itself is undefined', async () => {
     // Bypass makeHookProps: its `= {}` default would swallow the undefined and
     // turn `data` into `{}`, hiding the `data?.brand` branch under test.
     // oxlint-disable-next-line typescript/no-explicit-any
-    const props: any = { data: undefined, req: { payload: { findByID: vi.fn() } } }
+    const props: any = {
+      data: undefined,
+      req: { payload: { findByID: vi.fn() } },
+    }
     const result = await ensureBrandExists(props)
     expect(result).toBeUndefined()
   })

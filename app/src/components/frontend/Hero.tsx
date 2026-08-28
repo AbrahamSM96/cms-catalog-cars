@@ -58,7 +58,10 @@ const TRUST = [
  * @param props.slides - HeroSlideView[]
  * @param props.text - HeroText
  */
-export function Hero({ slides = DEFAULT_SLIDES, text }: HeroProps): React.JSX.Element {
+export function Hero({
+  slides = DEFAULT_SLIDES,
+  text,
+}: HeroProps): React.JSX.Element {
   const [current, setCurrent] = useState(0)
 
   const t = { ...DEFAULT_TEXT, ...text }
@@ -253,8 +256,8 @@ export function Hero({ slides = DEFAULT_SLIDES, text }: HeroProps): React.JSX.El
                     <button
                       aria-label={`Ir al slide ${i + 1}`}
                       className={`h-2 cursor-pointer rounded-full transition-all ${i === current
-                        ? 'w-8 bg-accent-500'
-                        : 'w-2 bg-white/70 hover:bg-white'
+                          ? 'w-8 bg-accent-500'
+                          : 'w-2 bg-white/70 hover:bg-white'
                         }`}
                       key={i}
                       onClick={() => goTo(i)}

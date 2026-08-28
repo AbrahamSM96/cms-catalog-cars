@@ -5,6 +5,8 @@ import {
   revalidateAfterChange,
   revalidateAfterDelete,
 } from '../hooks/revalidate'
+import { carModels, common, groups } from '../i18n/labels'
+import { pick } from '../i18n/locales'
 import { CACHE_TAGS } from '../lib/cache-tags'
 
 /**
@@ -27,7 +29,11 @@ export const ensureBrandExists: CollectionBeforeValidateHook = async (
   try {
     await req.payload.findByID({ collection: 'brands', depth: 0, id })
   } catch {
-    throw new Error(`The selected brand does not exist (id: ${String(id)}).`)
+    const message = pick(
+      carModels.errors.brandMissing,
+      req.i18n?.language ?? ''
+    )
+    throw new Error(`${message} (id: ${String(id)}).`)
   }
 
   return data
@@ -45,21 +51,23 @@ export const CarModels: CollectionConfig = {
   },
   admin: {
     defaultColumns: ['name', 'brand'],
-    group: 'Settings',
+    group: groups.settings,
     useAsTitle: 'name',
   },
   fields: [
     {
       admin: {
-        description: 'Brand this model belongs to',
+        description: carModels.fields.brand.description,
       },
       hasMany: false,
+      label: common.brand,
       name: 'brand',
       relationTo: 'brands',
       required: true,
       type: 'relationship',
     },
     {
+      label: common.name,
       name: 'name',
       required: true,
       type: 'text',
@@ -70,5 +78,6 @@ export const CarModels: CollectionConfig = {
     afterDelete: [revalidateAfterDelete(CACHE_TAGS.cars)],
     beforeValidate: [ensureBrandExists],
   },
+  labels: carModels.labels,
   slug: 'car-models',
 }

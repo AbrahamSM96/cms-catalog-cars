@@ -51,30 +51,27 @@ describe('FilterBar', () => {
     const user = userEvent.setup()
     render(<FilterBar brands={BRANDS} />)
     await user.selectOptions(screen.getByLabelText('Marca'), 'nissan')
-    expect(mockPush).toHaveBeenCalledWith(
-      '/catalogo?brand=nissan',
-      { scroll: false }
-    )
+    expect(mockPush).toHaveBeenCalledWith('/catalogo?brand=nissan', {
+      scroll: false,
+    })
   })
 
   it('navigates with status filter on change', async () => {
     const user = userEvent.setup()
     render(<FilterBar brands={BRANDS} />)
     await user.selectOptions(screen.getByLabelText('Estado'), 'available')
-    expect(mockPush).toHaveBeenCalledWith(
-      '/catalogo?status=available',
-      { scroll: false }
-    )
+    expect(mockPush).toHaveBeenCalledWith('/catalogo?status=available', {
+      scroll: false,
+    })
   })
 
   it('navigates with transmission filter on change', async () => {
     const user = userEvent.setup()
     render(<FilterBar brands={BRANDS} />)
     await user.selectOptions(screen.getByLabelText('Transmisión'), 'manual')
-    expect(mockPush).toHaveBeenCalledWith(
-      '/catalogo?transmission=manual',
-      { scroll: false }
-    )
+    expect(mockPush).toHaveBeenCalledWith('/catalogo?transmission=manual', {
+      scroll: false,
+    })
   })
 
   it('hides clear button when no filters are active', () => {
@@ -88,9 +85,7 @@ describe('FilterBar', () => {
       key === 'brand' ? 'nissan' : null
     )
     render(<FilterBar brands={BRANDS} />)
-    expect(
-      screen.getByRole('button', { name: /limpiar/i })
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /limpiar/i })).toBeInTheDocument()
   })
 
   it('navigates to clean pathname when clearing all', async () => {

@@ -1,8 +1,11 @@
 'use client'
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { SelectInput, useField } from '@payloadcms/ui'
+import { SelectInput, useField, useTranslation } from '@payloadcms/ui'
 import { useEffect, useState } from 'react'
+
+import { pick } from '../../i18n/locales'
+import { ui } from '../../i18n/labels'
 
 interface BrandDoc {
   id?: number | string
@@ -40,8 +43,7 @@ function loadBrands(): Promise<BrandOption[]> {
     .then((data): BrandOption[] => {
       const options = (data.docs ?? [])
         .filter(
-          (doc): doc is BrandOption =>
-            doc.id !== undefined && Boolean(doc.name)
+          (doc): doc is BrandOption => doc.id !== undefined && Boolean(doc.name)
         )
         .map((doc) => ({ id: doc.id, name: doc.name as string }))
       brandsCache = options
@@ -65,6 +67,7 @@ function loadBrands(): Promise<BrandOption[]> {
 export function BrandField(props: BrandFieldProps): React.JSX.Element {
   const { field, path } = props
   const { setValue, value } = useField<number | string>({ path })
+  const { i18n } = useTranslation()
   const [options, setOptions] = useState<BrandOption[]>(brandsCache ?? [])
 
   useEffect((): (() => void) => {
@@ -106,7 +109,7 @@ export function BrandField(props: BrandFieldProps): React.JSX.Element {
         value: String(brand.id),
       }))}
       path={path}
-      placeholder="Selecciona marca"
+      placeholder={pick(ui.fields.selectBrand, i18n.language)}
       required={field?.required}
       style={{ '--field-width': field?.admin?.width } as React.CSSProperties}
       value={current}

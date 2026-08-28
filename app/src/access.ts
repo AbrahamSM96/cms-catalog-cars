@@ -14,7 +14,8 @@ type AdminGate = (args: { req: PayloadRequest }) => boolean
  * @param roles - The roles to check for.
  */
 const hasAnyRole = (user: unknown, roles: string[]): boolean =>
-  (user as AdminUser | null)?.roles?.some((role) => roles.includes(role)) ?? false
+  (user as AdminUser | null)?.roles?.some((role) => roles.includes(role)) ??
+  false
 
 /**
  * Returns true when the given user holds the admin role.

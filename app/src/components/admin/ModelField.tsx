@@ -1,8 +1,16 @@
 'use client'
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { SelectInput, useField, useFormFields } from '@payloadcms/ui'
+import {
+  SelectInput,
+  useField,
+  useFormFields,
+  useTranslation,
+} from '@payloadcms/ui'
 import { useEffect, useRef, useState } from 'react'
+
+import { pick } from '../../i18n/locales'
+import { ui } from '../../i18n/labels'
 
 interface ModelFieldProps {
   field?: { admin?: { width?: string }; label?: unknown; required?: boolean }
@@ -25,6 +33,7 @@ type SelectOption = { label?: string; value?: string }
 export function ModelField(props: ModelFieldProps): React.JSX.Element {
   const { field, path } = props
   const { setValue, value } = useField<string>({ path })
+  const { i18n } = useTranslation()
   const brandId = useFormFields(([fields]) => fields?.brand?.value)
   // Options are stored together with the brand they belong to, so they can be
   // discarded during render instead of cleared from an effect.
@@ -92,7 +101,11 @@ export function ModelField(props: ModelFieldProps): React.JSX.Element {
       onChange={handleChange}
       options={names.map((name) => ({ label: name, value: name }))}
       path={path}
-      placeholder={brandId ? 'Selecciona modelo' : 'Elige una marca primero'}
+      placeholder={
+        brandId
+          ? pick(ui.fields.selectModel, i18n.language)
+          : pick(ui.fields.pickBrandFirst, i18n.language)
+      }
       readOnly={!brandId}
       required={field?.required}
       style={{ '--field-width': field?.admin?.width } as React.CSSProperties}

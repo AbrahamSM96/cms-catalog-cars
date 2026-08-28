@@ -6,6 +6,11 @@ const LAT_ERROR =
   'Latitude must be between -90 and 90 in decimal degrees (e.g. 20.6597).'
 const LNG_ERROR =
   'Longitude must be between -180 and 180 in decimal degrees (e.g. -103.3496).'
+const LAT_ERROR_ES =
+  'La latitud debe estar entre -90 y 90 en grados decimales (ej. 20.6597).'
+const LNG_ERROR_ES =
+  'La longitud debe estar entre -180 y 180 en grados decimales (ej. -103.3496).'
+const ES = { req: { i18n: { language: 'es' } } }
 
 // ---------------------------------------------------------------------------
 // validateLatitude
@@ -88,5 +93,30 @@ describe('validateLongitude', () => {
 
   it('returns error for very large value', () => {
     expect(validateLongitude(999)).toBe(LNG_ERROR)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// localized messages
+// ---------------------------------------------------------------------------
+
+describe('localized validation messages', () => {
+  it('returns the Spanish latitude error when the request language is es', () => {
+    expect(validateLatitude(91, ES)).toBe(LAT_ERROR_ES)
+  })
+
+  it('returns the Spanish longitude error when the request language is es', () => {
+    expect(validateLongitude(181, ES)).toBe(LNG_ERROR_ES)
+  })
+
+  it('falls back to English when the request has no i18n', () => {
+    expect(validateLatitude(91, { req: {} })).toBe(LAT_ERROR)
+    expect(validateLongitude(181, { req: {} })).toBe(LNG_ERROR)
+  })
+
+  it('falls back to English for an unsupported language', () => {
+    const fr = { req: { i18n: { language: 'fr' } } }
+    expect(validateLatitude(91, fr)).toBe(LAT_ERROR)
+    expect(validateLongitude(181, fr)).toBe(LNG_ERROR)
   })
 })

@@ -31,7 +31,7 @@ interface LocationsMapProps {
  * @param props.dealerships - The dealerships to display on the map.
  * @param props.onSelect - Callback when a dealership is selected.
  * @param props.selectedId - The currently selected dealership ID.
- * @param props.zoom - 
+ * @param props.zoom -
  */
 export function LocationsMap({
   center,

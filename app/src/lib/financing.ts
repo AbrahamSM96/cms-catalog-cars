@@ -26,9 +26,7 @@ export function resolveFinancingDefaults(
 
   const availableTerms =
     financing?.availableLoanTerms && financing.availableLoanTerms.length > 0
-      ? financing.availableLoanTerms
-          .map((t) => t.months)
-          .sort((a, b) => a - b)
+      ? financing.availableLoanTerms.map((t) => t.months).sort((a, b) => a - b)
       : [6, 12, 24, 36, 48, 60]
 
   return {

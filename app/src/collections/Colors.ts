@@ -5,6 +5,7 @@ import {
   revalidateAfterChange,
   revalidateAfterDelete,
 } from '../hooks/revalidate'
+import { colors, groups } from '../i18n/labels'
 import { CACHE_TAGS } from '../lib/cache-tags'
 
 export const Colors: CollectionConfig = {
@@ -19,19 +20,17 @@ export const Colors: CollectionConfig = {
   },
   admin: {
     defaultColumns: ['name', 'hex'],
-    description:
-      'Color catalog (exterior and interior). Add as many as you need.',
-    group: 'Settings',
+    description: colors.description,
+    group: groups.settings,
     useAsTitle: 'name',
   },
   fields: [
     {
       admin: {
-        description:
-          'Color name in Spanish, as shown on the site (e.g. Negro, Blanco, Gris Oxford)',
+        description: colors.fields.name.description,
         placeholder: 'Negro',
       },
-      label: 'Color',
+      label: colors.fields.name.label,
       name: 'name',
       required: true,
       type: 'text',
@@ -39,10 +38,10 @@ export const Colors: CollectionConfig = {
     },
     {
       admin: {
-        description: 'Hex code for the visual swatch (e.g. #000000)',
+        description: colors.fields.hex.description,
         placeholder: '#000000',
       },
-      label: 'Color code (optional)',
+      label: colors.fields.hex.label,
       name: 'hex',
       type: 'text',
     },
@@ -51,5 +50,6 @@ export const Colors: CollectionConfig = {
     afterChange: [revalidateAfterChange(CACHE_TAGS.cars)],
     afterDelete: [revalidateAfterDelete(CACHE_TAGS.cars)],
   },
+  labels: colors.labels,
   slug: 'colors',
 }
