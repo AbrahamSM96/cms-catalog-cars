@@ -15,7 +15,7 @@ interface CarGridProps {
 export function CarGrid({ cars }: CarGridProps): React.ReactElement {
   if (cars.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-20 text-center">
+      <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-12 text-center sm:py-16">
         <div className="mx-auto max-w-md px-6">
           <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-100">
             <svg

@@ -11,6 +11,7 @@ import type {
   Car,
   CarFilters,
   CarsResponse,
+  CatalogFacets,
   Contact,
   Dealership,
   Homepage,
@@ -230,6 +231,60 @@ export async function getBrands(): Promise<Brand[]> {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching brands:', error)
+    throw error
+  }
+}
+
+/**
+ * The brands and years that actually have a car behind them.
+ *
+ * The filter bar is built from this instead of from the whole `brands`
+ * collection: the CMS holds the entire market catalogue of brands, and offering
+ * one that matches no car only leads to an empty result page. Same for years —
+ * a fixed 2016→today range advertises years nobody has in stock.
+ *
+ * Deliberately derived from the *unfiltered* inventory. Recomputing the options
+ * from the current result set would remove the option you just picked from the
+ * list, leaving no way to undo it without clearing everything.
+ */
+export async function getCatalogFacets(): Promise<CatalogFacets> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.brands)
+  cacheTag(CACHE_TAGS.cars)
+
+  try {
+    const payload = await payloadClient()
+
+    const result = await payload.find({
+      collection: 'cars',
+      // depth 1 populates the brand relation; select keeps the rest of the
+      // document (images, features, financing) out of the query.
+      depth: 1,
+      limit: 0,
+      select: { brand: true, year: true },
+    })
+
+    const brandsBySlug = new Map<string, Brand>()
+    const years = new Set<number>()
+
+    for (const car of result.docs as unknown as Car[]) {
+      if (typeof car.year === 'number') years.add(car.year)
+      // A brand that failed to populate comes back as an id, not an object.
+      if (car.brand && typeof car.brand === 'object') {
+        brandsBySlug.set(car.brand.slug, car.brand)
+      }
+    }
+
+    return {
+      brands: [...brandsBySlug.values()].sort((a, b) =>
+        a.name.localeCompare(b.name, 'es')
+      ),
+      years: [...years].sort((a, b) => b - a),
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching catalog facets:', error)
     throw error
   }
 }

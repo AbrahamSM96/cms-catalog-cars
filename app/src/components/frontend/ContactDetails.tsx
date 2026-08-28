@@ -34,18 +34,18 @@ export async function ContactDetails(): Promise<React.JSX.Element> {
   const addr = contact?.address
   const addressText = addr
     ? [
-        addr.line1,
-        [addr.postalCode, addr.city, addr.state].filter(Boolean).join(', '),
-        addr.country,
-      ]
-        .filter(Boolean)
-        .join(', ')
+      addr.line1,
+      [addr.postalCode, addr.city, addr.state].filter(Boolean).join(', '),
+      addr.country,
+    ]
+      .filter(Boolean)
+      .join(', ')
     : null
   const mapsHref = addr?.googleMapsUrl
   const hours = contact?.hoursNote
 
   return (
-    <section className="py-14">
+    <section className="py-10 sm:py-14">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-4 sm:grid-cols-2">
           {/* WhatsApp */}

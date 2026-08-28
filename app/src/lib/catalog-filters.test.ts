@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { applyFilter, hasActiveFilters, yearOptions } from './catalog-filters'
+import { applyFilter, hasActiveFilters } from './catalog-filters'
 
 describe('applyFilter', () => {
   it('sets a new filter value', () => {
@@ -65,22 +65,5 @@ describe('hasActiveFilters', () => {
 
   it('ignores unknown params', () => {
     expect(hasActiveFilters(new URLSearchParams('foo=bar'))).toBe(false)
-  })
-})
-
-describe('yearOptions', () => {
-  it('generates descending years from currentYear to 2016', () => {
-    const years = yearOptions(2024)
-    expect(years[0]).toBe(2024)
-    expect(years[years.length - 1]).toBe(2016)
-    expect(years).toHaveLength(9)
-  })
-
-  it('returns a single year when currentYear is 2016', () => {
-    expect(yearOptions(2016)).toEqual([2016])
-  })
-
-  it('generates correct length for 2025', () => {
-    expect(yearOptions(2025)).toHaveLength(10)
   })
 })

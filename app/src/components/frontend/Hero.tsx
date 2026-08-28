@@ -87,7 +87,7 @@ export function Hero({
       <div className="pointer-events-none absolute -top-24 left-1/2 h-[32rem] w-[52rem] -translate-x-1/2 rounded-full bg-accent-500/10 blur-3xl" />
       <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)] opacity-60" />
 
-      <div className="relative mx-auto max-w-7xl px-4 pt-28 pb-16 sm:px-6 sm:pt-32 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16 lg:px-8">
         {/* Copy block */}
         <div className="mx-auto max-w-3xl text-center">
           <div className="animate-rise shadow-soft inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2">
@@ -159,7 +159,7 @@ export function Hero({
 
         {/* Cinematic image showcase */}
         <div
-          className="animate-rise relative mx-auto mt-14 max-w-6xl"
+          className="animate-rise relative mx-auto mt-10 max-w-6xl sm:mt-14"
           style={{ animationDelay: '400ms' }}
         >
           <div className="shadow-float relative aspect-[16/9] w-full overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 sm:aspect-[21/9]">
@@ -256,8 +256,8 @@ export function Hero({
                     <button
                       aria-label={`Ir al slide ${i + 1}`}
                       className={`h-2 cursor-pointer rounded-full transition-all ${i === current
-                          ? 'w-8 bg-accent-500'
-                          : 'w-2 bg-white/70 hover:bg-white'
+                        ? 'w-8 bg-accent-500'
+                        : 'w-2 bg-white/70 hover:bg-white'
                         }`}
                       key={i}
                       onClick={() => goTo(i)}

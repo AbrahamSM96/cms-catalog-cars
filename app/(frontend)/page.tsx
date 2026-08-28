@@ -58,7 +58,7 @@ export default function HomePage(): React.JSX.Element {
       </Suspense>
 
       {/* Catalog CTA band */}
-      <section className="relative overflow-hidden bg-slate-50 py-20 sm:py-24">
+      <section className="relative overflow-hidden bg-slate-50 py-12 sm:py-16 lg:py-24">
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] opacity-50" />
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <div className="shadow-soft inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2">

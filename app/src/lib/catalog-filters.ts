@@ -45,16 +45,3 @@ export function applyFilter(
 export function hasActiveFilters(params: URLSearchParams): boolean {
   return FILTER_KEYS.some((key) => params.get(key) !== null)
 }
-
-/**
- * Build the descending year list from `currentYear` down to 2016.
- *
- * @param currentYear - the reference year (usually `new Date().getFullYear()`).
- * @returns array of years, descending.
- */
-export function yearOptions(currentYear: number): number[] {
-  return Array.from(
-    { length: currentYear - 2016 + 1 },
-    (_, i) => currentYear - i
-  )
-}

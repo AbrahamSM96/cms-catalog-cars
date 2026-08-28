@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 export default function BuscadorPage(): React.JSX.Element {
   return (
     <div className="min-h-screen bg-slate-50">
-      <section className="relative overflow-hidden bg-white pt-28 pb-12 sm:pt-32">
+      <section className="relative overflow-hidden bg-white pt-24 pb-8 sm:pt-32 sm:pb-12">
         <div className="pointer-events-none absolute -top-24 left-1/2 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-accent-500/10 blur-3xl" />
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)] opacity-50" />
 
@@ -42,7 +42,7 @@ export default function BuscadorPage(): React.JSX.Element {
         </div>
       </section>
 
-      <section className="py-14">
+      <section className="py-10 sm:py-14">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <Suspense
             fallback={

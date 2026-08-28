@@ -149,6 +149,17 @@ export interface CarsResponse {
   nextPage: number | null
 }
 
+/**
+ * The filter options the catalogue can actually offer: the brands and years
+ * that have at least one car behind them. Derived from the inventory, not from
+ * the `brands` collection.
+ */
+export interface CatalogFacets {
+  brands: Brand[]
+  /** Descending, newest first. */
+  years: number[]
+}
+
 export interface CarFilters {
   brand?: string
   status?: string

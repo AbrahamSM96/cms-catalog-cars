@@ -71,7 +71,7 @@ export default function CarDetailPage(
     <div className="min-h-screen bg-slate-50">
       <Suspense
         fallback={
-          <div className="mx-auto max-w-7xl px-4 pt-24 pb-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl px-4 pt-20 pb-12 sm:px-6 sm:pt-24 sm:pb-16 lg:px-8">
             <div className="h-10 w-2/3 animate-pulse rounded-xl bg-slate-200" />
             <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
               <div className="lg:col-span-8">

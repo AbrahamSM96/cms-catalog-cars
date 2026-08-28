@@ -78,7 +78,7 @@ export function Footer({
 
   return (
     <footer className="border-t border-slate-200 bg-white" id="contact">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>
@@ -226,7 +226,7 @@ export function Footer({
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-slate-100 pt-6 sm:flex-row">
+        <div className="mt-10 flex flex-col items-center sm:mt-12 justify-between gap-3 border-t border-slate-100 pt-6 sm:flex-row">
           <p className="text-sm text-slate-500">
             © {year} {site.name}. Todos los derechos reservados.
           </p>

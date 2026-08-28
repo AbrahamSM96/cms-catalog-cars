@@ -127,7 +127,7 @@ export function Locations({ dealerships }: LocationsProps): React.JSX.Element {
 
   if (dealerships.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-20 text-center">
+      <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-12 text-center sm:py-16">
         <MapPin className="mx-auto h-10 w-10 text-slate-300" />
         <h3 className="mt-4 text-lg font-bold text-slate-900">
           Aún no hay ubicaciones

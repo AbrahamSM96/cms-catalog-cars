@@ -1,5 +1,5 @@
 /* eslint-disable react/no-danger */
-import { getBrands, getCars } from '@/lib/payload-client'
+import { getCars, getCatalogFacets } from '@/lib/payload-client'
 import { buildItemListLd } from '@/lib/json-ld'
 import type { CarFilters } from '@/types/car'
 import { CarGrid } from '@/components/frontend/CarGrid'
@@ -49,7 +49,10 @@ export async function CatalogResults({
     transmission: params.transmission,
   }
 
-  const [carsData, brands] = await Promise.all([getCars(filters), getBrands()])
+  const [carsData, facets] = await Promise.all([
+    getCars(filters),
+    getCatalogFacets(),
+  ])
 
   const itemListLd = {
     '@context': 'https://schema.org',
@@ -65,7 +68,7 @@ export async function CatalogResults({
         type="application/ld+json"
       />
       <div className="mb-8">
-        <FilterBar brands={brands} />
+        <FilterBar facets={facets} />
       </div>
 
       <div className="mb-6 flex items-center justify-between">
@@ -82,7 +85,7 @@ export async function CatalogResults({
       <CarGrid cars={carsData.docs} />
 
       {carsData.totalPages > 1 && (
-        <div className="mt-14 text-center">
+        <div className="mt-10 text-center sm:mt-14">
           <div className="shadow-soft inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-600">
             Página {carsData.page} de {carsData.totalPages}
           </div>
