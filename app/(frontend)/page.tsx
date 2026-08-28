@@ -81,6 +81,8 @@ export default function HomePage(): React.JSX.Element {
             <Link
               className="group inline-flex cursor-pointer items-center gap-2 rounded-xl bg-accent-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:bg-accent-700 hover:shadow-accent-600/30"
               href="/catalogo"
+              prefetch={true}
+
             >
               Ver catálogo completo
               <svg

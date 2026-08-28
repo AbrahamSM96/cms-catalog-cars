@@ -51,6 +51,8 @@ export function BrandLogo(props: BrandLogoProps): React.JSX.Element {
       aria-label="Inicio"
       className={clsx('group flex items-center gap-2.5', className)}
       href="/"
+      prefetch={true}
+
     >
       {site.logoUrl ? (
         <Image
@@ -88,7 +90,7 @@ export function BrandLogo(props: BrandLogoProps): React.JSX.Element {
         </span>
       )}
       {site.showName && (
-        <span className="text-lg font-bold tracking-tight text-slate-900">
+        <span className="hidden sm:inline text-lg font-bold tracking-tight text-slate-900">
           {site.name}
         </span>
       )}

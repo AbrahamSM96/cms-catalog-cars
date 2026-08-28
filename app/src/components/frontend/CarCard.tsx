@@ -69,7 +69,8 @@ export function CarCard({ car }: CarCardProps): React.JSX.Element {
   const status = statusConfig[car.status]
 
   return (
-    <Link className="group block" href={`/catalogo/${buildCarSlug(car)}`}>
+    <Link className="group block" href={`/catalogo/${buildCarSlug(car)}`} prefetch={true}
+    >
       <article className="shadow-soft hover:shadow-float relative overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-slate-300">
         {/* Image */}
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">

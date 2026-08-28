@@ -21,6 +21,8 @@ export default function NotFound(): React.JSX.Element {
         <Link
           className="mt-6 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-accent-600 px-6 py-3 font-semibold text-white shadow-sm transition-all duration-300 hover:bg-accent-700 hover:shadow-lg hover:shadow-accent-600/25"
           href="/catalogo"
+          prefetch={true}
+
         >
           Volver al catálogo
         </Link>
