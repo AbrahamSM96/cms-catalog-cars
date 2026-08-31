@@ -113,7 +113,7 @@ export function ImageGallery({
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', handleKeyDown)
 
-    return () => {
+    return (): void => {
       document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', handleKeyDown)
     }
