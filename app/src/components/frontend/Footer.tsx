@@ -122,8 +122,6 @@ export function Footer({
                 <Link
                   className="transition-colors hover:text-accent-600"
                   href="/catalogo"
-                  prefetch={true}
-
                 >
                   Inventario
                 </Link>
@@ -132,8 +130,6 @@ export function Footer({
                 <Link
                   className="transition-colors hover:text-accent-600"
                   href="/ubicaciones"
-                  prefetch={true}
-
                 >
                   Ubicaciones
                 </Link>
@@ -142,8 +138,6 @@ export function Footer({
                 <Link
                   className="transition-colors hover:text-accent-600"
                   href="/contacto"
-                  prefetch={true}
-
                 >
                   Contacto
                 </Link>

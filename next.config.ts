@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
   // read sits behind a <Suspense> boundary — and the cached content streams in
   // at request time, from memory after the first hit.
   cacheComponents: true,
+  // Partial Prefetching: cada <Link> baja el App Shell compartido de la ruta
+  // (contenido estático + cacheado) en vez de un prefetch completo por enlace.
+  // Solo los <Link prefetch> a rutas que leen params/searchParams piden además
+  // los datos por-URL (runtime prefetching).
+  partialPrefetching: true,
   output: 'standalone',
   serverExternalPackages: ['payload', '@payloadcms/db-postgres'],
   images: {
@@ -26,12 +31,12 @@ const nextConfig: NextConfig = {
       },
       ...(r2Hostname
         ? [
-            {
-              protocol: 'https' as const,
-              hostname: r2Hostname,
-              pathname: '/**',
-            },
-          ]
+          {
+            protocol: 'https' as const,
+            hostname: r2Hostname,
+            pathname: '/**',
+          },
+        ]
         : []),
     ],
   },

@@ -14,6 +14,19 @@ export interface Color {
   hex?: string
 }
 
+/**
+ * A generated variant of an upload (Payload `upload.imageSizes`). Every field
+ * is optional: Payload skips a size when the source image is smaller than the
+ * target and stores nulls for it.
+ */
+export interface MediaSize {
+  filename?: string
+  height?: number
+  mimeType?: string
+  url?: string
+  width?: number
+}
+
 export interface Media {
   id: string | number
   filename: string
@@ -25,6 +38,9 @@ export interface Media {
   width?: number
   height?: number
   url?: string
+  sizes?: {
+    og?: MediaSize
+  }
 }
 
 export interface HeroSlide {

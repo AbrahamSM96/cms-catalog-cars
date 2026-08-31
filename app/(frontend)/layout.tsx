@@ -45,6 +45,15 @@ export async function generateMetadata(): Promise<Metadata> {
       default: site.seo.titleDefault,
       template: site.seo.titleTemplate,
     },
+    // X reads `twitter:card` and nothing else: without it a shared link shows
+    // as a bare URL even though the Open Graph tags are there. Routes that set
+    // their own `twitter` block (the car detail page) override this one.
+    twitter: {
+      card: 'summary_large_image',
+      description: site.seo.ogDescription,
+      ...(site.ogImageUrl ? { images: [site.ogImageUrl] } : {}),
+      title: site.seo.titleDefault,
+    },
   }
 }
 

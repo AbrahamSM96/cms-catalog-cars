@@ -52,8 +52,6 @@ export function FeaturedCars({
           <Link
             className="group shadow-soft hidden cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition-all duration-300 hover:border-accent-500 hover:text-accent-600 sm:inline-flex"
             href="/catalogo"
-            prefetch={true}
-
           >
             Ver todo el inventario
             <svg

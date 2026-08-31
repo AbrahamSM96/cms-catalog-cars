@@ -163,16 +163,13 @@ export async function CarDetail({
       <div className="mx-auto max-w-7xl px-4 pt-20 pb-12 sm:px-6 sm:pt-24 sm:pb-16 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm text-slate-500">
-          <Link className="transition-colors hover:text-accent-600" href="/" prefetch={true}
-          >
+          <Link className="transition-colors hover:text-accent-600" href="/">
             Inicio
           </Link>
           <span className="mx-2 text-slate-300">/</span>
           <Link
             className="transition-colors hover:text-accent-600"
             href="/catalogo"
-            prefetch={true}
-
           >
             Catálogo
           </Link>

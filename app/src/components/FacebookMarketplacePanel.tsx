@@ -145,7 +145,7 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
   const copy = async (key: string, text: string): Promise<void> => {
     if (!text) return
     try {
-      await navigator.clipboard.writeText(text)
+      await navigator?.clipboard?.writeText(text)
       setCopiedKey(key)
       window.setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 1500)
     } catch {

@@ -69,7 +69,13 @@ export function CarCard({ car }: CarCardProps): React.JSX.Element {
   const status = statusConfig[car.status]
 
   return (
-    <Link className="group block" href={`/catalogo/${buildCarSlug(car)}`} prefetch={true}
+    // `prefetch` porque el detalle depende del slug (URL data): el App Shell
+    // compartido no lo trae, así que el runtime prefetch resuelve el auto
+    // cacheado antes del clic.
+    <Link
+      className="group block"
+      href={`/catalogo/${buildCarSlug(car)}`}
+      prefetch={true}
     >
       <article className="shadow-soft hover:shadow-float relative overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-slate-300">
         {/* Image */}

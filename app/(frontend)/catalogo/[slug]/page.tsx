@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
 import { absoluteUrl } from '@/lib/seo'
+import { buildCarImageAlt, getImageUrl } from '@/lib/images'
 import { CarDetail } from '@/components/frontend/CarDetail'
 import { getCarBySlug } from '@/lib/payload-client'
-import { getImageUrl } from '@/lib/images'
 
 interface CarDetailPageProps {
   params: Promise<{ slug: string }>
@@ -33,24 +33,44 @@ export async function generateMetadata({
   const title = `${brandName} ${car.model} ${car.version} ${car.year}`
   const carUrl = absoluteUrl(`/catalogo/${slug}`)
 
-  const featuredFilename =
-    typeof car.featuredImage === 'object'
-      ? car.featuredImage?.filename
-      : undefined
-  const image = featuredFilename ? getImageUrl(featuredFilename) : undefined
+  // Facebook and WhatsApp decide how to render the card from the tags alone,
+  // without downloading the file, so the image needs its dimensions and type
+  // declared or it falls back to a small card (or to no image at all). Prefer
+  // the `og` size (1200x630 JPEG) and fall back to the original upload when
+  // Payload skipped it because the source was smaller.
+  const featured =
+    typeof car.featuredImage === 'object' ? car.featuredImage : undefined
+  const ogSource = featured?.sizes?.og?.filename ? featured.sizes.og : featured
+  const image = ogSource?.filename
+    ? {
+        alt: buildCarImageAlt(car),
+        height: ogSource.height ?? undefined,
+        type: ogSource.mimeType ?? undefined,
+        url: getImageUrl(ogSource.filename),
+        width: ogSource.width ?? undefined,
+      }
+    : undefined
+
+  const description =
+    car.description || `${title} - Auto seminuevo en venta de calidad`
 
   return {
     alternates: { canonical: carUrl },
     description: car.description || `${title} - Autos seminuevos de calidad`,
     openGraph: {
-      description:
-        car.description || `${title} - Auto seminuevo en venta de calidad`,
+      description,
       images: image ? [image] : undefined,
       title,
       type: 'website',
       url: carUrl,
     },
     title,
+    twitter: {
+      card: 'summary_large_image',
+      description,
+      images: image ? [image.url] : undefined,
+      title,
+    },
   }
 }
 

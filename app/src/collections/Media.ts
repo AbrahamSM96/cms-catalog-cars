@@ -53,6 +53,26 @@ export const Media: CollectionConfig = {
   labels: media.labels,
   slug: 'media',
   upload: {
+    imageSizes: [
+      {
+        // Social card used by the Open Graph tags (Facebook, WhatsApp, X).
+        // 1200x630 is the size every platform asks for, and re-encoding to
+        // JPEG keeps the file small enough that WhatsApp still renders a
+        // preview — it drops thumbnails of a few hundred KB and up, which the
+        // full-resolution originals easily exceed.
+        // `withoutEnlargement: false` forces the size to exist even for
+        // smaller uploads, so the card never degrades to a tiny image.
+        formatOptions: {
+          format: 'jpeg',
+          options: { quality: 78 },
+        },
+        height: 630,
+        name: 'og',
+        position: 'centre',
+        width: 1200,
+        withoutEnlargement: false,
+      },
+    ],
     mimeTypes: ['image/*', 'video/*'],
     // Enable the admin "Paste URL" feature. Without an `allowList` the admin
     // only attempts a browser-side fetch, which fails with CORS on most
