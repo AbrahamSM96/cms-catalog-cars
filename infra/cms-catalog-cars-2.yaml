@@ -1,26 +1,27 @@
-# Render Blueprint — una instancia del CMS por cliente.
+# Render Blueprint — instancia #2 (banco de pruebas).
 #
-# Este archivo NO describe "el deploy de producción": describe la RECETA de un
-# deploy. Cada agencia es un Blueprint distinto creado desde este mismo repo,
-# con su propia base de datos, su propio bucket R2 y su propio secreto. El
-# código es idéntico para todas; lo único que cambia son las variables que Render
-# pregunta al crear la instancia (las marcadas con `sync: false`).
+# Copia de ../render.yaml. Lo ÚNICO que cambia es `name`, porque los nombres de
+# servicio son únicos dentro de la cuenta de Render: dos Blueprints creados desde
+# el mismo archivo chocarían, y en el peor caso el segundo adoptaría el servicio
+# del primero y le reescribiría las variables.
 #
-# Para crear una copia nueva:
-#   Render Dashboard > New > Blueprint > este repo > rellenar las variables.
+# Render no interpola variables en el campo `name`, así que la separación tiene
+# que ser un archivo por instancia. Al crear el Blueprint hay que rellenar
+# "Blueprint Path" con `infra/cms-catalog-cars-2.yaml`; el default (render.yaml
+# en la raíz) es el de la instancia #1.
 #
-# Este archivo es la instancia #1. Los nombres de servicio son únicos dentro de
-# la cuenta de Render, así que cada instancia adicional necesita su propio
-# archivo con otro `name` — ver ./infra/. Al crear el Blueprint se selecciona con
-# el campo "Blueprint Path"; vacío = este archivo. Cualquier cambio de
-# infraestructura de aquí hay que replicarlo en los de ./infra/.
+#   Render Dashboard > New > Blueprint > este repo > Blueprint Path > variables.
+#
+# MANTENIMIENTO: este archivo NO hereda de ../render.yaml. Cualquier cambio de
+# infraestructura (versión de Bun, buildCommand, activar el preDeployCommand al
+# pasar a un plan de pago) hay que replicarlo en AMBOS.
 #
 # La marca del cliente (nombre, logo, colores, SEO) NO se configura aquí: vive en
 # el global `site-settings` del admin, en la base de datos de cada cliente.
 
 services:
   - type: web
-    name: cms-catalog-cars
+    name: cms-catalog-cars-2
     runtime: node
     plan: free
     region: oregon
@@ -45,9 +46,12 @@ services:
     #   DATABASE_URI='<connection-string-del-cliente>' PAYLOAD_SECRET='x' bun run migrate
     #   DATABASE_URI='<connection-string-del-cliente>' PAYLOAD_SECRET='x' bun run seed
     #
+    # Las comillas simples son obligatorias: la connection string de Neon lleva
+    # `&`, y sin comillas el shell lo interpreta como "manda esto a background".
+    #
     # Esto es OBLIGATORIO antes del primer arranque: en producción el adaptador
     # de Postgres nunca hace push del esquema, así que las tablas las crean
-    # exclusivamente las migraciones de ./migrations. Sin ellas la app arranca
+    # exclusivamente las migraciones de ../migrations. Sin ellas la app arranca
     # contra una BD vacía y muere en la primera query.
     #
     # Y OJO con el mantenimiento: cada migración nueva que agregues al repo hay
