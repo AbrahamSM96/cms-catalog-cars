@@ -10,6 +10,7 @@
 export const CACHE_TAGS = {
   brands: 'brands',
   cars: 'cars',
+  cities: 'cities',
   contact: 'contact',
   dealerships: 'dealerships',
   homepage: 'homepage',

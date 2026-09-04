@@ -1,20 +1,6 @@
 import type { Brand, Car } from '../types/car'
 
-/**
- * Convert an arbitrary string into a URL-safe slug segment.
- * "Versa Advance" -> "versa-advance"
- *
- * @param value - string | number | undefined
- */
-function slugify(value: string | number | undefined): string {
-  if (value === undefined || value === null) return ''
-  return String(value)
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '') // strip accents (á -> a)
-    .replace(/[^a-z0-9]+/g, '-') // non-alphanumeric -> hyphen
-    .replace(/^-+|-+$/g, '') // trim leading/trailing hyphens
-}
+import { slugify } from './slugify'
 
 /**
  * Build an SEO-friendly slug for a car detail URL.

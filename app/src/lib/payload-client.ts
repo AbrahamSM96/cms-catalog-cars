@@ -8,10 +8,13 @@ import config from '@payload-config'
 
 import type {
   Brand,
+  BrandCount,
   Car,
   CarFilters,
   CarsResponse,
   CatalogFacets,
+  City,
+  CityFacet,
   Contact,
   Dealership,
   Homepage,
@@ -51,6 +54,20 @@ function payloadClient(): Promise<Payload> {
   return getPayload({ config })
 }
 
+/** Shape of a `find` result with no rows, for the queries worth skipping. */
+const EMPTY_CARS_RESPONSE: CarsResponse = {
+  docs: [],
+  hasNextPage: false,
+  hasPrevPage: false,
+  limit: 10,
+  nextPage: null,
+  page: 1,
+  pagingCounter: 0,
+  prevPage: null,
+  totalDocs: 0,
+  totalPages: 0,
+}
+
 /**
  * Fetch all cars with optional filters.
  *
@@ -73,6 +90,15 @@ export async function getCars(filters?: CarFilters): Promise<CarsResponse> {
       } else {
         and.push({ 'brand.slug': { equals: filters.brand } })
       }
+    }
+    // A city with no dealerships holds no cars. Answering that without a query
+    // also keeps `in: []` — which some adapters read as "no restriction" —
+    // from quietly returning the whole catalogue on a city landing page.
+    if (filters?.dealershipIds?.length === 0) {
+      return EMPTY_CARS_RESPONSE
+    }
+    if (filters?.dealershipIds) {
+      and.push({ dealership: { in: filters.dealershipIds } })
     }
     if (filters?.status) and.push({ status: { equals: filters.status } })
     if (filters?.minPrice)
@@ -285,6 +311,144 @@ export async function getCatalogFacets(): Promise<CatalogFacets> {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error fetching catalog facets:', error)
+    throw error
+  }
+}
+
+/**
+ * Read a relationship value as a plain id, whether Payload returned the id or
+ * the populated document.
+ *
+ * @param value - A relationship value at any depth.
+ */
+function relationId(value: unknown): string | null {
+  if (value === null || value === undefined) return null
+  if (typeof value === 'object') {
+    const { id } = value as { id?: number | string }
+    return id === undefined ? null : String(id)
+  }
+  return String(value)
+}
+
+/**
+ * Every city, with the inventory behind it and the dealerships to filter by.
+ *
+ * This is what the `/seminuevos/<ciudad>` pages are built from. Cities with no
+ * cars are still returned, with `count: 0` — the caller decides whether a city
+ * is worth a published page, and a page that exists but is empty still has to
+ * resolve so it can answer with `noindex` instead of a soft 404.
+ *
+ * Three shallow queries rather than one deep one: a car points at a dealership
+ * and the dealership at a city, so populating that chain per car would read the
+ * same handful of dealerships hundreds of times. The join is done here, on ids.
+ */
+export async function getCityFacets(): Promise<CityFacet[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.cars)
+  cacheTag(CACHE_TAGS.cities)
+  cacheTag(CACHE_TAGS.dealerships)
+
+  try {
+    const payload = await payloadClient()
+
+    const [cities, dealerships, cars] = await Promise.all([
+      payload.find({ collection: 'cities', depth: 0, limit: 0 }),
+      payload.find({
+        collection: 'dealerships',
+        depth: 0,
+        limit: 0,
+        select: { address: true },
+      }),
+      payload.find({
+        collection: 'cars',
+        depth: 0,
+        limit: 0,
+        select: { dealership: true },
+      }),
+    ])
+
+    const facets = new Map<string, CityFacet>()
+    for (const city of cities.docs as unknown as City[]) {
+      facets.set(String(city.id), { ...city, count: 0, dealershipIds: [] })
+    }
+
+    const cityOfDealership = new Map<string, string>()
+    for (const dealer of dealerships.docs as unknown as Dealership[]) {
+      const cityId = relationId(dealer.address?.city)
+      const facet = cityId === null ? undefined : facets.get(cityId)
+      if (!facet || cityId === null) continue
+      facet.dealershipIds.push(dealer.id)
+      cityOfDealership.set(String(dealer.id), cityId)
+    }
+
+    for (const car of cars.docs as unknown as Car[]) {
+      const dealershipId = relationId(car.dealership)
+      if (dealershipId === null) continue
+      const cityId = cityOfDealership.get(dealershipId)
+      const facet = cityId === undefined ? undefined : facets.get(cityId)
+      if (facet) facet.count += 1
+    }
+
+    return [...facets.values()].sort((a, b) =>
+      a.name.localeCompare(b.name, 'es')
+    )
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching city facets:', error)
+    throw error
+  }
+}
+
+/**
+ * The brands with inventory at the given dealerships, most stock first.
+ *
+ * Feeds the cross-links on a city landing page — the links that make
+ * `/seminuevos/pachuca/mazda` reachable by a crawler instead of only listed in
+ * the sitemap. Offering a brand with no cars in that city would link to an
+ * empty page, so the counts come from the same query.
+ *
+ * @param dealershipIds - The dealerships that make up the city.
+ */
+export async function getBrandsInCity(
+  dealershipIds: (number | string)[]
+): Promise<BrandCount[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.brands)
+  cacheTag(CACHE_TAGS.cars)
+
+  if (dealershipIds.length === 0) return []
+
+  try {
+    const payload = await payloadClient()
+
+    const result = await payload.find({
+      collection: 'cars',
+      depth: 1,
+      limit: 0,
+      select: { brand: true },
+      where: { dealership: { in: dealershipIds } },
+    })
+
+    const counts = new Map<string, BrandCount>()
+    for (const car of result.docs as unknown as Car[]) {
+      if (!car.brand || typeof car.brand !== 'object') continue
+      const entry = counts.get(car.brand.slug)
+      if (entry) {
+        entry.count += 1
+      } else {
+        counts.set(car.brand.slug, { brand: car.brand, count: 1 })
+      }
+    }
+
+    return [...counts.values()].sort(
+      (a, b) =>
+        b.count - a.count || a.brand.name.localeCompare(b.brand.name, 'es')
+    )
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching brands in city:', error)
     throw error
   }
 }

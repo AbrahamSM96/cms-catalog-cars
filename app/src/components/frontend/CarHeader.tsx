@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 
 import type { Brand, Car } from '../../types/car'
+import { carCity, formatCity } from '../../lib/city'
 
 import { ShareButton } from './ShareButton'
 
@@ -57,10 +58,14 @@ export function CarHeader({ car }: CarHeaderProps): React.JSX.Element | null {
 
   const techSpecs = buildTechSpecs()
 
+  const dealershipName =
+    car.dealership && typeof car.dealership === 'object'
+      ? car.dealership.name
+      : ''
+  const cityLabel = formatCity(carCity(car))
   const location =
-    car.location?.dealership && car.location?.city
-      ? `${car.location.dealership} - ${car.location.city}`
-      : car.location?.city || 'Ubicación no disponible'
+    [dealershipName, cityLabel].filter(Boolean).join(' - ') ||
+    'Ubicación no disponible'
 
   const pills: { icon: LucideIcon; label: string }[] = []
   if (car.fuelType) pills.push({ icon: Fuel, label: FUEL_LABELS[car.fuelType] })

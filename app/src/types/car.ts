@@ -8,6 +8,18 @@ export interface Brand {
   slug: string
 }
 
+/**
+ * A city with at least one dealership. Owns the canonical slug used by the
+ * landing routes (`/seminuevos/<slug>`) and the intro copy shown there.
+ */
+export interface City {
+  id: string | number
+  name: string
+  slug: string
+  state: string
+  intro?: string
+}
+
 export interface Color {
   id: string | number
   name: string
@@ -57,12 +69,6 @@ export interface Homepage {
     headingHighlight?: string
     subheading?: string
   }
-}
-
-export interface Location {
-  dealership?: string
-  city?: string
-  state?: string
 }
 
 export interface LoanTerm {
@@ -130,8 +136,7 @@ export interface Car {
   condition?: 'excellent' | 'very-good' | 'good' | 'fair' | 'poor'
   fuelType?: 'gasoline' | 'diesel' | 'electric' | 'hybrid' | 'plug-in-hybrid'
 
-  // Ubicación
-  location?: Location
+  // Ubicación: siempre derivada del concesionario, nunca capturada por auto.
   dealership?: Dealership | string | number
 
   // Financiamiento
@@ -170,6 +175,21 @@ export interface CarsResponse {
  * that have at least one car behind them. Derived from the inventory, not from
  * the `brands` collection.
  */
+/** A brand with how many cars back it, for the landing cross-links. */
+export interface BrandCount {
+  brand: Brand
+  count: number
+}
+
+/**
+ * A city plus what the landing pages need to decide whether it deserves a page:
+ * how much inventory sits behind it, and which dealerships to filter by.
+ */
+export interface CityFacet extends City {
+  count: number
+  dealershipIds: (number | string)[]
+}
+
 export interface CatalogFacets {
   brands: Brand[]
   /** Descending, newest first. */
@@ -178,6 +198,12 @@ export interface CatalogFacets {
 
 export interface CarFilters {
   brand?: string
+  /**
+   * Restrict to cars held at these dealerships — how a city is filtered, since
+   * a car points at a dealership and the dealership points at the city.
+   * An empty array means "a city with no dealerships" and matches nothing.
+   */
+  dealershipIds?: (number | string)[]
   status?: string
   minPrice?: number
   maxPrice?: number
@@ -259,8 +285,8 @@ export interface DealershipAddress {
   line1?: string
   neighborhood?: string
   postalCode?: string
-  city?: string
-  state?: string
+  /** Populated from `depth >= 1`; an id when the relation was not resolved. */
+  city?: City | string | number
   country?: string
 }
 

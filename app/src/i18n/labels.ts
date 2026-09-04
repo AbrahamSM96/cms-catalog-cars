@@ -107,15 +107,8 @@ export const cars = {
     },
     dealership: {
       description: msg(
-        'Select the dealership where the car is located. Used to show the map on the vehicle detail page.',
-        'Selecciona el concesionario donde está el auto. Usado para mostrar el mapa en la página de detalle del vehículo.'
-      ),
-      label: msg('Dealership', 'Concesionario'),
-    },
-    dealershipName: {
-      description: msg(
-        'Dealership name (e.g. Centro Magno)',
-        'Nombre del concesionario (ej. Centro Magno)'
+        'Dealership where the car is. Its city decides which page the car is listed on and which map shows on the detail page, so it has to be right.',
+        'Concesionario donde está el auto. Su ciudad decide en qué página se lista el auto y qué mapa se muestra en el detalle, así que tiene que estar bien.'
       ),
       label: msg('Dealership', 'Concesionario'),
     },
@@ -237,13 +230,6 @@ export const cars = {
     },
     location: {
       label: msg('Location', 'Ubicación'),
-    },
-    manualLocation: {
-      description: msg(
-        'Use it only if you do not pick a dealership from the list.',
-        'Úsalo solo si no seleccionas un concesionario de la lista.'
-      ),
-      label: msg('Manual location (optional)', 'Ubicación manual (opcional)'),
     },
     manuals: {
       description: msg(
@@ -432,6 +418,47 @@ export const cars = {
   },
 }
 
+export const cities = {
+  description: msg(
+    'Cities where you have a dealership. Each one gets its own landing page (/seminuevos/<slug>), so the name and slug are what search engines index.',
+    'Ciudades donde tienes una agencia. Cada una genera su propia página (/seminuevos/<slug>), así que el nombre y el slug son lo que indexan los buscadores.'
+  ),
+  fields: {
+    intro: {
+      description: msg(
+        'One or two paragraphs shown on that city’s page. Write something specific about selling there — it is what keeps the page from looking like a copy of the others.',
+        'Uno o dos párrafos que se muestran en la página de esa ciudad. Escribe algo propio sobre vender ahí: es lo que evita que la página parezca una copia de las demás.'
+      ),
+      label: msg('Page intro', 'Introducción de la página'),
+    },
+    name: {
+      description: msg(
+        'City name as it should read on the site (e.g. Pachuca)',
+        'Nombre de la ciudad como debe leerse en el sitio (ej. Pachuca)'
+      ),
+      label: msg('City', 'Ciudad'),
+    },
+    slug: {
+      description: msg(
+        'URL segment for this city. Generated from the name; change it only if you know what you are doing — editing it breaks the links already indexed.',
+        'Segmento de URL de esta ciudad. Se genera del nombre; cámbialo solo si sabes lo que haces: editarlo rompe los enlaces ya indexados.'
+      ),
+      label: msg('Slug', 'Slug'),
+    },
+    state: {
+      description: msg(
+        'State this city belongs to (e.g. Hidalgo)',
+        'Estado al que pertenece la ciudad (ej. Hidalgo)'
+      ),
+      label: msg('State', 'Estado'),
+    },
+  },
+  labels: {
+    plural: msg('Cities', 'Ciudades'),
+    singular: msg('City', 'Ciudad'),
+  },
+}
+
 export const colors = {
   description: msg(
     'Color catalog (exterior and interior). Add as many as you need.',
@@ -495,6 +522,12 @@ export const dealerships = {
     },
     closes: {
       label: msg('Closes', 'Cierra'),
+    },
+    city: {
+      description: msg(
+        'City this dealership is in. Pick it from the list — its own page (/seminuevos/<city>) lists every car stored here, and the state on the site comes from the city too.',
+        'Ciudad donde está esta agencia. Elígela de la lista: su página (/seminuevos/<ciudad>) lista todos los autos guardados aquí, y el estado que se muestra en el sitio también viene de la ciudad.'
+      ),
     },
     coordinates: {
       description: msg(

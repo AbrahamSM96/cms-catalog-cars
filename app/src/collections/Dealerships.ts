@@ -171,21 +171,13 @@ export const Dealerships: CollectionConfig = {
                   type: 'row',
                 },
                 {
-                  fields: [
-                    {
-                      admin: { placeholder: 'Zapopan', width: '50%' },
-                      label: common.city,
-                      name: 'city',
-                      type: 'text',
-                    },
-                    {
-                      admin: { placeholder: 'Jalisco', width: '50%' },
-                      label: common.state,
-                      name: 'state',
-                      type: 'text',
-                    },
-                  ],
-                  type: 'row',
+                  admin: { description: dealerships.fields.city.description },
+                  hasMany: false,
+                  label: common.city,
+                  name: 'city',
+                  relationTo: 'cities',
+                  required: true,
+                  type: 'relationship',
                 },
                 {
                   defaultValue: 'México',

@@ -718,6 +718,14 @@ export const Cars: CollectionConfig = {
             {
               admin: { initCollapsed: true },
               fields: [
+                // The car's city is derived from this dealership, never typed
+                // per car: a car saying "Pachuca" while its dealership sits in
+                // Tulancingo would put it on the wrong landing page.
+                //
+                // Not `required` yet — cars imported before the dealership
+                // relation existed still have none, and flipping the flag with
+                // orphans in the table makes the admin reject saves on records
+                // nobody touched. Flip it once the backfill reports zero.
                 {
                   admin: {
                     description: cars.fields.dealership.description,
@@ -727,48 +735,6 @@ export const Cars: CollectionConfig = {
                   name: 'dealership',
                   relationTo: 'dealerships',
                   type: 'relationship',
-                },
-                {
-                  admin: {
-                    description: cars.fields.manualLocation.description,
-                  },
-                  fields: [
-                    {
-                      admin: {
-                        description: cars.fields.dealershipName.description,
-                        placeholder: 'Centro Magno',
-                      },
-                      label: cars.fields.dealershipName.label,
-                      name: 'dealership',
-                      type: 'text',
-                    },
-                    {
-                      fields: [
-                        {
-                          admin: {
-                            placeholder: 'Guadalajara',
-                            width: '50%',
-                          },
-                          label: common.city,
-                          name: 'city',
-                          type: 'text',
-                        },
-                        {
-                          admin: {
-                            placeholder: 'Jalisco',
-                            width: '50%',
-                          },
-                          label: common.state,
-                          name: 'state',
-                          type: 'text',
-                        },
-                      ],
-                      type: 'row',
-                    },
-                  ],
-                  label: cars.fields.manualLocation.label,
-                  name: 'location',
-                  type: 'group',
                 },
               ],
               label: cars.fields.location.label,

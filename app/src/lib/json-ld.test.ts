@@ -85,11 +85,15 @@ describe('buildAutoDealerLd', () => {
   it('includes address when present', () => {
     const dealer = makeDealer({
       address: {
-        city: 'Guadalajara',
+        city: {
+          id: 1,
+          name: 'Guadalajara',
+          slug: 'guadalajara',
+          state: 'Jalisco',
+        },
         country: 'MX',
         line1: 'Av. Vallarta 1000',
         postalCode: '44100',
-        state: 'Jalisco',
       },
     })
     const result = buildAutoDealerLd([dealer])[0]

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { buildCarImageAlt, getImageUrl } from '@/lib/images'
+import { carCity } from '@/lib/city'
 import type { Dealership, Media } from '@/types/car'
 import { getCarBySlug, getContact } from '@/lib/payload-client'
 import { absoluteUrl } from '@/lib/seo'
@@ -102,29 +103,44 @@ export async function CarDetail({
     url: absoluteUrl(`/catalogo/${slug}`),
   }
 
+  const city = carCity(car)
+  const brandSlug = typeof car.brand === 'object' ? car.brand.slug : null
+
+  // The car stays at /catalogo/<slug> whatever its city — a car belongs to
+  // several landings at once and its dealership can change, so the hierarchy is
+  // declared here instead of in the path. Falls back to the catalogue for a car
+  // whose dealership has not been set yet.
+  const trail: { name: string; path: string }[] = [{ name: 'Inicio', path: '/' }]
+  if (city) {
+    trail.push({
+      name: `Seminuevos en ${city.name}`,
+      path: `/seminuevos/${city.slug}`,
+    })
+    if (brandSlug) {
+      trail.push({
+        name: `${brandName} en ${city.name}`,
+        path: `/seminuevos/${city.slug}/${brandSlug}`,
+      })
+    }
+  } else {
+    trail.push({ name: 'Catálogo', path: '/catalogo' })
+  }
+
   const breadcrumbLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
+      ...trail,
       {
-        '@type': 'ListItem',
-        item: absoluteUrl('/'),
-        name: 'Inicio',
-        position: 1,
-      },
-      {
-        '@type': 'ListItem',
-        item: absoluteUrl('/catalogo'),
-        name: 'Catálogo',
-        position: 2,
-      },
-      {
-        '@type': 'ListItem',
-        item: absoluteUrl(`/catalogo/${slug}`),
         name: `${brandName} ${car.model} ${car.version} ${car.year}`,
-        position: 3,
+        path: `/catalogo/${slug}`,
       },
-    ],
+    ].map((crumb, index) => ({
+      '@type': 'ListItem',
+      item: absoluteUrl(crumb.path),
+      name: crumb.name,
+      position: index + 1,
+    })),
   }
 
   const statusConfig = {
@@ -163,17 +179,17 @@ export async function CarDetail({
       <div className="mx-auto max-w-7xl px-4 pt-20 pb-12 sm:px-6 sm:pt-24 sm:pb-16 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-6 text-sm text-slate-500">
-          <Link className="transition-colors hover:text-accent-600" href="/">
-            Inicio
-          </Link>
-          <span className="mx-2 text-slate-300">/</span>
-          <Link
-            className="transition-colors hover:text-accent-600"
-            href="/catalogo"
-          >
-            Catálogo
-          </Link>
-          <span className="mx-2 text-slate-300">/</span>
+          {trail.map((crumb) => (
+            <span key={crumb.path}>
+              <Link
+                className="transition-colors hover:text-accent-600"
+                href={crumb.path}
+              >
+                {crumb.name}
+              </Link>
+              <span className="mx-2 text-slate-300">/</span>
+            </span>
+          ))}
           <span className="font-medium text-slate-900">
             {brandName} {car.model}
           </span>
@@ -256,6 +272,17 @@ export async function CarDetail({
         </div>
 
         {dealership && <CarLocation dealership={dealership} />}
+
+        {city && brandSlug && (
+          <p className="mt-8 text-center">
+            <Link
+              className="shadow-soft inline-flex items-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition hover:border-accent-500"
+              href={`/seminuevos/${city.slug}/${brandSlug}`}
+            >
+              Ver más {brandName} seminuevos en {city.name}
+            </Link>
+          </p>
+        )}
       </div>
     </>
   )

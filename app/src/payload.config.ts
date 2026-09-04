@@ -14,6 +14,7 @@ import { Brands } from './collections/Brands'
 import { CarModels } from './collections/CarModels'
 import { Cars } from './collections/Cars'
 import { CarVersions } from './collections/CarVersions'
+import { Cities } from './collections/Cities'
 import { Colors } from './collections/Colors'
 import { Contact } from './globals/Contact'
 import { Dealerships } from './collections/Dealerships'
@@ -79,6 +80,7 @@ export default buildConfig({
     CarModels,
     CarVersions,
     Cars,
+    Cities,
     Colors,
     Dealerships,
     Media,

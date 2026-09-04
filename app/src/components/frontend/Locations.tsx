@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 
 import type { Dealership, Media } from '@/types/car'
+import { dealershipCity } from '@/lib/city'
 import { useOpenStatuses } from '@/lib/hours-client'
 import { getImageUrl } from '@/lib/images'
 import { normalizeCoords } from '@/lib/geo'
@@ -61,7 +62,8 @@ function imageUrlOf(d: Dealership): string | null {
 function addressLines(d: Dealership): string[] {
   const a = d.address
   if (!a) return []
-  const rest = [a.neighborhood, a.postalCode, a.city, a.state, a.country]
+  const city = dealershipCity(d)
+  const rest = [a.neighborhood, a.postalCode, city?.name, city?.state, a.country]
     .filter(Boolean)
     .join(', ')
   return [a.line1, rest].filter(Boolean) as string[]
@@ -85,12 +87,13 @@ export function Locations({ dealerships }: LocationsProps): React.JSX.Element {
     const q = query.trim().toLowerCase()
     if (!q) return dealerships
     return dealerships.filter((d) => {
+      const city = dealershipCity(d)
       const hay = [
         d.name,
         d.address?.line1,
         d.address?.neighborhood,
-        d.address?.city,
-        d.address?.state,
+        city?.name,
+        city?.state,
         d.address?.postalCode,
       ]
         .filter(Boolean)

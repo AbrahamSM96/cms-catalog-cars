@@ -1,5 +1,6 @@
 import type { Car } from '../types/car'
 
+import { carCity } from './city'
 import { r2PublicUrl } from './r2'
 
 /**
@@ -35,6 +36,6 @@ export function buildCarImageAlt(car: Car): string {
   const base = [brandName, car.model, car.version, car.year]
     .filter(Boolean)
     .join(' ')
-  const city = car.location?.city?.trim()
+  const city = carCity(car)?.name.trim()
   return city ? `${base} en ${city}` : base
 }

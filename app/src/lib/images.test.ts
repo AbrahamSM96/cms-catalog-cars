@@ -1,8 +1,25 @@
 import { describe, expect, it } from 'vitest'
 
-import type { Car } from '../types/car'
+import type { Car, Dealership } from '../types/car'
 
 import { buildCarImageAlt, getImageUrl } from './images'
+
+/**
+ * Dealership fixture holding a city, which is where a car's city comes from.
+ *
+ * @param cityName - name of the city the dealership sits in.
+ */
+function makeDealership(cityName: string): Dealership {
+  return {
+    address: {
+      city: { id: 1, name: cityName, slug: 'ciudad', state: 'Jalisco' },
+    },
+    createdAt: '',
+    id: 1,
+    name: 'AutoGDL',
+    updatedAt: '',
+  }
+}
 
 /**
  * Minimal car fixture.
@@ -80,7 +97,7 @@ describe('buildCarImageAlt', () => {
   it('includes city when present', () => {
     const car = makeCar({
       brand: { id: 1, name: 'Nissan', slug: 'nissan' },
-      location: { city: 'Guadalajara' },
+      dealership: makeDealership('Guadalajara'),
     })
     expect(buildCarImageAlt(car)).toBe(
       'Nissan Versa Advance 2021 en Guadalajara'
@@ -103,7 +120,7 @@ describe('buildCarImageAlt', () => {
   it('trims whitespace from city', () => {
     const car = makeCar({
       brand: { id: 1, name: 'Nissan', slug: 'nissan' },
-      location: { city: '  ' },
+      dealership: makeDealership('  '),
     })
     expect(buildCarImageAlt(car)).toBe('Nissan Versa Advance 2021')
   })

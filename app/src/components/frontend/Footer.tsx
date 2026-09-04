@@ -127,6 +127,16 @@ export function Footer({
                 </Link>
               </li>
               <li>
+                {/* Sitewide link into the city landings: they are reachable
+                    from every page, not only from the sitemap. */}
+                <Link
+                  className="transition-colors hover:text-accent-600"
+                  href="/seminuevos"
+                >
+                  Seminuevos por ciudad
+                </Link>
+              </li>
+              <li>
                 <Link
                   className="transition-colors hover:text-accent-600"
                   href="/ubicaciones"

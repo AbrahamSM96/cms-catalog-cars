@@ -18,6 +18,75 @@ interface FeatureRow {
   feature?: string
 }
 
+/** The city of the selected dealership, as Facebook wants it pasted. */
+interface DealershipCity {
+  city: string
+  state: string
+}
+
+// Shared instance so an unresolved dealership keeps the same identity across
+// renders — the values memo below depends on it.
+const NO_CITY: DealershipCity = { city: '', state: '' }
+
+/**
+ * Unwrap a Payload relationship form value into a plain id.
+ *
+ * The form stores either the id itself or a `{ relationTo, value }` pair,
+ * depending on how the field was rendered.
+ *
+ * @param value - The relationship value held by the form.
+ */
+function relationId(value: unknown): unknown {
+  return value &&
+    typeof value === 'object' &&
+    'value' in (value as Record<string, unknown>)
+    ? (value as { value: unknown }).value
+    : value
+}
+
+/**
+ * Resolve the city and state of the selected dealership.
+ *
+ * The car itself no longer carries a city — it is derived from the dealership,
+ * which in turn points at a `cities` document. Facebook still wants a plain
+ * "Pachuca, Hidalgo" string, so the relation is followed here at `depth=1`.
+ *
+ * @param value - The `dealership` relationship value held by the form.
+ */
+function useDealershipCity(value: unknown): DealershipCity {
+  const id = relationId(value)
+  const shouldFetch = id !== undefined && id !== null && id !== ''
+
+  const [fetched, setFetched] = useState<{ city: DealershipCity; id: unknown }>(
+    { city: NO_CITY, id: undefined }
+  )
+
+  useEffect(() => {
+    if (!shouldFetch) return
+
+    let cancelled = false
+    fetch(`/api/dealerships/${String(id)}?depth=1`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((doc: { address?: { city?: { name?: string; state?: string } } }) => {
+        if (cancelled) return
+        const city = doc?.address?.city
+        setFetched({
+          city: { city: city?.name ?? '', state: city?.state ?? '' },
+          id,
+        })
+      })
+      .catch(() => {
+        if (!cancelled) setFetched({ city: NO_CITY, id })
+      })
+
+    return (): void => {
+      cancelled = true
+    }
+  }, [id, shouldFetch])
+
+  return fetched.id === id ? fetched.city : NO_CITY
+}
+
 /**
  * Resolve the `name` of a relationship value (id or populated object) by
  * fetching the referenced collection document. Used for brand and colors.
@@ -26,12 +95,7 @@ interface FeatureRow {
  * @param value - The relationship value (id or populated object).
  */
 function useRelationName(collection: string, value: unknown): string {
-  const id =
-    value &&
-      typeof value === 'object' &&
-      'value' in (value as Record<string, unknown>)
-      ? (value as { value: unknown }).value
-      : value
+  const id = relationId(value)
 
   // Already-populated object with a name: no fetch needed.
   const populatedName =
@@ -83,11 +147,10 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
   const brandName = useRelationName('brands', data.brand)
   const exteriorColorName = useRelationName('colors', data.exteriorColor)
   const interiorColorName = useRelationName('colors', data.interiorColor)
+  const dealershipCity = useDealershipCity(data.dealership)
   const [copiedKey, setCopiedKey] = useState<string | null>(null)
 
   const values: MarketplaceValues = useMemo(() => {
-    const location =
-      (data.location as { city?: string; state?: string } | undefined) ?? {}
     const featuresRaw = data.features
     const features = (
       Array.isArray(featuresRaw) ? (featuresRaw as FeatureRow[]) : []
@@ -98,7 +161,7 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
     return {
       bodyType: data.bodyType as string | undefined,
       brandName,
-      city: location.city,
+      city: dealershipCity.city,
       condition: data.condition as string | undefined,
       exteriorColor: exteriorColorName,
       features,
@@ -107,12 +170,12 @@ export function FacebookMarketplacePanel(): React.JSX.Element {
       mileage: data.mileage as number | undefined,
       model: data.model as string | undefined,
       price: data.price as number | undefined,
-      state: location.state,
+      state: dealershipCity.state,
       transmission: data.transmission as string | undefined,
       vehicleType: data.vehicleType as string | undefined,
       year: data.year as number | undefined,
     }
-  }, [data, brandName, exteriorColorName, interiorColorName])
+  }, [data, brandName, dealershipCity, exteriorColorName, interiorColorName])
 
   const marketplaceFields = useMemo(
     () => buildMarketplaceFields(values),

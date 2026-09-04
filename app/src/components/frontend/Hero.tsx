@@ -90,12 +90,8 @@ export function Hero({
       <div className="relative mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16 lg:px-8">
         {/* Copy block */}
         <div className="mx-auto max-w-3xl text-center">
-          <div className="animate-rise shadow-soft inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-500" />
-            </span>
-            <span className="text-sm font-medium text-slate-700">
+          <div className="animate-rise neon-border inline-flex items-center gap-2.5 rounded-full border border-slate-900/10 bg-white/70 px-5 py-2 backdrop-blur-sm">
+            <span className="text-[11px] font-medium tracking-[0.22em] text-slate-600 uppercase sm:text-xs">
               {t.badge}
             </span>
           </div>

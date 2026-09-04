@@ -3,6 +3,7 @@
 import { MapPin, Navigation, Phone } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
+import { dealershipCity } from '@/lib/city'
 import { useOpenStatus } from '@/lib/hours-client'
 import type { Dealership } from '@/types/car'
 import { normalizeCoords } from '@/lib/geo'
@@ -41,10 +42,11 @@ export function CarLocation({
   )
 
   const a = dealership.address
+  const city = dealershipCity(dealership)
   const addressLines = a
     ? [
       a.line1,
-      [a.neighborhood, a.postalCode, a.city, a.state, a.country]
+      [a.neighborhood, a.postalCode, city?.name, city?.state, a.country]
         .filter(Boolean)
         .join(', '),
     ].filter(Boolean)
