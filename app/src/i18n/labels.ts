@@ -531,8 +531,8 @@ export const dealerships = {
     },
     coordinates: {
       description: msg(
-        'Use DECIMAL degrees (e.g. 20.6597 and -103.3496), not degrees-minutes-seconds. In Google Maps: right-click the place → click the coordinates to copy them (they come in decimal).',
-        'Usa grados DECIMALES (ej. 20.6597 y -103.3496), no grados-minutos-segundos. En Google Maps: clic derecho en el lugar → clic en las coordenadas para copiarlas (vienen en decimal).'
+        'Filled in on save from the Google Maps link below — leave them empty and paste the link. To set them by hand use DECIMAL degrees (e.g. 20.6597 and -103.3496), not degrees-minutes-seconds: right-click the place in Google Maps → click the coordinates to copy them.',
+        'Se llenan solas al guardar con el enlace de Google Maps de abajo: déjalas vacías y pega el enlace. Si las pones a mano, usa grados DECIMALES (ej. 20.6597 y -103.3496), no grados-minutos-segundos: clic derecho en el lugar en Google Maps → clic en las coordenadas para copiarlas.'
       ),
       label: msg('Coordinates (for the map)', 'Coordenadas (para el mapa)'),
     },
@@ -548,8 +548,8 @@ export const dealerships = {
     },
     googleMapsUrl: {
       description: msg(
-        "For the 'Get directions' button.",
-        "Para el botón 'Cómo llegar'."
+        "For the 'Get directions' button. Paste the link from Google Maps' Share button — the coordinates above are read from it on save.",
+        "Para el botón 'Cómo llegar'. Pega el enlace del botón Compartir de Google Maps: las coordenadas de arriba se sacan de ahí al guardar."
       ),
     },
     latitude: {

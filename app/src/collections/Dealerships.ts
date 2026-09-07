@@ -1,6 +1,7 @@
 import type { CollectionConfig, Field } from 'payload'
 
 import { adminsOnly, editorsAndAdmins } from '../access'
+import { fillCoordinatesFromMapsUrl } from '../hooks/mapsCoordinates'
 import {
   revalidateAfterChange,
   revalidateAfterDelete,
@@ -264,6 +265,7 @@ export const Dealerships: CollectionConfig = {
     afterDelete: [
       revalidateAfterDelete(CACHE_TAGS.cars, CACHE_TAGS.dealerships),
     ],
+    beforeChange: [fillCoordinatesFromMapsUrl],
   },
   labels: dealerships.labels,
   slug: 'dealerships',
