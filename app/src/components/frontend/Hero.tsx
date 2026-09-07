@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 
+import { Badge } from './Badge'
 import { SearchBar } from './SearchBar'
 
 export interface HeroSlideView {
@@ -90,11 +91,11 @@ export function Hero({
       <div className="relative mx-auto max-w-7xl px-4 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16 lg:px-8">
         {/* Copy block */}
         <div className="mx-auto max-w-3xl text-center">
-          <div className="animate-rise neon-border inline-flex items-center gap-2.5 rounded-full border border-slate-900/10 bg-white/70 px-5 py-2 backdrop-blur-sm">
+          <Badge className="animate-rise" variant="glass">
             <span className="text-[11px] font-medium tracking-[0.22em] text-slate-600 uppercase sm:text-xs">
               {t.badge}
             </span>
-          </div>
+          </Badge>
 
           <h1
             className="animate-rise mt-6 text-4xl font-bold tracking-tight text-slate-900 sm:text-6xl lg:text-7xl"

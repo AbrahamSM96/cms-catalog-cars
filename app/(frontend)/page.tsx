@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
 import { getSiteSettings } from '@/lib/payload-client'
+import { Badge } from '@/components/frontend/Badge'
 import { HomeFeatured } from '@/components/frontend/HomeFeatured'
 import { HomeHero } from '@/components/frontend/HomeHero'
 import { HomeLocations } from '@/components/frontend/HomeLocations'
@@ -61,15 +62,11 @@ export default function HomePage(): React.JSX.Element {
       <section className="relative overflow-hidden bg-slate-50 py-12 sm:py-16 lg:py-24">
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)] opacity-50" />
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-          <div className="shadow-soft inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-500" />
-            </span>
+          <Badge className="animate-rise" variant="glass">
             <span className="text-sm font-medium text-slate-700">
               Inventario actualizado
             </span>
-          </div>
+          </Badge>
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             Explora todo nuestro inventario
           </h2>
