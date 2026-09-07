@@ -72,6 +72,16 @@ function serverUrl(): string {
 
 export default buildConfig({
   admin: {
+    components: {
+      // Inventory overview above the stock dashboard (components/admin/dashboard.css).
+      beforeDashboard: ['/components/admin/AdminDashboardHero#AdminDashboardHero'],
+      // Left half of the split-screen sign-in view (components/admin/login.css).
+      beforeLogin: ['/components/admin/LoginBrandPanel#LoginBrandPanel'],
+      graphics: {
+        // The Payload mark in the breadcrumb, which links back to the dashboard.
+        Icon: '/components/admin/AdminIcon#AdminIcon',
+      },
+    },
     importMap,
     user: 'users',
   },

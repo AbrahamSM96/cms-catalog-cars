@@ -7,6 +7,7 @@ import {
   revalidateAfterDelete,
 } from '../hooks/revalidate'
 import { common, dealerships, groups } from '../i18n/labels'
+import { isTimeOfDay } from '../lib/hours'
 import { validateLatitude, validateLongitude } from '../lib/coordinates'
 import { CACHE_TAGS } from '../lib/cache-tags'
 
@@ -21,6 +22,18 @@ const DAYS: { label: Translated; name: string }[] = [
   { label: dealerships.fields.saturday.label, name: 'saturday' },
   { label: dealerships.fields.sunday.label, name: 'sunday' },
 ]
+
+/**
+ * Reject a time the site cannot read.
+ *
+ * The `TimeField` dropdown can only produce valid values, so this guards the
+ * other door: the REST/Local API, where a free-form string would otherwise
+ * reach the column and silently disable the open/closed badge.
+ *
+ * @param value - The submitted time, absent when the day is marked closed.
+ */
+const validateTime = (value?: null | string): string | true =>
+  !value || isTimeOfDay(value) ? true : 'HH:MM (24h)'
 
 // One row per weekday: a "Closed" toggle plus opening/closing time (HH:MM, 24h).
 const dayFields: Field[] = DAYS.map((day) => ({
@@ -43,14 +56,15 @@ const dayFields: Field[] = DAYS.map((day) => ({
              * @param siblingData - The sibling field data
              * @returns Whether to show the field
              */
+            components: { Field: '/components/admin/TimeField#TimeField' },
             condition: (_, siblingData) => !siblingData?.closed,
             description: dealerships.fields.opens.description,
-            placeholder: '09:00',
             width: '33%',
           },
           label: dealerships.fields.opens.label,
           name: 'open',
           type: 'text',
+          validate: validateTime,
         },
         {
           admin: {
@@ -61,14 +75,15 @@ const dayFields: Field[] = DAYS.map((day) => ({
              * @param siblingData - The sibling field data
              * @returns Whether to show the field
              */
+            components: { Field: '/components/admin/TimeField#TimeField' },
             condition: (_, siblingData) => !siblingData?.closed,
             description: dealerships.fields.opens.description,
-            placeholder: '19:00',
             width: '33%',
           },
           label: dealerships.fields.closes.label,
           name: 'close',
           type: 'text',
+          validate: validateTime,
         },
       ],
       type: 'row',

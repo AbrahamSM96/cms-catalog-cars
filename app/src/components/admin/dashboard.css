@@ -1,0 +1,234 @@
+/**
+ * Inventory overview shown above the Payload dashboard
+ * (`AdminDashboardHero`, wired through `admin.components.beforeDashboard`).
+ *
+ * Every colour, radius and shadow here is a token from `theme.css`, so the
+ * block follows the admin's light/dark toggle without a single duplicated
+ * palette. Nothing in this file touches Payload's own classes — it only styles
+ * markup we render — which is what keeps it safe across upgrades.
+ */
+
+.admin-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.admin-hero__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.admin-hero__title {
+  color: var(--admin-text);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.admin-hero__text {
+  color: var(--admin-text-muted);
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+/* ── Stat tiles ──────────────────────────────────────────────────────────── */
+
+.admin-hero__stats {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+}
+
+.admin-stat {
+  background-color: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-m);
+  box-shadow: var(--admin-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.125rem 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tone is carried by a rail rather than by the number's colour, so the value
+   keeps full contrast in both themes. */
+.admin-stat::before {
+  background-color: var(--admin-stat-tone);
+  content: '';
+  inset: 0 auto 0 0;
+  position: absolute;
+  width: 3px;
+}
+
+.admin-stat--accent {
+  --admin-stat-tone: var(--brand-accent);
+}
+
+.admin-stat--caution {
+  --admin-stat-tone: var(--admin-caution);
+}
+
+.admin-stat--neutral {
+  --admin-stat-tone: var(--admin-border-strong);
+}
+
+.admin-stat--positive {
+  --admin-stat-tone: var(--admin-positive);
+}
+
+.admin-stat__label {
+  color: var(--admin-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.admin-stat__value {
+  color: var(--admin-text);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+}
+
+/* ── Recent cars ─────────────────────────────────────────────────────────── */
+
+.admin-hero__section-head {
+  align-items: baseline;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.admin-hero__subtitle {
+  color: var(--admin-text);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.admin-hero__link {
+  color: var(--brand-accent);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color var(--admin-transition);
+}
+
+.admin-hero__link:hover {
+  color: var(--brand-accent-strong);
+  text-decoration: underline;
+}
+
+.admin-hero__empty {
+  border: 1px dashed var(--admin-border-strong);
+  border-radius: var(--admin-radius-m);
+  color: var(--admin-text-muted);
+  font-size: 0.9375rem;
+  margin: 0;
+  padding: 1.75rem;
+  text-align: center;
+}
+
+.admin-recent {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-card {
+  background-color: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-m);
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  height: 100%;
+  padding: 1.125rem 1.25rem;
+  text-decoration: none;
+  transition:
+    border-color var(--admin-transition),
+    box-shadow var(--admin-transition);
+}
+
+.admin-card:hover {
+  border-color: var(--admin-border-strong);
+  box-shadow: var(--admin-shadow-md);
+  text-decoration: none;
+}
+
+.admin-card:focus-visible {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 2px;
+}
+
+.admin-card__head {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.admin-card__title {
+  color: var(--admin-text);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.admin-card__price {
+  color: var(--admin-text);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.admin-card__meta {
+  color: var(--admin-text-muted);
+  font-size: 0.8125rem;
+}
+
+.admin-badge {
+  background-color: var(--admin-badge-bg);
+  border-radius: 999px;
+  color: var(--admin-badge-color);
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.1875rem 0.5rem;
+  white-space: nowrap;
+}
+
+.admin-badge--available {
+  --admin-badge-bg: var(--admin-positive-soft);
+  --admin-badge-color: var(--admin-positive);
+}
+
+.admin-badge--reserved {
+  --admin-badge-bg: var(--admin-caution-soft);
+  --admin-badge-color: var(--admin-caution);
+}
+
+.admin-badge--sold {
+  --admin-badge-bg: var(--admin-neutral-soft);
+  --admin-badge-color: var(--admin-neutral);
+}
+
+@media (min-width: 64rem) {
+  .admin-hero__title {
+    font-size: 2rem;
+  }
+}

@@ -1,12 +1,21 @@
 /**
+ * Payload owns `page.tsx` and the route group's `layout.tsx` and may rewrite
+ * them at any time, so anything of ours lives here instead: the Cache
+ * Components opt-out below, and the admin stylesheets.
+ *
+ * Order matters — `theme.css` declares the tokens the other two consume. The
+ * screen-specific sheets are scoped to classes Payload only renders on their
+ * own route, so loading all three everywhere is harmless.
+ */
+import '@/components/admin/theme.css'
+import '@/components/admin/dashboard.css'
+import '@/components/admin/login.css'
+
+/**
  * The Payload admin reads cookies and queries the database on every request —
  * it is a logged-in application, not a page that can be prerendered. Cache
  * Components would otherwise fail the build trying to produce a static shell
  * for it.
- *
- * This layout exists only to carry that opt-out. Payload generates
- * `page.tsx` and the route group's `layout.tsx` and may rewrite them at any
- * time, so the config lives in a file Payload does not own.
  */
 export const instant = false
 

@@ -1,0 +1,395 @@
+/**
+ * Split-screen sign-in screen for the Payload admin.
+ *
+ * Payload renders the login view as
+ * `section.login.template-minimal > div.template-minimal__wrap`, with the
+ * brand logo, the `beforeLogin` components and the form stacked inside that
+ * single 480px column. Instead of forking the view, the column is pushed into
+ * the right half of the viewport and `LoginBrandPanel` paints the left half
+ * from a fixed element — so an upgrade of `@payloadcms/next` cannot break the
+ * layout, only restyle the form inside it.
+ *
+ * Every selector is scoped to `.login`, which Payload only ever puts on this
+ * route, so the rest of the admin keeps its stock appearance and its theme
+ * toggle.
+ */
+
+.login {
+  /*
+   * Lock the sign-in screen to the light palette. The public site is
+   * light-first and this screen is its front door; the admin theme toggle
+   * still governs every other view. Values mirror Payload's own light theme
+   * (its `html[data-theme='dark']` block remaps the same variables).
+   */
+  --theme-bg: var(--color-base-0);
+  --theme-border-color: var(--color-base-150);
+  --theme-elevation-0: var(--color-base-0);
+  --theme-elevation-50: var(--color-base-50);
+  --theme-elevation-100: var(--color-base-100);
+  --theme-elevation-150: var(--color-base-150);
+  --theme-elevation-200: var(--color-base-200);
+  --theme-elevation-250: var(--color-base-250);
+  --theme-elevation-300: var(--color-base-300);
+  --theme-elevation-350: var(--color-base-350);
+  --theme-elevation-400: var(--color-base-400);
+  --theme-elevation-450: var(--color-base-450);
+  --theme-elevation-500: var(--color-base-500);
+  --theme-elevation-550: var(--color-base-550);
+  --theme-elevation-600: var(--color-base-600);
+  --theme-elevation-650: var(--color-base-650);
+  --theme-elevation-700: var(--color-base-700);
+  --theme-elevation-750: var(--color-base-750);
+  --theme-elevation-800: var(--color-base-800);
+  --theme-elevation-850: var(--color-base-850);
+  --theme-elevation-900: var(--color-base-900);
+  --theme-elevation-950: var(--color-base-950);
+  --theme-elevation-1000: var(--color-base-1000);
+  --theme-input-bg: var(--color-base-0);
+  --theme-text: var(--color-base-1000);
+
+  /*
+   * `theme.css` swaps the accent for a lighter red under the dark theme. This
+   * screen is light no matter what the toggle says, so it re-pins the light
+   * values instead of inheriting them.
+   */
+  --brand-accent: #dc2626;
+  --brand-accent-contrast: #ffffff;
+  --brand-accent-ring: rgba(220, 38, 38, 0.16);
+  --brand-accent-strong: #b91c1c;
+
+  align-items: flex-start;
+  background-color: var(--color-base-0);
+  color-scheme: light;
+  padding: 1.25rem 1.25rem 3rem;
+}
+
+/* The logo already leads the brand panel; a second one above the form is noise. */
+.login .login__brand {
+  display: none;
+}
+
+.login.template-minimal--width-normal .template-minimal__wrap {
+  max-width: 25rem;
+}
+
+/* ── Brand panel ─────────────────────────────────────────────────────────── */
+
+.login-brand {
+  background-color: var(--brand-ink);
+  /*
+   * Cinematic depth without an image: an accent flare in the upper left, a
+   * cooler slate pool in the lower right, over a slate-to-oxblood base.
+   */
+  background-image:
+    radial-gradient(
+      120% 110% at 12% 8%,
+      rgba(220, 38, 38, 0.55) 0%,
+      rgba(220, 38, 38, 0) 55%
+    ),
+    radial-gradient(
+      90% 90% at 88% 92%,
+      rgba(15, 23, 42, 0.85) 0%,
+      rgba(15, 23, 42, 0) 60%
+    ),
+    linear-gradient(155deg, #1e293b 0%, #0f172a 48%, #45090b 100%);
+  border-radius: 1.25rem;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  isolation: isolate;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  padding: 1.75rem;
+  position: relative;
+}
+
+/* Faint engineering grid, faded out towards the bottom right. */
+.login-brand::before {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 56px 56px;
+  content: '';
+  inset: 0;
+  mask-image: radial-gradient(120% 100% at 10% 0%, #000 0%, transparent 70%);
+  position: absolute;
+  z-index: -1;
+}
+
+/* Soft vignette so the type never sits on the brightest part of the flare. */
+.login-brand::after {
+  background: radial-gradient(
+    100% 80% at 50% 100%,
+    rgba(2, 6, 23, 0.55) 0%,
+    rgba(2, 6, 23, 0) 70%
+  );
+  content: '';
+  inset: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.login-brand__eyebrow {
+  align-items: center;
+  align-self: flex-start;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.75rem;
+  font-weight: 600;
+  gap: 0.5rem;
+  letter-spacing: 0.04em;
+  padding: 0.375rem 0.875rem;
+}
+
+.login-brand__dot {
+  background-color: var(--brand-accent);
+  border-radius: 999px;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.25);
+  height: 0.4375rem;
+  width: 0.4375rem;
+}
+
+.login-brand__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-brand__mark {
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 1rem;
+  display: inline-flex;
+  height: 3.25rem;
+  justify-content: center;
+  padding: 0.5rem;
+  width: fit-content;
+  min-width: 3.25rem;
+}
+
+.login-brand__logo {
+  height: 2.25rem;
+  object-fit: contain;
+  width: auto;
+}
+
+.login-brand__icon {
+  height: 1.75rem;
+  width: 1.75rem;
+}
+
+.login-brand__title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.login-brand__text {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  max-width: 34ch;
+}
+
+.login-brand__footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding-top: 1rem;
+  text-transform: uppercase;
+}
+
+/* ── Form column ─────────────────────────────────────────────────────────── */
+
+.login-intro {
+  margin-bottom: 1.75rem;
+}
+
+.login-intro__title {
+  color: var(--color-base-1000);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.login-intro__text {
+  color: var(--color-base-600);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin: 0.5rem 0 0;
+}
+
+.login .login__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.login .login__form__inputWrap {
+  gap: 1rem;
+  margin-bottom: 0;
+}
+
+.login .login__form .field-type label,
+.login .login__form .field-type .field-label {
+  color: var(--color-base-700);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin-bottom: 0.375rem;
+}
+
+.login .login__form .field-type input {
+  border: 1px solid var(--color-base-150);
+  border-radius: 0.625rem;
+  box-shadow: none;
+  font-size: 0.9375rem;
+  height: 2.875rem;
+  padding: 0 0.875rem;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.login .login__form .field-type input:not(:disabled):hover {
+  border-color: var(--color-base-250);
+  box-shadow: none;
+}
+
+.login .login__form .field-type input:focus {
+  border-color: var(--brand-accent);
+  box-shadow: 0 0 0 3px var(--brand-accent-ring);
+  outline: none;
+}
+
+/* Payload renders the "forgot password" link between the fields and the
+   submit button; below the button reads better and keeps the primary action
+   next to the inputs. */
+.login .login__form > a {
+  align-self: center;
+  color: var(--color-base-600);
+  font-size: 0.875rem;
+  order: 3;
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.login .login__form > a:hover {
+  color: var(--brand-accent);
+}
+
+.login .login__form > a:focus-visible {
+  border-radius: 0.25rem;
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 2px;
+}
+
+.login .form-submit {
+  margin: 0;
+  width: 100%;
+}
+
+.login .form-submit .btn {
+  margin: 0;
+  width: 100%;
+}
+
+/* The accent itself comes from `theme.css`, which brands every primary button
+   in the admin; only the full-width sign-in shape is local. */
+.login .form-submit .btn__content {
+  font-weight: 600;
+  justify-content: center;
+}
+
+/* ── Desktop split ───────────────────────────────────────────────────────── */
+
+@media (min-width: 64rem) {
+  .login {
+    align-items: center;
+    margin-left: 50%;
+    min-height: 100vh;
+    padding: 4rem 3.5rem;
+    width: 50%;
+  }
+
+  .login-brand {
+    border-radius: 0;
+    inset: 0 50% 0 0;
+    justify-content: space-between;
+    margin-bottom: 0;
+    padding: 4rem 3.5rem;
+    position: fixed;
+  }
+
+  .login-brand__body {
+    margin-block: auto;
+  }
+
+  .login-brand__mark {
+    height: 4rem;
+    min-width: 4rem;
+    padding: 0.75rem;
+  }
+
+  .login-brand__logo {
+    height: 2.75rem;
+  }
+
+  .login-brand__icon {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .login-brand__title {
+    font-size: 3rem;
+  }
+
+  .login-brand__text {
+    font-size: 1rem;
+  }
+
+  .login-intro {
+    margin-bottom: 2rem;
+  }
+
+  .login-intro__title {
+    font-size: 2rem;
+  }
+}
+
+/* ── Entrance ────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+  .login-brand,
+  .login-intro,
+  .login .login__form {
+    animation: login-rise 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .login-intro {
+    animation-delay: 80ms;
+  }
+
+  .login .login__form {
+    animation-delay: 140ms;
+  }
+}
+
+@keyframes login-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

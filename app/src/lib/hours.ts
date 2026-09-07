@@ -143,6 +143,19 @@ export function getOpenStatus(hours?: WeeklyHours): OpenStatus | null {
 }
 
 /**
+ * True when a value is a time this module can read: "HH:MM" in 24-hour form.
+ *
+ * The CMS validates opening and closing times with this, so the admin cannot
+ * store something `parseTime()` would later reject — an unreadable time makes
+ * the open/closed badge disappear with no error anywhere.
+ *
+ * @param value - the candidate time string
+ */
+export function isTimeOfDay(value?: string): boolean {
+  return parseTime(value) !== null
+}
+
+/**
  * True if the schedule has at least one usable day (to decide whether to show status).
  *
  * @param hours - the weekly schedule to check

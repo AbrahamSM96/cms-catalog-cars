@@ -1,0 +1,155 @@
+/**
+ * Brand layer for the Payload admin.
+ *
+ * This file is the single source of truth for every custom screen we add to
+ * the admin (`login.css`, `dashboard.css`, any future panel). It does two
+ * things and nothing else:
+ *
+ * 1. Declares `--brand-*` and `--admin-*` design tokens. The surface, border
+ *    and text tokens are aliases of Payload's own `--theme-elevation-*` scale,
+ *    which Payload remaps under `html[data-theme='dark']` — so they follow the
+ *    admin theme toggle for free, and only the values that genuinely differ
+ *    between themes (the accent, the shadows, the status tints) are restated
+ *    in the dark block below.
+ * 2. Restyles the shared chrome — navigation, primary buttons — so the stock
+ *    views match the screens we build.
+ *
+ * Rule of thumb: colours, radii and shadows are declared here and consumed as
+ * `var(--…)` elsewhere. A re-brand should never mean editing a component's
+ * stylesheet.
+ */
+
+:root {
+  /* Brand accent. Mirrors `--accent` in app/globals.css (the public site). */
+  --brand-accent: #dc2626;
+  --brand-accent-strong: #b91c1c;
+  --brand-accent-contrast: #ffffff;
+  --brand-accent-soft: rgba(220, 38, 38, 0.1);
+  --brand-accent-ring: rgba(220, 38, 38, 0.16);
+  --brand-ink: #0f172a;
+
+  /* Surfaces, borders and text: aliases of Payload's elevation scale. */
+  --admin-surface: var(--theme-elevation-0);
+  --admin-surface-raised: var(--theme-elevation-50);
+  --admin-surface-sunken: var(--theme-elevation-25, var(--theme-elevation-50));
+  --admin-border: var(--theme-elevation-100);
+  --admin-border-strong: var(--theme-elevation-150);
+  --admin-text: var(--theme-elevation-1000);
+  --admin-text-soft: var(--theme-elevation-700);
+  --admin-text-muted: var(--theme-elevation-500);
+
+  /* Status tints, used by badges and stat tiles. */
+  --admin-positive: #15803d;
+  --admin-positive-soft: rgba(21, 128, 61, 0.12);
+  --admin-caution: #b45309;
+  --admin-caution-soft: rgba(180, 83, 9, 0.12);
+  --admin-neutral: var(--theme-elevation-600);
+  --admin-neutral-soft: var(--theme-elevation-100);
+
+  --admin-radius-s: 0.5rem;
+  --admin-radius-m: 0.75rem;
+  --admin-radius-l: 1rem;
+
+  --admin-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --admin-shadow-md:
+    0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
+
+  --admin-transition: 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html[data-theme='dark'] {
+  /* #dc2626 does not clear 4.5:1 on a near-black surface; #ef4444 does. */
+  --brand-accent: #ef4444;
+  --brand-accent-strong: #f87171;
+  --brand-accent-contrast: #1a0505;
+  --brand-accent-soft: rgba(239, 68, 68, 0.16);
+  --brand-accent-ring: rgba(239, 68, 68, 0.22);
+
+  --admin-positive: #4ade80;
+  --admin-positive-soft: rgba(74, 222, 128, 0.14);
+  --admin-caution: #fbbf24;
+  --admin-caution-soft: rgba(251, 191, 36, 0.14);
+
+  --admin-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --admin-shadow-md:
+    0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Navigation ──────────────────────────────────────────────────────────── */
+
+.nav {
+  background-color: var(--admin-surface-raised);
+}
+
+.nav__label {
+  color: var(--admin-text-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.nav-group__toggle {
+  color: var(--admin-text-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.nav .nav__link {
+  border-radius: var(--admin-radius-s);
+  color: var(--admin-text-soft);
+  padding-block: 0.4375rem;
+  padding-inline: 0.625rem;
+  transition:
+    background-color var(--admin-transition),
+    color var(--admin-transition);
+  width: 100%;
+}
+
+.nav .nav__link:hover,
+.nav a.nav__link:focus-visible {
+  background-color: var(--admin-neutral-soft);
+  color: var(--admin-text);
+  text-decoration: none;
+}
+
+.nav .nav__link.active {
+  background-color: var(--brand-accent-soft);
+  color: var(--brand-accent);
+  font-weight: 600;
+}
+
+/* The active state is the pill above; Payload's edge indicator would double up. */
+.nav .nav__link-indicator {
+  display: none;
+}
+
+/* ── Breadcrumb home icon (AdminIcon) ────────────────────────────────────── */
+
+.admin-icon {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.step-nav__home {
+  color: var(--admin-text);
+  transition: color var(--admin-transition);
+}
+
+.step-nav__home:hover {
+  color: var(--brand-accent);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+.btn--style-primary {
+  --bg-color: var(--brand-accent);
+  --color: var(--brand-accent-contrast);
+  --hover-bg: var(--brand-accent-strong);
+  --hover-color: var(--brand-accent-contrast);
+
+  border-radius: var(--admin-radius-s);
+}
