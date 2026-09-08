@@ -1,9 +1,11 @@
+import type { CarCardSizesVariant } from '../../lib/images'
 import type { Car } from '../../types/car'
 
 import { CarCard } from './CarCard'
 
 interface CarGridProps {
   cars: Car[]
+  sizesVariant?: CarCardSizesVariant
 }
 
 /**
@@ -11,8 +13,12 @@ interface CarGridProps {
  *
  * @param props - The properties for the CarGrid component.
  * @param props.cars - An array of Car objects to be displayed in the grid.
+ * @param props.sizesVariant - `sizes` preset forwarded to each card's image.
  */
-export function CarGrid({ cars }: CarGridProps): React.ReactElement {
+export function CarGrid({
+  cars,
+  sizesVariant = 'catalog',
+}: CarGridProps): React.ReactElement {
   if (cars.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-12 text-center sm:py-16">
@@ -70,7 +76,7 @@ export function CarGrid({ cars }: CarGridProps): React.ReactElement {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {cars.map((car) => (
-        <CarCard car={car} key={car.id} />
+        <CarCard car={car} key={car.id} sizesVariant={sizesVariant} />
       ))}
     </div>
   )

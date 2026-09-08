@@ -4,13 +4,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 
-import { buildCarImageAlt, getImageUrl } from '../../lib/images'
+import type { CarCardSizesVariant } from '../../lib/images'
+
+import { buildCarImageAlt, carCardSizes, getImageUrl } from '../../lib/images'
 import { buildCarSlug } from '../../lib/car-slug'
 import type { Car } from '../../types/car'
 import { formatPriceMXN } from '../../lib/currency'
 
 interface CarCardProps {
   car: Car
+  sizesVariant?: CarCardSizesVariant
 }
 
 /**
@@ -18,8 +21,12 @@ interface CarCardProps {
  *
  * @param props - component props
  * @param props.car - car data
+ * @param props.sizesVariant - preset de `sizes` según el grid que la renderiza
  */
-export function CarCard({ car }: CarCardProps): React.JSX.Element {
+export function CarCard({
+  car,
+  sizesVariant = 'grid',
+}: CarCardProps): React.JSX.Element {
   const brandName = typeof car.brand === 'object' ? car.brand.name : 'Unknown'
 
   // Get preview image: featured image, else first exterior/interior photo
@@ -88,7 +95,7 @@ export function CarCard({ car }: CarCardProps): React.JSX.Element {
               setHasError(true)
               setImgSrc('/placeholder-car.svg')
             }}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes={carCardSizes[sizesVariant]}
             src={imgSrc}
             unoptimized={hasError}
           />

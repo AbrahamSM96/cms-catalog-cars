@@ -79,7 +79,7 @@ export function FeaturedCars({
               key={car.id}
               style={{ animationDelay: `${index * 90}ms` }}
             >
-              <CarCard car={car} />
+              <CarCard car={car} sizesVariant="grid" />
             </div>
           ))}
         </div>

@@ -4,6 +4,20 @@ import { carCity } from './city'
 import { r2PublicUrl } from './r2'
 
 /**
+ * `sizes` presets for the car preview image, por widget que renderiza la card.
+ *
+ * El navegador elige el candidato del `srcset` con este valor, así que cada
+ * grid declara el ancho real que ocupa la card en su layout: la home usa el
+ * grid destacado y el catálogo/landing un grid más angosto por los filtros.
+ */
+export const carCardSizes = {
+  catalog: '(min-width: 1400px) 30vw, (min-width: 768px) 40vw, 80vw',
+  grid: '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw',
+} as const
+
+export type CarCardSizesVariant = keyof typeof carCardSizes
+
+/**
  * Get the public image URL from R2.
  *
  * Pure helper (no server-only dependencies) so it can be imported from both
