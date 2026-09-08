@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 
 import { absoluteUrl } from '@/lib/seo'
 import { buildCarImageAlt, getImageUrl } from '@/lib/images'
-import { CarDetail } from '@/components/frontend/CarDetail'
+import { CarDetail } from '@/components/car/CarDetail'
 import { getCarBySlug } from '@/lib/payload-client'
 
 interface CarDetailPageProps {

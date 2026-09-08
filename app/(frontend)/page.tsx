@@ -4,10 +4,10 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
 import { getSiteSettings } from '@/lib/payload-client'
-import { Badge } from '@/components/frontend/Badge'
-import { HomeFeatured } from '@/components/frontend/HomeFeatured'
-import { HomeHero } from '@/components/frontend/HomeHero'
-import { HomeLocations } from '@/components/frontend/HomeLocations'
+import { Badge } from '@/components/ui/Badge'
+import { HomeFeatured } from '@/components/sections/HomeFeatured'
+import { HomeHero } from '@/components/sections/HomeHero'
+import { HomeLocations } from '@/components/sections/HomeLocations'
 import { resolveSiteConfig } from '@/config/site'
 
 /**

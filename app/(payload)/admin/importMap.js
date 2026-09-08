@@ -1,6 +1,6 @@
-import { FacebookMarketplacePanel as FacebookMarketplacePanel_c4a4d72846c51c5aa7b96959e0afa802 } from '../../src/components/FacebookMarketplacePanel'
-import { PriceDescription as PriceDescription_04da38a0c88a213bc2c55daa703d9285 } from '../../src/components/PriceDescription'
-import { MileageDescription as MileageDescription_ae48e49ee51163c51400a666b3d73aaf } from '../../src/components/MileageDescription'
+import { FacebookMarketplacePanel as FacebookMarketplacePanel_c4a4d72846c51c5aa7b96959e0afa802 } from '../../src/components/admin/FacebookMarketplacePanel'
+import { PriceDescription as PriceDescription_04da38a0c88a213bc2c55daa703d9285 } from '../../src/components/admin/PriceDescription'
+import { MileageDescription as MileageDescription_ae48e49ee51163c51400a666b3d73aaf } from '../../src/components/admin/MileageDescription'
 import { AdminDashboardHero as AdminDashboardHero_f6071829304a5b6c7d8e9f0a1b2c3d4e } from '../../src/components/admin/AdminDashboardHero'
 import { AdminIcon as AdminIcon_071829304a5b6c7d8e9f0a1b2c3d4e5f } from '../../src/components/admin/AdminIcon'
 import { LoginBrandPanel as LoginBrandPanel_e5f6071829304a5b6c7d8e9f0a1b2c3d } from '../../src/components/admin/LoginBrandPanel'
@@ -13,11 +13,11 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 import { S3ClientUploadHandler as S3ClientUploadHandler_0 } from '@payloadcms/storage-s3/client'
 
 export const importMap = {
-  '/components/FacebookMarketplacePanel#FacebookMarketplacePanel':
+  '/components/admin/FacebookMarketplacePanel#FacebookMarketplacePanel':
     FacebookMarketplacePanel_c4a4d72846c51c5aa7b96959e0afa802,
-  '/components/PriceDescription#PriceDescription':
+  '/components/admin/PriceDescription#PriceDescription':
     PriceDescription_04da38a0c88a213bc2c55daa703d9285,
-  '/components/MileageDescription#MileageDescription':
+  '/components/admin/MileageDescription#MileageDescription':
     MileageDescription_ae48e49ee51163c51400a666b3d73aaf,
   '/components/admin/AdminDashboardHero#AdminDashboardHero':
     AdminDashboardHero_f6071829304a5b6c7d8e9f0a1b2c3d4e,

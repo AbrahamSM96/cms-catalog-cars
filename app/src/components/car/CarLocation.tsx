@@ -9,7 +9,8 @@ import type { Dealership } from '@/types/car'
 import { normalizeCoords } from '@/lib/geo'
 
 const LocationsMap = dynamic(
-  () => import('./LocationsMap').then((m) => m.LocationsMap),
+  () =>
+    import('@/components/location/LocationsMap').then((m) => m.LocationsMap),
   {
     /**
      * loading
@@ -45,11 +46,11 @@ export function CarLocation({
   const city = dealershipCity(dealership)
   const addressLines = a
     ? [
-      a.line1,
-      [a.neighborhood, a.postalCode, city?.name, city?.state, a.country]
-        .filter(Boolean)
-        .join(', '),
-    ].filter(Boolean)
+        a.line1,
+        [a.neighborhood, a.postalCode, city?.name, city?.state, a.country]
+          .filter(Boolean)
+          .join(', '),
+      ].filter(Boolean)
     : []
 
   const mapsHref =

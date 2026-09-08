@@ -281,7 +281,7 @@ export const Cars: CollectionConfig = {
                   admin: {
                     components: {
                       Description:
-                        '/components/PriceDescription#PriceDescription',
+                        '/components/admin/PriceDescription#PriceDescription',
                     },
                     description: cars.fields.price.description,
                     placeholder: cars.fields.price.placeholder,
@@ -528,7 +528,7 @@ export const Cars: CollectionConfig = {
                   admin: {
                     components: {
                       Description:
-                        '/components/MileageDescription#MileageDescription',
+                        '/components/admin/MileageDescription#MileageDescription',
                     },
                     description: cars.fields.mileage.description,
                     placeholder: cars.fields.mileage.placeholder,
@@ -756,7 +756,7 @@ export const Cars: CollectionConfig = {
               admin: {
                 components: {
                   Field:
-                    '/components/FacebookMarketplacePanel#FacebookMarketplacePanel',
+                    '/components/admin/FacebookMarketplacePanel#FacebookMarketplacePanel',
                 },
               },
               name: 'fbMarketplace',

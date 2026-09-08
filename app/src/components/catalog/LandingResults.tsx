@@ -11,8 +11,8 @@ import {
 import { landingCrumbs, resolveLandingPath } from '@/lib/landing-routes'
 import { absoluteUrl } from '@/lib/seo'
 import { buildItemListLd, serializeLd } from '@/lib/json-ld'
-import { CarGrid } from '@/components/frontend/CarGrid'
-import { LandingHub } from '@/components/frontend/LandingHub'
+import { CarGrid } from '@/components/car/CarGrid'
+import { LandingHub } from '@/components/sections/LandingHub'
 
 /** The path segments after `/seminuevos`. */
 export interface LandingParams {

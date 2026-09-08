@@ -3,8 +3,8 @@ import { Suspense } from 'react'
 
 import { getCars, getCatalogFacets, getCityFacets } from '@/lib/payload-client'
 import { resolveLandingPath } from '@/lib/landing-routes'
-import type { LandingParams } from '@/components/frontend/LandingResults'
-import { LandingResults } from '@/components/frontend/LandingResults'
+import type { LandingParams } from '@/components/catalog/LandingResults'
+import { LandingResults } from '@/components/catalog/LandingResults'
 
 interface SeminuevosPageProps {
   params: Promise<LandingParams>

@@ -12,10 +12,10 @@ import {
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { CategoryButton } from '@/components/ui/CategoryButton'
+
 import { getImageUrl } from '../../lib/images'
 import type { Media } from '../../types/car'
-
-import { CategoryButton } from './CategoryButton'
 
 interface ImageGalleryProps {
   images?: Media[]

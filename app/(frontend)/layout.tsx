@@ -3,13 +3,13 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
 import '../globals.css'
-import { BrandTheme } from '@/components/frontend/BrandTheme'
+import { BrandTheme } from '@/components/layout/BrandTheme'
 import { getSiteSettings } from '@/lib/payload-client'
 import { poppins } from '@/commons/poppins'
 import { resolveSiteConfig } from '@/config/site'
 import { SITE_URL } from '@/lib/seo'
-import { SiteFooter } from '@/components/frontend/SiteFooter'
-import { SiteHeader } from '@/components/frontend/SiteHeader'
+import { SiteFooter } from '@/components/layout/SiteFooter'
+import { SiteHeader } from '@/components/layout/SiteHeader'
 
 /**
  * generateMetadata — build the site metadata from the CMS `site-settings`

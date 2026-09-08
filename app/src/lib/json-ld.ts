@@ -27,13 +27,18 @@ const WEEKDAY_NAMES: Record<WeekdayKey, string> = {
  *
  * Every string in here comes from the CMS — car model, version, dealership
  * name, address — so that is reachable by anyone who can edit a document.
- * `<` is valid JSON and schema.org reads it as `<`, so escaping it costs
- * nothing and closes the hole for good.
+ * Both angle brackets are escaped, not just the opening one: `<` alone already
+ * neutralises `</script>`, but leaving `>` behind means a payload survives in
+ * the output as `</script>`, which reads like a half-escaped tag to anyone
+ * auditing the page. Both are valid JSON and schema.org reads them back as `<`
+ * and `>`, so escaping the pair costs nothing and closes the hole for good.
  *
  * @param data - The JSON-LD document, or array of documents, to embed.
  */
 export function serializeLd(data: unknown): string {
-  return JSON.stringify(data).replace(/</g, '\\u003c')
+  return JSON.stringify(data)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
 }
 
 /**

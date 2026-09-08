@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import type { WeeklyHours } from '../types/car'
 
-import { getOpenStatus, hasSchedule } from './hours'
+import { getOpenStatus, hasSchedule, isTimeOfDay } from './hours'
 
 afterEach(() => {
   vi.useRealTimers()
@@ -433,5 +433,37 @@ describe('nowInMexico defensive branches', () => {
       label: 'Abierto',
       open: true,
     })
+  })
+})
+
+describe('isTimeOfDay', () => {
+  it('accepts a padded 24-hour time', () => {
+    expect(isTimeOfDay('09:00')).toBe(true)
+  })
+
+  it('accepts a single-digit hour', () => {
+    expect(isTimeOfDay('9:30')).toBe(true)
+  })
+
+  it('accepts midnight and the last minute of the day', () => {
+    expect(isTimeOfDay('00:00')).toBe(true)
+    expect(isTimeOfDay('23:59')).toBe(true)
+  })
+
+  it('rejects an hour past 23', () => {
+    expect(isTimeOfDay('25:00')).toBe(false)
+  })
+
+  it('rejects a minute past 59', () => {
+    expect(isTimeOfDay('09:61')).toBe(false)
+  })
+
+  it('rejects 12-hour text', () => {
+    expect(isTimeOfDay('9am')).toBe(false)
+  })
+
+  it('rejects an empty or missing value', () => {
+    expect(isTimeOfDay('')).toBe(false)
+    expect(isTimeOfDay(undefined)).toBe(false)
   })
 })

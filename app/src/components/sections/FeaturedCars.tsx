@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
-import type { Car } from '../../types/car'
+import { CarCard } from '@/components/car/CarCard'
 
-import { CarCard } from './CarCard'
+import type { Car } from '../../types/car'
 
 interface FeaturedCarsProps {
   cars: Car[]

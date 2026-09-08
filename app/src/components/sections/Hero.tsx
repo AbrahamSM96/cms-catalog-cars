@@ -4,8 +4,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 
-import { Badge } from './Badge'
-import { SearchBar } from './SearchBar'
+import { Badge } from '@/components/ui/Badge'
+import { SearchBar } from '@/components/catalog/SearchBar'
 
 export interface HeroSlideView {
   url: string

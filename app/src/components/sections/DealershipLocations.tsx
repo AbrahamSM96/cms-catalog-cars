@@ -2,7 +2,7 @@ import { connection } from 'next/server'
 
 import { buildAutoDealerLd, serializeLd } from '@/lib/json-ld'
 import { getDealerships } from '@/lib/payload-client'
-import { Locations } from '@/components/frontend/Locations'
+import { Locations } from '@/components/location/Locations'
 
 /**
  * DealershipLocations — the locations list plus its AutoDealer structured data.

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-import { BrandLogo } from '@/components/frontend/BrandLogo'
+import { BrandLogo } from '@/components/layout/BrandLogo'
 import type { SiteConfig } from '@/config/site'
 
 const LINKS = [

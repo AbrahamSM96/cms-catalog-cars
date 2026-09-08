@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
-import { DealershipLocations } from '@/components/frontend/DealershipLocations'
+import { DealershipLocations } from '@/components/sections/DealershipLocations'
 
 export const metadata: Metadata = {
   alternates: {

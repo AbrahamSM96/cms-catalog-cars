@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
-import { FinderBrands } from '@/components/frontend/FinderBrands'
+import { FinderBrands } from '@/components/sections/FinderBrands'
 
 export const metadata: Metadata = {
   alternates: {

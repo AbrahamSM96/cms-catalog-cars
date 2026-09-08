@@ -1,7 +1,7 @@
 import { connection } from 'next/server'
 
 import { getContact, getSiteSettings } from '@/lib/payload-client'
-import { Footer } from '@/components/frontend/Footer'
+import { Footer } from '@/components/layout/Footer'
 import { logoNeedsDarkPlate } from '@/lib/logo-contrast'
 import { resolveSiteConfig } from '@/config/site'
 

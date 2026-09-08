@@ -2,8 +2,8 @@
 import { getCars, getCatalogFacets } from '@/lib/payload-client'
 import { buildItemListLd, serializeLd } from '@/lib/json-ld'
 import type { CarFilters } from '@/types/car'
-import { CarGrid } from '@/components/frontend/CarGrid'
-import { FilterBar } from '@/components/frontend/FilterBar'
+import { CarGrid } from '@/components/car/CarGrid'
+import { FilterBar } from '@/components/catalog/FilterBar'
 
 /** The filters the catalogue accepts through the URL. */
 export interface CatalogSearchParams {

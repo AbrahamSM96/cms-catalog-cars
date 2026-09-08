@@ -8,10 +8,10 @@ import {
   Settings2,
 } from 'lucide-react'
 
+import { ShareButton } from '@/components/ui/ShareButton'
+
 import type { Brand, Car } from '../../types/car'
 import { carCity, formatCity } from '../../lib/city'
-
-import { ShareButton } from './ShareButton'
 
 interface CarHeaderProps {
   car: Car

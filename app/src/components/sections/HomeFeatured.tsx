@@ -1,6 +1,6 @@
 import { connection } from 'next/server'
 
-import { FeaturedCars } from '@/components/frontend/FeaturedCars'
+import { FeaturedCars } from '@/components/sections/FeaturedCars'
 import { getFeaturedCars } from '@/lib/payload-client'
 
 /**

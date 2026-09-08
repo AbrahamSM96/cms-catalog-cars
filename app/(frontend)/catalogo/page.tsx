@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
-import { CatalogResults } from '@/components/frontend/CatalogResults'
-import type { CatalogSearchParams } from '@/components/frontend/CatalogResults'
-import { SearchBar } from '@/components/frontend/SearchBar'
+import { CatalogResults } from '@/components/catalog/CatalogResults'
+import type { CatalogSearchParams } from '@/components/catalog/CatalogResults'
+import { SearchBar } from '@/components/catalog/SearchBar'
 
 export const metadata: Metadata = {
   alternates: {

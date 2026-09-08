@@ -22,6 +22,7 @@ const IDENTICAL = new Set([
   'cars.options.transmission.manual',
   'cars.tabs.facebookMarketplace.label',
   'cars.tabs.general.label',
+  'cities.fields.slug.label',
   'colors.fields.name.label',
   'colors.labels.singular',
   'common.whatsapp',

@@ -1,6 +1,6 @@
 import { connection } from 'next/server'
 
-import { CatalogFinder } from '@/components/frontend/CatalogFinder'
+import { CatalogFinder } from '@/components/catalog/CatalogFinder'
 import { getBrands } from '@/lib/payload-client'
 
 /**

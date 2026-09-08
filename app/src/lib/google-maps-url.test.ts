@@ -71,6 +71,24 @@ describe('parseCoordinatesFromMapsUrl', () => {
     ).toBeNull()
   })
 
+  it('skips a coordinate parameter that is not a pair', () => {
+    // `center` is read before `q`, and Google fills it with a place name on a
+    // shared link — the scan has to keep going instead of giving up there.
+    expect(
+      parseCoordinatesFromMapsUrl(
+        'https://maps.google.com/?center=Guadalajara&q=20.6597,-103.3496'
+      )
+    ).toEqual({ latitude: 20.6597, longitude: -103.3496 })
+  })
+
+  it('falls back to the map centre when the pin is out of range', () => {
+    expect(
+      parseCoordinatesFromMapsUrl(
+        'https://www.google.com/maps/place/Seminuevos/@20.6597,-103.3496,17z/data=!8m2!3d999!4d-103.3502'
+      )
+    ).toEqual({ latitude: 20.6597, longitude: -103.3496 })
+  })
+
   it('returns null for out-of-range values', () => {
     expect(
       parseCoordinatesFromMapsUrl('https://www.google.com/maps/@200,-103.3496')
@@ -170,5 +188,17 @@ describe('resolveCoordinatesFromMapsUrl', () => {
 
   it('returns null for an empty link', async () => {
     await expect(resolveCoordinatesFromMapsUrl('   ')).resolves.toBeNull()
+  })
+
+  it('never calls out for a long link with no coordinates', async () => {
+    const fetchImpl = vi.fn()
+
+    await expect(
+      resolveCoordinatesFromMapsUrl(
+        'https://www.google.com/maps/search/seminuevos+guadalajara',
+        fetchImpl as unknown as typeof fetch
+      )
+    ).resolves.toBeNull()
+    expect(fetchImpl).not.toHaveBeenCalled()
   })
 })

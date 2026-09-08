@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { BrandLogo } from '@/components/frontend/BrandLogo'
+import { BrandLogo } from '@/components/layout/BrandLogo'
 import type { Contact } from '@/types/car'
 import type { SiteConfig } from '@/config/site'
 

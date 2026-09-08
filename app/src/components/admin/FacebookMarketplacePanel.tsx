@@ -8,9 +8,9 @@ import {
   buildMarketplaceDescription,
   buildMarketplaceFields,
   type MarketplaceValues,
-} from '../lib/marketplace'
-import { fill, pick } from '../i18n/locales'
-import { ui } from '../i18n/labels'
+} from '../../lib/marketplace'
+import { fill, pick } from '../../i18n/locales'
+import { ui } from '../../i18n/labels'
 
 import { CopyBtn } from './CopyBtn'
 

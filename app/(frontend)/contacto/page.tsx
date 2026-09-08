@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
-import { ContactDetails } from '@/components/frontend/ContactDetails'
+import { ContactDetails } from '@/components/sections/ContactDetails'
 
 export const metadata: Metadata = {
   alternates: {

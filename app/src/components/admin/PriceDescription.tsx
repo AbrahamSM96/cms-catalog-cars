@@ -3,7 +3,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useField } from '@payloadcms/ui'
 
-import { formatPriceMXN } from '../lib/currency'
+import { formatPriceMXN } from '../../lib/currency'
 
 /**
  * PriceDescription
