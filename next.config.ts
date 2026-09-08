@@ -22,6 +22,13 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   serverExternalPackages: ['payload', '@payloadcms/db-postgres'],
   images: {
+    // R2 no manda `Cache-Control` en sus objetos (solo ETag), así que el
+    // optimizador caía al default de 4 h y el navegador revalidaba el logo y
+    // las fotos en cada visita. Es seguro subirlo: Payload no sobrescribe
+    // archivos con el mismo nombre (`overwriteExistingFiles` queda en false),
+    // así que re-subir una imagen genera un filename nuevo y una URL nueva —
+    // el cache se invalida solo.
+    minimumCacheTTL: 2678400, // 31 días
     remotePatterns: [
       {
         protocol: 'http',
