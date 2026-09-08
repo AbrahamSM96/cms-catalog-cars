@@ -5,7 +5,6 @@ import { Suspense } from 'react'
 import '../globals.css'
 import { BrandTheme } from '@/components/frontend/BrandTheme'
 import { getSiteSettings } from '@/lib/payload-client'
-import { inter } from '@/commons/inter'
 import { poppins } from '@/commons/poppins'
 import { resolveSiteConfig } from '@/config/site'
 import { SITE_URL } from '@/lib/seo'
@@ -76,10 +75,7 @@ export default function RootLayout(
   const { children } = props
 
   return (
-    <html
-      className={`${poppins.variable} ${inter.variable} antialiased`}
-      lang="es"
-    >
+    <html className={`${poppins.variable} antialiased`} lang="es">
       <body>
         <Suspense>
           <BrandTheme />
