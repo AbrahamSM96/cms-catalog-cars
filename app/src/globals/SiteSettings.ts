@@ -3,6 +3,7 @@ import type { GlobalConfig } from 'payload'
 import { editorsAndAdmins } from '../access'
 import { revalidateGlobalAfterChange } from '../hooks/revalidate'
 import { common, groups, siteSettings } from '../i18n/labels'
+import { validateBrandColor } from '../lib/brand-color'
 import { CACHE_TAGS } from '../lib/cache-tags'
 
 /**
@@ -179,12 +180,14 @@ export const SiteSettings: GlobalConfig = {
               label: siteSettings.fields.theme.fields.accent.label,
               name: 'accent',
               type: 'text',
+              validate: validateBrandColor,
             },
             {
               admin: { placeholder: '#1D4ED8', width: '50%' },
               label: siteSettings.fields.theme.fields.accentStrong.label,
               name: 'accentStrong',
               type: 'text',
+              validate: validateBrandColor,
             },
           ],
           type: 'row',
@@ -197,6 +200,7 @@ export const SiteSettings: GlobalConfig = {
           label: siteSettings.fields.theme.fields.primary.label,
           name: 'primary',
           type: 'text',
+          validate: validateBrandColor,
         },
       ],
       label: siteSettings.fields.theme.label,

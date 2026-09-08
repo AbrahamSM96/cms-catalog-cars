@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { Car, Dealership } from '../types/car'
 
-import { buildAutoDealerLd, buildItemListLd } from './json-ld'
+import { buildAutoDealerLd, buildItemListLd, serializeLd } from './json-ld'
 
 /**
  * Minimal car fixture.
@@ -216,5 +216,40 @@ describe('buildAutoDealerLd', () => {
   it('sets url to /ubicaciones', () => {
     const result = buildAutoDealerLd([makeDealer()])[0]
     expect(result['url']).toContain('/ubicaciones')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// serializeLd
+// ---------------------------------------------------------------------------
+
+describe('serializeLd', () => {
+  it('escapes a closing script tag so it cannot end the element', () => {
+    const output = serializeLd({
+      name: 'Sport</script><img src=x onerror=alert(1)>',
+    })
+    expect(output).not.toContain('</script>')
+    expect(output).toContain('\\u003c/script\\u003e')
+  })
+
+  it('escapes every angle bracket, not just the first', () => {
+    expect(serializeLd({ name: '<a><b>' })).not.toContain('<')
+  })
+
+  it('stays valid JSON that parses back to the original value', () => {
+    const data = { name: 'Sport</script>', year: 2020 }
+    expect(JSON.parse(serializeLd(data))).toEqual(data)
+  })
+
+  it('serializes an array of documents', () => {
+    expect(serializeLd([{ '@type': 'ListItem' }])).toBe(
+      '[{"@type":"ListItem"}]'
+    )
+  })
+
+  it('leaves a document with no angle brackets untouched', () => {
+    expect(serializeLd({ name: 'Toyota Corolla 2020' })).toBe(
+      '{"name":"Toyota Corolla 2020"}'
+    )
   })
 })

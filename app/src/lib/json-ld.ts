@@ -15,6 +15,28 @@ const WEEKDAY_NAMES: Record<WeekdayKey, string> = {
 }
 
 /**
+ * Serialize a JSON-LD document for a `<script type="application/ld+json">`.
+ *
+ * Structured data has to be written with `dangerouslySetInnerHTML` — the script
+ * body is not a text node — and `JSON.stringify` escapes quotes and backslashes
+ * but leaves `<` alone. The HTML parser does not know it is looking at JSON, so
+ * a `</script>` anywhere inside a value ends the element early and everything
+ * after it is parsed as markup:
+ *
+ *   version: 'Sport</script><img src=x onerror=alert(1)>'
+ *
+ * Every string in here comes from the CMS — car model, version, dealership
+ * name, address — so that is reachable by anyone who can edit a document.
+ * `<` is valid JSON and schema.org reads it as `<`, so escaping it costs
+ * nothing and closes the hole for good.
+ *
+ * @param data - The JSON-LD document, or array of documents, to embed.
+ */
+export function serializeLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c')
+}
+
+/**
  * Build the ItemList JSON-LD entries for the catalog page, one per car.
  *
  * @param cars - the cars to list

@@ -24,6 +24,10 @@ export async function BrandTheme(): Promise<React.JSX.Element> {
 
   const site = resolveSiteConfig(await getSiteSettings())
 
+  // Safe to interpolate: `resolveSiteConfig` runs every colour through
+  // `safeBrandColor`, so each of these is a hex literal or the static default.
+  // Never inline a raw CMS value here — this block is unescaped by definition,
+  // and a stylesheet has no escaping syntax to fall back on.
   const css = `:root{--accent:${site.theme.accent};--accent-strong:${site.theme.accentStrong};--primary:${site.theme.primary}}`
 
   return (

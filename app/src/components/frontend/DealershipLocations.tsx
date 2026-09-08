@@ -1,6 +1,6 @@
 import { connection } from 'next/server'
 
-import { buildAutoDealerLd } from '@/lib/json-ld'
+import { buildAutoDealerLd, serializeLd } from '@/lib/json-ld'
 import { getDealerships } from '@/lib/payload-client'
 import { Locations } from '@/components/frontend/Locations'
 
@@ -24,7 +24,7 @@ export async function DealershipLocations(): Promise<React.JSX.Element> {
     <>
       {/* eslint-disable-next-line react/no-danger */}
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(autoDealerLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeLd(autoDealerLd) }}
         type="application/ld+json"
       />
       <Locations dealerships={dealerships} />

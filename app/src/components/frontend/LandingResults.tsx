@@ -10,7 +10,7 @@ import {
 } from '@/lib/payload-client'
 import { landingCrumbs, resolveLandingPath } from '@/lib/landing-routes'
 import { absoluteUrl } from '@/lib/seo'
-import { buildItemListLd } from '@/lib/json-ld'
+import { buildItemListLd, serializeLd } from '@/lib/json-ld'
 import { CarGrid } from '@/components/frontend/CarGrid'
 import { LandingHub } from '@/components/frontend/LandingHub'
 
@@ -83,11 +83,11 @@ export async function LandingResults(
   return (
     <>
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeLd(itemListLd) }}
         type="application/ld+json"
       />
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeLd(breadcrumbLd) }}
         type="application/ld+json"
       />
 

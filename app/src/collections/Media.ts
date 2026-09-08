@@ -74,18 +74,37 @@ export const Media: CollectionConfig = {
       },
     ],
     mimeTypes: ['image/*', 'video/*'],
-    // Enable the admin "Paste URL" feature. Without an `allowList` the admin
-    // only attempts a browser-side fetch, which fails with CORS on most
-    // external image hosts ("Failed to fetch the file"). Providing an allowList
-    // turns on the server-side fetch fallback (no CORS) and gates which URLs
-    // the server is allowed to download. `hostname: ""` matches any host (see
-    // isURLAllowed), so any public http(s) image URL is accepted. This endpoint
-    // is admin-only and gated by this collection's create/update access.
-    pasteURL: {
-      allowList: [
-        { hostname: '', protocol: 'https' },
-        { hostname: '', protocol: 'http' },
-      ],
-    },
+    // The admin "Paste URL" button, server-side, and only in development.
+    //
+    // An `allowList` is what turns on the server-side fetch — the one that gets
+    // past CORS, which is why it was added. But `hostname: ''` is falsy, and
+    // `isURLAllowed` skips a falsy key entirely, so the list matched every URL,
+    // and that had two consequences neither obvious nor intended:
+    //
+    // 1. `getExternalFile` skips `safeFetch` for any allowListed URL, and
+    //    `safeFetch` is Payload's SSRF guard — it resolves the host and refuses
+    //    to connect to a non-public IP. Matching everything disabled it, and
+    //    that fetch carries `credentials: 'include'`.
+    // 2. It opened `GET /api/media/paste-url?src=…`, which fetches with no
+    //    guard at all and streams the response body back to the caller. Not a
+    //    blind request: an authenticated proxy into whatever the deploy can
+    //    reach, `mimeTypes` included, since that only gates the saved document.
+    //
+    // Both need a session with create/update on this collection — an editor.
+    // That is a fine trade locally, where the network behind the app is your
+    // own machine.
+    //
+    // Production gets `false`, not just a missing allowList. Both disable the
+    // endpoint and put `getExternalFile` back on `safeFetch`, but only `false`
+    // hides the button (`pasteURL !== false` is what renders it in
+    // @payloadcms/ui). Leaving it visible would ship a control whose client-side
+    // fetch fails on CORS for most image hosts and then reports "The provided
+    // URL is not allowed" — a dead button explained by a misleading error.
+    // Uploading by URL through the API is unaffected: that path still works,
+    // through `safeFetch`.
+    pasteURL:
+      process.env.NODE_ENV === 'production'
+        ? false
+        : { allowList: [{ hostname: '' }] },
   },
 }

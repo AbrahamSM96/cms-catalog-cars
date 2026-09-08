@@ -32,6 +32,37 @@ export const importMap = {
 }
 
 /**
+ * Read a variable production cannot run without, refusing to boot when it is
+ * missing.
+ *
+ * The two callers below used to degrade in silence instead: the signing secret
+ * fell back to a placeholder committed to this repository, and the public
+ * origin fell back to the incoming `Host` header. Neither failure surfaces
+ * anywhere — the app boots, the admin works, and the only party who notices is
+ * someone forging a session cookie or a password-reset link. Since every client
+ * gets its own deploy, one forgotten variable out of N is a question of when.
+ *
+ * Outside production the fallback stands, so `bun dev`, the test suite and the
+ * type generators still run with no environment at all.
+ *
+ * @param name - Environment variable to read.
+ * @param devFallback - Value to use when NODE_ENV is not `production`.
+ */
+function requiredEnv(name: string, devFallback: string): string {
+  const value = process.env[name]?.trim()
+  if (value) return value
+
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      `${name} is missing. Set it in this deploy's environment — ` +
+        'production refuses to start without it.'
+    )
+  }
+
+  return devFallback
+}
+
+/**
  * Resolve which database this process talks to.
  *
  * `DATABASE_URI` wins whenever it is set: that is what Docker Compose and the
@@ -63,11 +94,16 @@ function databaseUri(): string | undefined {
  * comes from whatever proxy sits in front of the app, so the real domain is
  * pinned instead — a spoofed or internal host would otherwise end up inside a
  * reset link.
+ *
+ * That pinning is the whole point, so the variable is required rather than
+ * defaulted: an empty `NEXT_PUBLIC_SITE_URL` in production would hand the
+ * origin back to the `Host` header, and a reset link built from an attacker's
+ * host delivers the victim's token to the attacker.
  */
 function serverUrl(): string {
   if (process.env.NODE_ENV !== 'production') return ''
 
-  return process.env.NEXT_PUBLIC_SITE_URL ?? ''
+  return requiredEnv('NEXT_PUBLIC_SITE_URL', '')
 }
 
 export default buildConfig({
@@ -141,7 +177,10 @@ export default buildConfig({
       },
     }),
   ],
-  secret: process.env.PAYLOAD_SECRET || 'your-secret-key-here',
+  // Signs every admin session cookie. The development fallback is deliberately
+  // labelled: it is public knowledge, so a deploy running on it authenticates
+  // anyone who forges a token with it.
+  secret: requiredEnv('PAYLOAD_SECRET', 'dev-only-insecure-secret'),
   serverURL: serverUrl(),
   sharp,
   typescript: {

@@ -749,6 +749,12 @@ export const siteSettings = {
     'Site identity: brand, SEO, favicon, share image and colors.',
     'Identidad del sitio: marca, SEO, favicon, imagen para compartir y colores.'
   ),
+  errors: {
+    color: msg(
+      'Use a hex color, e.g. #dc2626.',
+      'Usa un color hexadecimal, ej. #dc2626.'
+    ),
+  },
   fields: {
     brand: {
       description: msg(

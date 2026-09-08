@@ -37,8 +37,15 @@ in the admin and run it again.
 
 ```bash
 # 4 · migrate
-DATABASE_URI="$URI" PAYLOAD_SECRET='x' bun run migrate
+DATABASE_URI="$URI" PAYLOAD_SECRET='x' NEXT_PUBLIC_SITE_URL='http://localhost' \
+  bun run migrate
 ```
+
+`migrate` runs with `NODE_ENV=production`, and in production `payload.config.ts`
+refuses to build without those two variables. Both are throwaway here — a
+migration signs no session and emails no link — but the config cannot tell a CLI
+run from a web process, and defaulting them is exactly what made a deploy able
+to boot with a public signing secret. Only the real deploy's values matter.
 
 It should not ask anything. If it asks *"It looks like you've run Payload in dev
 mode…"*, cancel with Ctrl-C: that prompt only appears on databases created with

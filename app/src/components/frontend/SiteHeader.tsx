@@ -3,6 +3,7 @@ import { connection } from 'next/server'
 
 import { getContact, getSiteSettings } from '@/lib/payload-client'
 import { logoNeedsDarkPlate } from '@/lib/logo-contrast'
+import { serializeLd } from '@/lib/json-ld'
 import { Navbar } from '@/components/frontend/Navbar'
 import { resolveSiteConfig } from '@/config/site'
 import { SITE_URL } from '@/lib/seo'
@@ -61,7 +62,7 @@ export async function SiteHeader(): Promise<React.JSX.Element> {
     <>
       {}
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeLd(organizationLd) }}
         type="application/ld+json"
       />
       <Navbar

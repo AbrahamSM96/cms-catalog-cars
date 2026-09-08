@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 
 import { buildCarImageAlt, getImageUrl } from '@/lib/images'
 import { carCity } from '@/lib/city'
+import { serializeLd } from '@/lib/json-ld'
 import type { Dealership, Media } from '@/types/car'
 import { getCarBySlug, getContact } from '@/lib/payload-client'
 import { absoluteUrl } from '@/lib/seo'
@@ -168,11 +169,11 @@ export async function CarDetail({
     <>
       {/* SEO structured data */}
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeLd(jsonLd) }}
         type="application/ld+json"
       />
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeLd(breadcrumbLd) }}
         type="application/ld+json"
       />
 

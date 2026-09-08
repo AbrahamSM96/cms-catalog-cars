@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 import { getCars, getCatalogFacets } from '@/lib/payload-client'
-import { buildItemListLd } from '@/lib/json-ld'
+import { buildItemListLd, serializeLd } from '@/lib/json-ld'
 import type { CarFilters } from '@/types/car'
 import { CarGrid } from '@/components/frontend/CarGrid'
 import { FilterBar } from '@/components/frontend/FilterBar'
@@ -64,7 +64,7 @@ export async function CatalogResults({
     <>
       {}
       <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeLd(itemListLd) }}
         type="application/ld+json"
       />
       <div className="mb-8">

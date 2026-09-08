@@ -1,5 +1,6 @@
 import type { Media, SiteSettings } from '@/types/car'
 import { getImageUrl } from '@/lib/images'
+import { safeBrandColor } from '@/lib/brand-color'
 
 /**
  * Per-client brand configuration.
@@ -138,11 +139,19 @@ export function resolveSiteConfig(settings: SiteSettings | null): SiteConfig {
     },
     showName: settings.brand?.showName ?? siteConfig.showName,
     tagline: settings.brand?.tagline || siteConfig.tagline,
+    // Colours are the only values here that reach the page as CSS instead of
+    // as text, so a bad one is an injected `<style>`, not a broken word. They
+    // are filtered rather than defaulted — see lib/brand-color.ts.
     theme: {
-      accent: settings.theme?.accent || siteConfig.theme.accent,
-      accentStrong:
-        settings.theme?.accentStrong || siteConfig.theme.accentStrong,
-      primary: settings.theme?.primary || siteConfig.theme.primary,
+      accent: safeBrandColor(settings.theme?.accent, siteConfig.theme.accent),
+      accentStrong: safeBrandColor(
+        settings.theme?.accentStrong,
+        siteConfig.theme.accentStrong
+      ),
+      primary: safeBrandColor(
+        settings.theme?.primary,
+        siteConfig.theme.primary
+      ),
     },
   }
 }
