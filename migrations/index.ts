@@ -2,6 +2,8 @@ import * as migration_20260824_160008_initial from './20260824_160008_initial';
 import * as migration_20260826_152034_site_settings_show_name from './20260826_152034_site_settings_show_name';
 import * as migration_20260831_035511 from './20260831_035511';
 import * as migration_20260904_194504_seminuevos_cities from './20260904_194504_seminuevos_cities';
+import * as migration_20260909_193405_vin_decodes from './20260909_193405_vin_decodes';
+import * as migration_20260909_201555_version_optional from './20260909_201555_version_optional';
 
 export const migrations = [
   {
@@ -23,5 +25,15 @@ export const migrations = [
     up: migration_20260904_194504_seminuevos_cities.up,
     down: migration_20260904_194504_seminuevos_cities.down,
     name: '20260904_194504_seminuevos_cities',
+  },
+  {
+    up: migration_20260909_193405_vin_decodes.up,
+    down: migration_20260909_193405_vin_decodes.down,
+    name: '20260909_193405_vin_decodes',
+  },
+  {
+    up: migration_20260909_201555_version_optional.up,
+    down: migration_20260909_201555_version_optional.down,
+    name: '20260909_201555_version_optional'
   },
 ];

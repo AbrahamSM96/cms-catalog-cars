@@ -67,6 +67,16 @@ export const carVersions = {
 }
 
 export const cars = {
+  errors: {
+    invalidVin: msg(
+      'That VIN is not valid. Check it — it must be 17 characters and its check digit must match.',
+      'Ese VIN no es válido. Revísalo: son 17 caracteres y su dígito verificador debe coincidir.'
+    ),
+    versionRequired: msg(
+      'Pick a version, or fill in the VIN if the catalog does not list this one.',
+      'Elige una versión, o captura el VIN si el catálogo no tiene esta.'
+    ),
+  },
   fields: {
     availableLoanTerms: {
       description: msg(
@@ -323,6 +333,14 @@ export const cars = {
     },
     version: {
       label: msg('Version', 'Versión'),
+    },
+    vin: {
+      description: msg(
+        'The 17-character serial number, printed on the windshield and on the door jamb. Decode it to fill in the technical data.',
+        'El número de serie de 17 caracteres, impreso en el parabrisas y en el marco de la puerta. Decodifícalo para llenar los datos técnicos.'
+      ),
+      label: msg('VIN', 'VIN'),
+      placeholder: msg('3VWDX7AJ1DM389728', '3VWDX7AJ1DM389728'),
     },
     year: {
       label: msg('Year', 'Año'),
@@ -951,5 +969,88 @@ export const ui = {
     photoCountPlural: msg('{count} photos', '{count} fotos'),
     photoCountSingular: msg('{count} photo', '{count} foto'),
     uploadNote: msg('upload up to 20 on Facebook', 'sube hasta 20 en Facebook'),
+  },
+  vinPanel: {
+    apply: msg('Apply selected', 'Aplicar seleccionados'),
+    confidence: {
+      exact: msg('from the VIN', 'del VIN'),
+      guess: msg('review this one', 'revisa este'),
+      inferred: msg('inferred', 'inferido'),
+    },
+    current: msg('now', 'ahora'),
+    decode: msg('Decode', 'Decodificar'),
+    decoding: msg('Decoding…', 'Decodificando…'),
+    duplicate: msg(
+      'Another car already registered with this VIN.',
+      'Ya hay otro auto registrado con este VIN.'
+    ),
+    empty: msg('empty', 'vacío'),
+    errors: {
+      forbidden: msg(
+        'Your account cannot decode VINs.',
+        'Tu cuenta no puede decodificar VIN.'
+      ),
+      invalidVin: msg(
+        'That VIN is not valid — check the 17 characters.',
+        'Ese VIN no es válido: revisa los 17 caracteres.'
+      ),
+      notFound: msg(
+        'The catalog does not recognize this VIN. Fill the car in by hand.',
+        'El catálogo no reconoce este VIN. Captura el auto a mano.'
+      ),
+      unavailable: msg(
+        'The decoding service did not answer. Try again in a moment.',
+        'El servicio de decodificación no respondió. Inténtalo en un momento.'
+      ),
+    },
+    intro: msg(
+      'Paste the VIN and decode it: the fields below are filled in as suggestions. Nothing is saved until you apply them.',
+      'Pega el VIN y decodifícalo: los campos de abajo se llenan como sugerencias. Nada se guarda hasta que las apliques.'
+    ),
+    noSuggestions: msg(
+      'This VIN did not yield any new data.',
+      'Este VIN no arrojó datos nuevos.'
+    ),
+    suggestionsHeading: msg('Suggested data', 'Datos sugeridos'),
+  },
+}
+
+export const vinDecodes = {
+  description: msg(
+    'Decoded VINs kept so the same model, year and plant is never looked up twice. Filled in automatically.',
+    'VIN decodificados que se conservan para no volver a consultar el mismo modelo, año y planta. Se llena solo.'
+  ),
+  fields: {
+    decoded: {
+      label: msg('Decoded data', 'Datos decodificados'),
+    },
+    fetchedAt: {
+      label: msg('Fetched at', 'Consultado el'),
+    },
+    raw: {
+      description: msg(
+        "The provider's untouched response, kept so new fields can be read from it without another lookup.",
+        'La respuesta sin tocar del proveedor, guardada para poder leer campos nuevos sin volver a consultar.'
+      ),
+      label: msg('Raw response', 'Respuesta original'),
+    },
+    sampleVin: {
+      description: msg(
+        'One of the VINs this entry was built from.',
+        'Uno de los VIN con los que se creó esta entrada.'
+      ),
+      label: msg('Sample VIN', 'VIN de ejemplo'),
+    },
+    squish: {
+      description: msg(
+        'Positions 1-8, 10 and 11 of the VIN: every unit of the same model, year and plant shares them.',
+        'Posiciones 1-8, 10 y 11 del VIN: todas las unidades del mismo modelo, año y planta las comparten.'
+      ),
+      label: msg('Squish VIN', 'VIN reducido'),
+    },
+  },
+  labels: {
+    plural: msg('VIN decodes', 'VIN decodificados'),
+    singular: msg('VIN decode', 'VIN decodificado'),
   },
 }

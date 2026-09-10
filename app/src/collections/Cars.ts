@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, TextFieldSingleValidation } from 'payload'
 
 import { adminsOnly, editorsAndAdmins } from '../access'
 import {
@@ -12,8 +12,48 @@ import {
   revalidateAfterDelete,
 } from '../hooks/revalidate'
 import { cars, common, groups } from '../i18n/labels'
+import { decodeVinEndpoint } from '../endpoints/decodeVin'
+import { isValidVin } from '../lib/vin/vin'
+import { pick } from '../i18n/locales'
 import { CACHE_TAGS } from '../lib/cache-tags'
 import { renameCarMedia } from '../hooks/renameCarMedia'
+
+/**
+ * Reject a VIN the decoder could never read.
+ *
+ * The `VinField` panel checks this before spending a network call, so this
+ * guards the other door: the REST and Local APIs, where a mistyped serial
+ * number would otherwise be stored and quietly never match anything.
+ *
+ * @param value - The submitted VIN, absent while the field is empty.
+ * @param options - The Payload validation options.
+ */
+const validateVin: TextFieldSingleValidation = (value, options) =>
+  !value || isValidVin(value)
+    ? true
+    : pick(cars.errors.invalidVin, options.req.i18n.language)
+
+/**
+ * Require a version unless the car carries a VIN.
+ *
+ * The versions come from the scraped catalogue, and it does not cover
+ * everything: a model/year combination with no versions listed used to leave
+ * the document unsavable, since the dropdown had nothing to offer and the
+ * field was `required`. A VIN identifies the unit precisely enough to stand in
+ * for the version, so it lifts the requirement — and forcing an editor to pick
+ * a version that is not the car's, just to get past validation, puts a wrong
+ * trim on a public listing.
+ *
+ * @param value - The submitted version.
+ * @param options - The Payload validation options.
+ */
+const validateVersion: TextFieldSingleValidation = (value, options) => {
+  const { data, req } = options
+  if (value) return true
+  if ((data as { vin?: string } | undefined)?.vin) return true
+
+  return pick(cars.errors.versionRequired, req.i18n.language)
+}
 
 export const Cars: CollectionConfig = {
   access: {
@@ -74,6 +114,19 @@ export const Cars: CollectionConfig = {
           },
           fields: [
             {
+              admin: {
+                components: {
+                  Field: '/components/admin/VinField#VinField',
+                },
+                description: cars.fields.vin.description,
+                placeholder: cars.fields.vin.placeholder,
+              },
+              label: cars.fields.vin.label,
+              name: 'vin',
+              type: 'text',
+              validate: validateVin,
+            },
+            {
               fields: [
                 {
                   admin: {
@@ -127,8 +180,8 @@ export const Cars: CollectionConfig = {
                   },
                   label: cars.fields.version.label,
                   name: 'version',
-                  required: true,
                   type: 'text',
+                  validate: validateVersion,
                 },
               ],
               type: 'row',
@@ -770,6 +823,7 @@ export const Cars: CollectionConfig = {
       type: 'tabs',
     },
   ],
+  endpoints: [decodeVinEndpoint],
   hooks: {
     afterChange: [renameCarMedia, revalidateAfterChange(CACHE_TAGS.cars)],
     afterDelete: [revalidateAfterDelete(CACHE_TAGS.cars)],

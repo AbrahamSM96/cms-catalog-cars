@@ -23,6 +23,7 @@ import { Homepage } from './globals/Homepage'
 import { Media } from './collections/Media'
 import { SiteSettings } from './globals/SiteSettings'
 import { Users } from './collections/Users'
+import { VinDecodes } from './collections/VinDecodes'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -131,6 +132,7 @@ export default buildConfig({
     Dealerships,
     Media,
     Users,
+    VinDecodes,
   ],
   db: postgresAdapter({
     pool: {

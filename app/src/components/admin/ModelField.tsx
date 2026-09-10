@@ -10,6 +10,7 @@ import {
 import { useEffect, useRef, useState } from 'react'
 
 import { pick } from '../../i18n/locales'
+import { takeSuggestion } from './vin-suggestions'
 import { ui } from '../../i18n/labels'
 
 interface ModelFieldProps {
@@ -72,6 +73,13 @@ export function ModelField(props: ModelFieldProps): React.JSX.Element {
           .map((doc) => doc.name)
           .filter((name): name is string => Boolean(name))
         setFetched({ brand: brandId, names: [...new Set(names)] })
+
+        // A VIN decode may have left a model behind for this brand; the reset
+        // above just wiped it, so it is restored now that the options are in.
+        const suggested = takeSuggestion('model', Date.now())
+        if (suggested !== undefined && names.includes(suggested)) {
+          setValueRef.current(suggested)
+        }
       })
       .catch((): void => {})
     return (): void => {

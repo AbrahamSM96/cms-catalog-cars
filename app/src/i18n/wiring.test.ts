@@ -8,6 +8,7 @@ import { Colors } from '../collections/Colors'
 import { Dealerships } from '../collections/Dealerships'
 import { Media } from '../collections/Media'
 import { Users } from '../collections/Users'
+import { VinDecodes } from '../collections/VinDecodes'
 import { Contact } from '../globals/Contact'
 import { Homepage } from '../globals/Homepage'
 import { SiteSettings } from '../globals/SiteSettings'
@@ -43,6 +44,7 @@ const ENTITIES: Array<[string, EntityLike]> = [
   ['media', Media],
   ['siteSettings', SiteSettings],
   ['users', Users],
+  ['vinDecodes', VinDecodes],
 ]
 
 /**

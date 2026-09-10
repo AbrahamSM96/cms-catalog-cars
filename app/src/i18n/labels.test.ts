@@ -20,6 +20,8 @@ const IDENTICAL = new Set([
   'cars.options.bodyType.minivan',
   'cars.options.bodyType.suv',
   'cars.options.transmission.manual',
+  'cars.fields.vin.label',
+  'cars.fields.vin.placeholder',
   'cars.tabs.facebookMarketplace.label',
   'cars.tabs.general.label',
   'cities.fields.slug.label',

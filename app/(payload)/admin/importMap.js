@@ -9,6 +9,7 @@ import { ModelField as ModelField_a1b2c3d4e5f6071829304a5b6c7d8e9f } from '../..
 import { VersionField as VersionField_b2c3d4e5f6071829304a5b6c7d8e9f0a } from '../../src/components/admin/VersionField'
 import { TimeField as TimeField_1829304a5b6c7d8e9f0a1b2c3d4e5f60 } from '../../src/components/admin/TimeField'
 import { YearField as YearField_c3d4e5f6071829304a5b6c7d8e9f0a1b } from '../../src/components/admin/YearField'
+import { VinField as VinField_d4e5f6071829304a5b6c7d8e9f0a1b2d } from '../../src/components/admin/VinField'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 import { S3ClientUploadHandler as S3ClientUploadHandler_0 } from '@payloadcms/storage-s3/client'
 
@@ -25,6 +26,8 @@ export const importMap = {
     AdminIcon_071829304a5b6c7d8e9f0a1b2c3d4e5f,
   '/components/admin/LoginBrandPanel#LoginBrandPanel':
     LoginBrandPanel_e5f6071829304a5b6c7d8e9f0a1b2c3d,
+  '/components/admin/VinField#VinField':
+    VinField_d4e5f6071829304a5b6c7d8e9f0a1b2d,
   '/components/admin/BrandField#BrandField':
     BrandField_d4e5f6071829304a5b6c7d8e9f0a1b2c,
   '/components/admin/ModelField#ModelField':
