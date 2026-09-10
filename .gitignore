@@ -67,3 +67,7 @@ graphify-out
 
 # maplibre-gl worker copiado desde node_modules por `bun run maplibre:worker`
 /public/maplibre/
+
+# Captured browser session for scripts/scrape-vehicle-catalog.ts
+.bbva-cookie
+.catalog-scrape-checkpoint.json
