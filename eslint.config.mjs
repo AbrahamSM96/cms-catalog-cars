@@ -7,7 +7,6 @@ import importRules from 'eslint-plugin-import'
 import reactHooks from 'eslint-plugin-react-hooks'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import eslintSortDestructueKeys from 'eslint-plugin-sort-destructure-keys'
-import jest from 'eslint-plugin-jest'
 import reactPlugin from 'eslint-plugin-react'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import oxlint from 'eslint-plugin-oxlint'
@@ -226,7 +225,6 @@ export default tseslint.config(
       '**/__mocks__/**',
       '**/__tests__/**',
     ],
-    plugins: { jest },
     rules: {
       'react/no-multi-comp': 'off',
       'react/jsx-no-undef': 'off',

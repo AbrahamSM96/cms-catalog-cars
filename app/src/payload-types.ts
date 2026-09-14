@@ -289,8 +289,7 @@ export interface Car {
    * Body style (aligned with Facebook Marketplace)
    */
   bodyType?:
-    | ('coupe' | 'truck' | 'sedan' | 'hatchback' | 'suv' | 'convertible' | 'wagon' | 'minivan' | 'small-car')
-    | null;
+    ('coupe' | 'truck' | 'sedan' | 'hatchback' | 'suv' | 'convertible' | 'wagon' | 'minivan' | 'small-car') | null;
   /**
    * Number of doors (e.g. 4)
    */
