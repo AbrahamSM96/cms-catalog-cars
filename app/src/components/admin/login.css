@@ -1,13 +1,19 @@
 /**
- * Split-screen sign-in screen for the Payload admin.
+ * Sign-in screen for the Payload admin.
  *
  * Payload renders the login view as
  * `section.login.template-minimal > div.template-minimal__wrap`, with the
  * brand logo, the `beforeLogin` components and the form stacked inside that
- * single 480px column. Instead of forking the view, the column is pushed into
- * the right half of the viewport and `LoginBrandPanel` paints the left half
- * from a fixed element — so an upgrade of `@payloadcms/next` cannot break the
- * layout, only restyle the form inside it.
+ * single 480px column. Instead of forking the view, that column is restyled
+ * in place — so an upgrade of `@payloadcms/next` cannot break the layout,
+ * only restyle the form inside it.
+ *
+ * Two shapes share one set of gradient tokens:
+ *
+ * - Up to `64rem` the gradient is the whole page: the brand block sits
+ *   straight on it and the form floats above in a white card.
+ * - From `64rem` up the gradient collapses into a fixed panel on the left
+ *   half and the form column takes the right half on a light background.
  *
  * Every selector is scoped to `.login`, which Payload only ever puts on this
  * route, so the rest of the admin keeps its stock appearance and its theme
@@ -16,10 +22,10 @@
 
 .login {
   /*
-   * Lock the sign-in screen to the light palette. The public site is
-   * light-first and this screen is its front door; the admin theme toggle
-   * still governs every other view. Values mirror Payload's own light theme
-   * (its `html[data-theme='dark']` block remaps the same variables).
+   * Lock the form to the light palette. The public site is light-first and
+   * this screen is its front door; the admin theme toggle still governs every
+   * other view. Values mirror Payload's own light theme (its
+   * `html[data-theme='dark']` block remaps the same variables).
    */
   --theme-bg: var(--color-base-0);
   --theme-border-color: var(--color-base-150);
@@ -57,30 +63,13 @@
   --brand-accent-ring: rgba(220, 38, 38, 0.16);
   --brand-accent-strong: #b91c1c;
 
-  align-items: flex-start;
-  background-color: var(--color-base-0);
-  color-scheme: light;
-  padding: 1.25rem 1.25rem 3rem;
-}
-
-/* The logo already leads the brand panel; a second one above the form is noise. */
-.login .login__brand {
-  display: none;
-}
-
-.login.template-minimal--width-normal .template-minimal__wrap {
-  max-width: 25rem;
-}
-
-/* ── Brand panel ─────────────────────────────────────────────────────────── */
-
-.login-brand {
-  background-color: var(--brand-ink);
   /*
    * Cinematic depth without an image: an accent flare in the upper left, a
-   * cooler slate pool in the lower right, over a slate-to-oxblood base.
+   * cooler slate pool in the lower right, over a slate-to-oxblood base. Held
+   * in a custom property because the same stack paints the full page on
+   * mobile and the left panel on desktop.
    */
-  background-image:
+  --login-flare:
     radial-gradient(
       120% 110% at 12% 8%,
       rgba(220, 38, 38, 0.55) 0%,
@@ -92,42 +81,69 @@
       rgba(15, 23, 42, 0) 60%
     ),
     linear-gradient(155deg, #1e293b 0%, #0f172a 48%, #45090b 100%);
-  border-radius: 1.25rem;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  isolation: isolate;
-  margin-bottom: 2rem;
-  overflow: hidden;
-  padding: 1.75rem;
-  position: relative;
-}
-
-/* Faint engineering grid, faded out towards the bottom right. */
-.login-brand::before {
-  background-image:
+  --login-grid:
     linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+
+  /*
+   * `stretch` + `margin-block: auto` on the column centres the screen
+   * vertically without the overflow trap of `align-items: center`: when the
+   * content is taller than the viewport the auto margins collapse to zero and
+   * the top of the card stays reachable instead of being clipped.
+   */
+  align-items: stretch;
+  background-attachment: fixed;
+  background-color: var(--brand-ink);
+  background-image: var(--login-flare);
+  color-scheme: light;
+  isolation: isolate;
+  padding: 1.5rem 1.25rem 2.5rem;
+}
+
+/* Faint engineering grid over the flare, faded out towards the bottom right. */
+.login::before {
+  background-image: var(--login-grid);
   background-size: 56px 56px;
   content: '';
   inset: 0;
   mask-image: radial-gradient(120% 100% at 10% 0%, #000 0%, transparent 70%);
-  position: absolute;
+  pointer-events: none;
+  position: fixed;
   z-index: -1;
 }
 
-/* Soft vignette so the type never sits on the brightest part of the flare. */
+.login .template-minimal__wrap {
+  margin-block: auto;
+}
+
+/* The logo already leads the brand block; a second one above the form is noise. */
+.login .login__brand {
+  display: none;
+}
+
+.login.template-minimal--width-normal .template-minimal__wrap {
+  max-width: 25rem;
+}
+
+/* ── Brand block ─────────────────────────────────────────────────────────── */
+
+.login-brand {
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  /* Identity, then greeting, then form: each step gets more air than the gaps
+     inside it, so the stack reads as three blocks and not one wall of text. */
+  gap: 1.25rem;
+  margin-bottom: 2.25rem;
+  padding-inline: 0.25rem;
+  position: relative;
+}
+
+/* The flare and the grid belong to the page here; the panel only re-claims
+   them once it becomes the fixed left half (see the desktop block). */
+.login-brand::before,
 .login-brand::after {
-  background: radial-gradient(
-    100% 80% at 50% 100%,
-    rgba(2, 6, 23, 0.55) 0%,
-    rgba(2, 6, 23, 0) 70%
-  );
-  content: '';
-  inset: 0;
-  position: absolute;
-  z-index: -1;
+  content: none;
 }
 
 .login-brand__eyebrow {
@@ -152,53 +168,72 @@
   width: 0.4375rem;
 }
 
+/*
+ * On phones the mark and the brand name share a row so the header stays a
+ * banner instead of a full screen: the password field has to be visible
+ * without scrolling. From `36rem` up it unfolds into the stacked block the
+ * desktop split expects.
+ */
 .login-brand__body {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  align-items: center;
+  column-gap: 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  row-gap: 0.875rem;
 }
 
 .login-brand__mark {
   align-items: center;
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 1rem;
+  border-radius: 0.875rem;
   display: inline-flex;
-  height: 3.25rem;
+  height: 2.75rem;
   justify-content: center;
+  min-width: 2.75rem;
   padding: 0.5rem;
   width: fit-content;
-  min-width: 3.25rem;
 }
 
 .login-brand__logo {
-  height: 2.25rem;
+  height: 1.75rem;
   object-fit: contain;
   width: auto;
 }
 
 .login-brand__icon {
-  height: 1.75rem;
-  width: 1.75rem;
+  height: 1.5rem;
+  width: 1.5rem;
 }
 
 .login-brand__title {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: 1.15;
+  /* A long dealership name must wrap instead of widening the layout at 320px. */
+  overflow-wrap: anywhere;
 }
 
+/*
+ * The pitch and the form's own greeting say the same thing twice on a phone,
+ * and stacked they read as one cramped paragraph. The greeting wins here —
+ * it belongs to the task — and the pitch returns once there is room for it.
+ */
 .login-brand__text {
   color: rgba(255, 255, 255, 0.72);
-  font-size: 0.9375rem;
-  line-height: 1.65;
+  display: none;
+  font-size: 0.875rem;
+  grid-column: 1 / -1;
+  line-height: 1.6;
   max-width: 34ch;
 }
 
+/* Decorative on a phone, where it only pushes the form further down. */
 .login-brand__footer {
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   color: rgba(255, 255, 255, 0.6);
+  display: none;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   padding-top: 1rem;
@@ -208,29 +243,41 @@
 /* ── Form column ─────────────────────────────────────────────────────────── */
 
 .login-intro {
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.25rem;
+  padding-inline: 0.25rem;
 }
 
+/* One step below the brand name: the dealership is the headline, the greeting
+   is the label of the card underneath it. */
 .login-intro__title {
-  color: var(--color-base-1000);
-  font-size: 1.75rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
   margin: 0;
 }
 
 .login-intro__text {
-  color: var(--color-base-600);
-  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.875rem;
   line-height: 1.6;
-  margin: 0.5rem 0 0;
+  margin: 0.375rem 0 0;
+  max-width: 40ch;
 }
 
+/* The white card that lifts the form off the gradient. It flattens back into
+   the page on desktop, where the background is already light. */
 .login .login__form {
+  background-color: var(--color-base-0);
+  border-radius: 1rem;
+  box-shadow:
+    0 1px 2px rgba(2, 6, 23, 0.12),
+    0 24px 48px rgba(2, 6, 23, 0.28);
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  padding: 1.5rem 1.25rem;
 }
 
 .login .login__form__inputWrap {
@@ -250,8 +297,9 @@
   border: 1px solid var(--color-base-150);
   border-radius: 0.625rem;
   box-shadow: none;
-  font-size: 0.9375rem;
-  height: 2.875rem;
+  /* 16px minimum: anything smaller makes iOS Safari zoom the page on focus. */
+  font-size: 1rem;
+  height: 3rem;
   padding: 0 0.875rem;
   transition:
     border-color 200ms ease,
@@ -273,10 +321,15 @@
    submit button; below the button reads better and keeps the primary action
    next to the inputs. */
 .login .login__form > a {
+  align-items: center;
   align-self: center;
   color: var(--color-base-600);
+  display: inline-flex;
   font-size: 0.875rem;
+  /* Padding, not font size, buys the 44px touch target. */
+  min-height: 2.75rem;
   order: 3;
+  padding: 0 0.75rem;
   text-decoration: none;
   transition: color 200ms ease;
 }
@@ -306,6 +359,75 @@
 .login .form-submit .btn__content {
   font-weight: 600;
   justify-content: center;
+  min-height: 1.5rem;
+  padding-block: 0.75rem;
+}
+
+/*
+ * ── Above phone width: the brand block unfolds ───────────────────────────
+ *
+ * The cut sits at 36rem, not at a tablet width: anything wider than a large
+ * phone has room for the stacked block, and keeping the compact banner up to
+ * 48rem made a 700px window look like a shrunken phone layout.
+ */
+
+@media (min-width: 36rem) {
+  .login {
+    padding: 2.5rem 2rem 3rem;
+  }
+
+  .login.template-minimal--width-normal .template-minimal__wrap {
+    max-width: 27rem;
+  }
+
+  .login-brand {
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .login-brand__body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .login-brand__mark {
+    border-radius: 1rem;
+    height: 3.25rem;
+    min-width: 3.25rem;
+  }
+
+  .login-brand__logo {
+    height: 2.25rem;
+  }
+
+  .login-brand__icon {
+    height: 1.75rem;
+    width: 1.75rem;
+  }
+
+  .login-brand__title {
+    font-size: 2rem;
+    line-height: 1.1;
+  }
+
+  .login-brand__text {
+    display: block;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .login-intro {
+    margin-bottom: 1.5rem;
+  }
+
+  .login-intro__title {
+    font-size: 1.5rem;
+  }
+
+  .login .login__form {
+    padding: 1.75rem 1.5rem;
+  }
 }
 
 /* ── Desktop split ───────────────────────────────────────────────────────── */
@@ -313,23 +435,60 @@
 @media (min-width: 64rem) {
   .login {
     align-items: center;
+    background-color: var(--color-base-0);
+    background-image: none;
     margin-left: 50%;
     min-height: 100vh;
     padding: 4rem 3.5rem;
     width: 50%;
   }
 
+  /* The grid moves back onto the panel, which now owns the gradient. */
+  .login::before {
+    content: none;
+  }
+
   .login-brand {
-    border-radius: 0;
+    background-color: var(--brand-ink);
+    background-image: var(--login-flare);
     inset: 0 50% 0 0;
+    isolation: isolate;
     justify-content: space-between;
     margin-bottom: 0;
+    overflow: hidden;
     padding: 4rem 3.5rem;
     position: fixed;
   }
 
+  .login-brand::before {
+    background-image: var(--login-grid);
+    background-size: 56px 56px;
+    content: '';
+    inset: 0;
+    mask-image: radial-gradient(120% 100% at 10% 0%, #000 0%, transparent 70%);
+    position: absolute;
+    z-index: -1;
+  }
+
+  /* Soft vignette so the type never sits on the brightest part of the flare. */
+  .login-brand::after {
+    background: radial-gradient(
+      100% 80% at 50% 100%,
+      rgba(2, 6, 23, 0.55) 0%,
+      rgba(2, 6, 23, 0) 70%
+    );
+    content: '';
+    inset: 0;
+    position: absolute;
+    z-index: -1;
+  }
+
   .login-brand__body {
     margin-block: auto;
+  }
+
+  .login-brand__footer {
+    display: block;
   }
 
   .login-brand__mark {
@@ -357,10 +516,26 @@
 
   .login-intro {
     margin-bottom: 2rem;
+    padding-inline: 0;
   }
 
   .login-intro__title {
+    color: var(--color-base-1000);
     font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .login-intro__text {
+    color: var(--color-base-600);
+  }
+
+  /* On a light background the card would be a box inside a box. */
+  .login .login__form {
+    background-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
   }
 }
 
