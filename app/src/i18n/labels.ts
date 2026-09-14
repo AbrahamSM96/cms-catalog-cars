@@ -1011,6 +1011,10 @@ export const ui = {
       'This VIN did not yield any new data.',
       'Este VIN no arrojó datos nuevos.'
     ),
+    scope: msg(
+      'Works best on cars built or sold in the US — other markets often return nothing.',
+      'Funciona mejor con autos fabricados o vendidos en EE. UU.; en otros mercados suele no encontrar nada.'
+    ),
     suggestionsHeading: msg('Suggested data', 'Datos sugeridos'),
   },
 }

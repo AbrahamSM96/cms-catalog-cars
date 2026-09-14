@@ -1,0 +1,104 @@
+/**
+ * VIN panel in the Cars form (`VinField`).
+ *
+ * A VIN is 17 characters, so the input is capped instead of stretching across
+ * the whole form, and the decode button sits beside it pinned to the same 40px
+ * height Payload gives every input. The field's own bottom margin is zeroed
+ * inside the row — left in, it pushes the button up by one `--spacing-field`,
+ * which is the misalignment this file exists to fix.
+ *
+ * Below 40rem the pair stacks and the button goes full width with a 44px touch
+ * target. Every colour is a Payload theme token, so light and dark both work.
+ */
+
+.vin-panel {
+  margin-bottom: var(--spacing-field);
+  max-width: 34rem;
+}
+
+.vin-panel__row {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vin-panel__field {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Payload spaces each field from the next one; inside the row we do it. */
+.vin-panel__field .field-type {
+  margin-bottom: 0;
+}
+
+.vin-panel__field input {
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.06em;
+}
+
+.vin-panel__decode {
+  align-items: center;
+  background: var(--theme-elevation-800);
+  border: 1px solid transparent;
+  border-radius: var(--style-radius-s);
+  color: var(--theme-elevation-0);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  transition:
+    background-color 0.2s ease,
+    opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.vin-panel__decode:hover:not(:disabled) {
+  background: var(--theme-elevation-700);
+}
+
+.vin-panel__decode:focus-visible {
+  outline: 2px solid var(--theme-success-500);
+  outline-offset: 2px;
+}
+
+.vin-panel__decode:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.vin-panel__decode[data-busy='true'] {
+  cursor: progress;
+}
+
+.vin-panel__notes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0.5rem 0 0;
+}
+
+.vin-panel__note {
+  color: var(--theme-elevation-600);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (min-width: 40rem) {
+  .vin-panel__row {
+    align-items: flex-end;
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+
+  .vin-panel__decode {
+    /* Matches the 40px height of a Payload text input. */
+    min-height: 40px;
+  }
+}

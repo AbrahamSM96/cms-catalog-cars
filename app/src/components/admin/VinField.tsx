@@ -92,6 +92,9 @@ const BADGE_COLORS: Record<Confidence, string> = {
  * Nothing is written until the editor applies it, and nothing is saved until
  * they save the document — the decode is a suggestion, not an import.
  *
+ * The row layout lives in `vin.css`; the suggestion list below it is still
+ * inline, since it only renders after a decode.
+ *
  * @param props - The Payload field component props.
  */
 export function VinField(props: VinFieldProps): React.JSX.Element {
@@ -222,9 +225,9 @@ export function VinField(props: VinFieldProps): React.JSX.Element {
   const label = typeof field?.label === 'string' ? field.label : 'VIN'
 
   return (
-    <div style={{ marginBottom: '1.5rem' }}>
-      <div style={{ alignItems: 'flex-end', display: 'flex', gap: '0.75rem' }}>
-        <div style={{ flex: 1 }}>
+    <div className="vin-panel">
+      <div className="vin-panel__row">
+        <div className="vin-panel__field">
           <TextInput
             label={label}
             onChange={(event: React.ChangeEvent<HTMLInputElement>): void =>
@@ -236,21 +239,11 @@ export function VinField(props: VinFieldProps): React.JSX.Element {
           />
         </div>
         <button
+          className="vin-panel__decode"
+          data-busy={busy}
           disabled={busy || vin.length === 0}
           onClick={(): void => {
             void decode()
-          }}
-          style={{
-            background: 'var(--theme-elevation-800)',
-            border: 'none',
-            borderRadius: '6px',
-            color: 'var(--theme-elevation-0)',
-            cursor: busy ? 'progress' : 'pointer',
-            fontSize: '0.82rem',
-            fontWeight: 600,
-            marginBottom: '1.5rem',
-            opacity: vin.length === 0 ? 0.5 : 1,
-            padding: '0.55rem 1.1rem',
           }}
           type="button"
         >
@@ -258,15 +251,10 @@ export function VinField(props: VinFieldProps): React.JSX.Element {
         </button>
       </div>
 
-      <p
-        style={{
-          color: 'var(--theme-elevation-500)',
-          fontSize: '0.78rem',
-          margin: '0 0 0.5rem',
-        }}
-      >
-        {pick(ui.vinPanel.intro, i18n.language)}
-      </p>
+      <div className="vin-panel__notes">
+        <p className="vin-panel__note">{pick(ui.vinPanel.intro, i18n.language)}</p>
+        <p className="vin-panel__note">{pick(ui.vinPanel.scope, i18n.language)}</p>
+      </div>
 
       {error ? (
         <p

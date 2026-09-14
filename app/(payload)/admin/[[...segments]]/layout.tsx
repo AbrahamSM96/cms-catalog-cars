@@ -3,13 +3,14 @@
  * them at any time, so anything of ours lives here instead: the Cache
  * Components opt-out below, and the admin stylesheets.
  *
- * Order matters — `theme.css` declares the tokens the other two consume. The
+ * Order matters — `theme.css` declares the tokens the others consume. The
  * screen-specific sheets are scoped to classes Payload only renders on their
- * own route, so loading all three everywhere is harmless.
+ * own route, so loading them everywhere is harmless.
  */
 import '@/components/admin/theme.css'
 import '@/components/admin/dashboard.css'
 import '@/components/admin/login.css'
+import '@/components/admin/vin.css'
 
 /**
  * The Payload admin reads cookies and queries the database on every request —
