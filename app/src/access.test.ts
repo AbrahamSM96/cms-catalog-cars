@@ -126,8 +126,22 @@ describe('adminsOrSelf', () => {
     expect(result).toEqual({ id: { equals: '3' } })
   })
 
-  it('returns a query with undefined equals when user is null', () => {
-    const result = accessFn(reqWith(null))
-    expect(result).toEqual({ id: { equals: undefined } })
+  it('returns a query object for users with no roles', () => {
+    const result = accessFn(reqWith(noRolesUser))
+    expect(result).toEqual({ id: { equals: '4' } })
+  })
+
+  it('denies access when user is null', () => {
+    expect(accessFn(reqWith(null))).toBe(false)
+  })
+
+  it('denies access when user is undefined', () => {
+    expect(accessFn(reqWith(undefined))).toBe(false)
+  })
+
+  it('never returns a query with an undefined id', () => {
+    for (const user of [null, undefined]) {
+      expect(accessFn(reqWith(user))).not.toEqual({ id: { equals: undefined } })
+    }
   })
 })

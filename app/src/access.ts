@@ -55,12 +55,16 @@ export const adminsOrSelfFieldRead: FieldAccess = (args) => {
 }
 
 /**
- * Grants full access to admins and scopes updates to the requesting user.
+ * Grants full access to admins and scopes access to the requesting user's own
+ * record. Denies outright when there is no authenticated user: returning a
+ * `{ id: { equals: undefined } }` query would make the denial depend on how the
+ * database adapter coerces `undefined`, which fails open on some adapters.
  *
  * @param args - Access control arguments.
  */
 export const adminsOrSelf: Access = (args) => {
   const { user } = args.req
+  if (!user) return false
   if (hasAdminRole(user)) return true
-  return { id: { equals: user?.id } }
+  return { id: { equals: user.id } }
 }
