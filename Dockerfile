@@ -44,6 +44,10 @@ ARG NEXT_PUBLIC_SITE_URL
 ENV NEXT_PUBLIC_R2_PUBLIC_URL=$NEXT_PUBLIC_R2_PUBLIC_URL
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 
+# Placeholder so buildConfig() survives being imported during the build. The
+# real secret comes from the runner's run-time env.
+ENV PAYLOAD_SECRET=build-time-placeholder
+
 RUN bun run build
 
 # ---- runner: minimal runtime image ----
