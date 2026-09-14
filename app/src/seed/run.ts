@@ -24,6 +24,11 @@ import { colorsList } from './colors'
  * Idempotent: existing rows are read up front and only the missing ones are
  * created, so an interrupted run resumes instead of duplicating or, worse,
  * skipping the rest because the collection was no longer empty.
+ *
+ * One exception to "only creates": a version's `years` is updated when the
+ * catalogue disagrees with the database. Re-running the seed after scraping a
+ * new model year is otherwise close to a no-op, because most of what that
+ * scrape adds is an extra year on versions that already exist.
  */
 
 /**
@@ -93,12 +98,33 @@ function toId(id: number | string): number {
   return typeof id === 'number' ? id : Number(id)
 }
 
-/** Number of documents created, per collection. */
+/**
+ * Compare two year lists.
+ *
+ * Both sides arrive sorted — the catalogue sorts on write, and Postgres returns
+ * a `hasMany` column in insertion order, which for these rows is that same sort
+ * — but this sorts copies anyway rather than trusting the invariant, since the
+ * cost of being wrong is a silent no-op on every row.
+ *
+ * @param stored - Years currently in the database.
+ * @param wanted - Years the catalogue says the version has.
+ */
+function sameYears(stored: number[], wanted: number[]): boolean {
+  if (stored.length !== wanted.length) return false
+
+  const left = [...stored].sort((a, b) => a - b)
+  const right = [...wanted].sort((a, b) => a - b)
+
+  return left.every((year, index) => year === right[index])
+}
+
+/** Number of documents written, per collection. */
 interface SeedCounts {
   brands: number
   carModels: number
   carVersions: number
   colors: number
+  updatedVersions: number
 }
 
 /**
@@ -135,7 +161,9 @@ async function seedColors(payload: Payload): Promise<number> {
  */
 async function seedVehicleCatalog(
   payload: Payload
-): Promise<Pick<SeedCounts, 'brands' | 'carModels' | 'carVersions'>> {
+): Promise<
+  Pick<SeedCounts, 'brands' | 'carModels' | 'carVersions' | 'updatedVersions'>
+> {
   const [existingBrands, existingModels, existingVersions] = await Promise.all([
     payload.find({ collection: 'brands', depth: 0, limit: 0 }),
     payload.find({ collection: 'car-models', depth: 0, limit: 0 }),
@@ -153,12 +181,12 @@ async function seedVehicleCatalog(
       toId(doc.id),
     ])
   )
-  /** `${modelId}::${clave}` of every version already stored */
-  const versionKeys = new Set(
-    existingVersions.docs.map(
-      (doc) =>
-        `${toId(typeof doc.model === 'object' ? doc.model.id : doc.model)}::${doc.clave}`
-    )
+  /** `${modelId}::${clave}` -> the stored version's id and years */
+  const versionsByKey = new Map<string, { id: number; years: number[] }>(
+    existingVersions.docs.map((doc) => [
+      `${toId(typeof doc.model === 'object' ? doc.model.id : doc.model)}::${doc.clave}`,
+      { id: toId(doc.id), years: doc.years },
+    ])
   )
 
   // Three phases, because each level needs the ids of the one above it: models
@@ -202,17 +230,34 @@ async function seedVehicleCatalog(
   for (const model of newModels) modelIds.set(model.key, model.id)
 
   // Phase 3 — versions, the bulk of the work (~8.7k rows).
+  //
+  // Two outcomes, not one. A version that is already stored still needs looking
+  // at, because the catalogue grows sideways as well as downwards: scraping a
+  // new model year mostly finds claves you already have, each gaining a year in
+  // `years`. Treating "already present" as "already correct" is what made a
+  // year's worth of scraping land as a handful of new rows and nothing else.
   const missingVersions: { modelId: number; version: CatalogVersion }[] = []
+  const staleVersions: { id: number; years: number[] }[] = []
+
   for (const brand of vehicleCatalog) {
     const brandId = brandIds.get(brand.slug) as number
     for (const model of brand.models) {
       const modelId = modelIds.get(`${brandId}::${model.name}`) as number
       for (const version of model.versions) {
-        if (versionKeys.has(`${modelId}::${version.clave}`)) continue
-        missingVersions.push({ modelId, version })
+        const stored = versionsByKey.get(`${modelId}::${version.clave}`)
+
+        if (stored === undefined) {
+          missingVersions.push({ modelId, version })
+          continue
+        }
+
+        if (!sameYears(stored.years, version.years)) {
+          staleVersions.push({ id: stored.id, years: version.years })
+        }
       }
     }
   }
+
   await mapWithConcurrency(missingVersions, ({ modelId, version }) =>
     payload.create({
       ...CREATE_OPTIONS,
@@ -226,10 +271,22 @@ async function seedVehicleCatalog(
     })
   )
 
+  // The catalogue is the source of truth and only ever adds years, so the
+  // stored list is replaced rather than merged.
+  await mapWithConcurrency(staleVersions, ({ id, years }) =>
+    payload.update({
+      ...CREATE_OPTIONS,
+      collection: 'car-versions',
+      data: { years },
+      id,
+    })
+  )
+
   return {
     brands: missingBrands.length,
     carModels: missingModels.length,
     carVersions: missingVersions.length,
+    updatedVersions: staleVersions.length,
   }
 }
 
@@ -250,8 +307,8 @@ const counts = await seed()
 // eslint-disable-next-line no-console
 console.log(
   `Seed complete — created ${counts.colors} colors, ${counts.brands} brands, ` +
-  `${counts.carModels} models, ${counts.carVersions} versions ` +
-  `(existing rows left untouched).`
+  `${counts.carModels} models, ${counts.carVersions} versions; ` +
+  `updated the years of ${counts.updatedVersions} existing versions.`
 )
 
 process.exit(0)

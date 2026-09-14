@@ -70,4 +70,5 @@ graphify-out
 
 # Captured browser session for scripts/scrape-vehicle-catalog.ts
 .bbva-cookie
+.bbva-marcas-request.json
 .catalog-scrape-checkpoint.json
