@@ -689,6 +689,7 @@ export const contact = {
 
 export const groups = {
   content: msg('Content', 'Contenido'),
+  sales: msg('Sales', 'Ventas'),
   settings: msg('Settings', 'Configuración'),
 }
 
@@ -744,6 +745,118 @@ export const homepage = {
     },
   },
   label: msg('Homepage', 'Portada'),
+}
+
+export const leads = {
+  description: msg(
+    'Every contact the site produced: who asked, about which car, and where they came from. Records are created automatically when a visitor taps WhatsApp, calls, or sends the contact form — nothing here is typed by hand except the status and the notes.',
+    'Cada contacto que generó el sitio: quién preguntó, por qué auto y de dónde llegó. Los registros se crean solos cuando alguien toca WhatsApp, llama o manda el formulario: aquí no se captura nada a mano salvo el estado y las notas.'
+  ),
+  fields: {
+    car: {
+      description: msg(
+        'Car the visitor was looking at. Empty when the contact came from the navbar, the footer or the contact page, where no car is in context.',
+        'Auto que el visitante estaba viendo. Vacío cuando el contacto salió del menú, del pie de página o de la página de contacto, donde no hay un auto de por medio.'
+      ),
+      label: msg('Car', 'Auto'),
+    },
+    fbclid: {
+      description: msg(
+        'Click identifier Facebook appends to the URL. Only present when the visit came from a Facebook or Instagram ad.',
+        'Identificador del clic que Facebook agrega a la URL. Solo aparece cuando la visita vino de un anuncio de Facebook o Instagram.'
+      ),
+      label: msg('Facebook click ID', 'ID de clic de Facebook'),
+    },
+    landingPath: {
+      description: msg(
+        'First page of the visit. Tells you which page earned the contact, which is not always the page the contact was sent from.',
+        'Primera página de la visita. Te dice qué página ganó el contacto, que no siempre es la página desde la que se envió.'
+      ),
+      label: msg('Landing page', 'Página de entrada'),
+    },
+    notes: {
+      description: msg(
+        'Your own notes about this lead — what was agreed, when to follow up.',
+        'Tus notas sobre este prospecto: qué se acordó, cuándo darle seguimiento.'
+      ),
+      label: msg('Notes', 'Notas'),
+    },
+    origin: {
+      label: msg('Where the visit came from', 'De dónde vino la visita'),
+    },
+    placement: {
+      description: msg(
+        'Which button on the site was tapped.',
+        'Qué botón del sitio se tocó.'
+      ),
+      label: msg('Button', 'Botón'),
+    },
+    source: {
+      description: msg(
+        'How the visitor chose to get in touch.',
+        'Cómo decidió contactarte el visitante.'
+      ),
+      label: msg('Channel', 'Canal'),
+    },
+    status: {
+      description: msg(
+        'Where this lead stands. Keeping it current is what turns the list into a report — an untouched list only tells you how many people wrote, never how many bought.',
+        'En qué punto está este prospecto. Mantenerlo al día es lo que convierte la lista en un reporte: una lista sin tocar solo te dice cuánta gente escribió, nunca cuánta compró.'
+      ),
+      label: msg('Status', 'Estado'),
+    },
+    utmCampaign: {
+      description: msg(
+        'Campaign named in the link (e.g. seminuevos-octubre).',
+        'Campaña indicada en el enlace (ej. seminuevos-octubre).'
+      ),
+      label: msg('Campaign', 'Campaña'),
+    },
+    utmContent: {
+      description: msg(
+        'Specific ad or link variant inside the campaign.',
+        'Anuncio o variante de enlace específica dentro de la campaña.'
+      ),
+      label: msg('Ad', 'Anuncio'),
+    },
+    utmMedium: {
+      description: msg(
+        'Kind of traffic (e.g. cpc, social, email).',
+        'Tipo de tráfico (ej. cpc, social, email).'
+      ),
+      label: msg('Medium', 'Medio'),
+    },
+    utmSource: {
+      description: msg(
+        'Where the link was published (e.g. facebook, instagram).',
+        'Dónde se publicó el enlace (ej. facebook, instagram).'
+      ),
+      label: msg('Source', 'Origen'),
+    },
+  },
+  labels: {
+    plural: msg('Leads', 'Prospectos'),
+    singular: msg('Lead', 'Prospecto'),
+  },
+  options: {
+    placement: {
+      carDetail: msg('Car page', 'Página del auto'),
+      contactPage: msg('Contact page', 'Página de contacto'),
+      footer: msg('Footer', 'Pie de página'),
+      navbar: msg('Navbar', 'Menú'),
+    },
+    source: {
+      form: msg('Contact form', 'Formulario de contacto'),
+      phone: msg('Phone', 'Teléfono'),
+      whatsapp: msg('WhatsApp', 'WhatsApp'),
+    },
+    status: {
+      contacted: msg('Contacted', 'Contactado'),
+      lost: msg('Lost', 'Perdido'),
+      new: msg('New', 'Nuevo'),
+      sold: msg('Sold', 'Vendido'),
+    },
+  },
 }
 
 export const media = {

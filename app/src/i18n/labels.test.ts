@@ -35,6 +35,7 @@ const IDENTICAL = new Set([
   'dealerships.tabs.general.label',
   'homepage.fields.heroSlides.labels.plural',
   'homepage.fields.heroSlides.labels.singular',
+  'leads.options.source.whatsapp',
   'siteSettings.fields.media.fields.favicon.label',
   'siteSettings.fields.media.fields.logo.label',
   'siteSettings.fields.seo.label',

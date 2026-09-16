@@ -60,6 +60,17 @@ describe('buildVersionOptions', () => {
     expect(options).toEqual([{ label: `2017 · ${GT}`, value: GT }])
   })
 
+  // The catalogue is scraped, so a row's years arrive in whatever order the
+  // source listed them — the nearest one is not always the last.
+  it('keeps the closest year when one row lists its years descending', () => {
+    const options = buildVersionOptions({
+      docs: [{ description: GT, years: [2017, 2012] }],
+      year: 2019,
+    })
+
+    expect(options).toEqual([{ label: `2017 · ${GT}`, value: GT }])
+  })
+
   it('keeps the closest year regardless of the order rows arrive in', () => {
     const options = buildVersionOptions({
       docs: [
@@ -81,7 +92,9 @@ describe('buildVersionOptions', () => {
       year: 2019,
     })
 
-    expect(options.map((option) => option.value)).toEqual([BASE, GT])
+    // Both sit two years away, so the description decides: the GT trim's
+    // description starts "2.0L G", the base one "2.0L I".
+    expect(options.map((option) => option.value)).toEqual([GT, BASE])
   })
 
   it('ignores rows with no description', () => {

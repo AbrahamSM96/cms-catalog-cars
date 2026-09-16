@@ -1,45 +1,34 @@
-import { FacebookMarketplacePanel as FacebookMarketplacePanel_c4a4d72846c51c5aa7b96959e0afa802 } from '../../src/components/admin/FacebookMarketplacePanel'
-import { PriceDescription as PriceDescription_04da38a0c88a213bc2c55daa703d9285 } from '../../src/components/admin/PriceDescription'
-import { MileageDescription as MileageDescription_ae48e49ee51163c51400a666b3d73aaf } from '../../src/components/admin/MileageDescription'
-import { AdminDashboardHero as AdminDashboardHero_f6071829304a5b6c7d8e9f0a1b2c3d4e } from '../../src/components/admin/AdminDashboardHero'
-import { AdminIcon as AdminIcon_071829304a5b6c7d8e9f0a1b2c3d4e5f } from '../../src/components/admin/AdminIcon'
-import { LoginBrandPanel as LoginBrandPanel_e5f6071829304a5b6c7d8e9f0a1b2c3d } from '../../src/components/admin/LoginBrandPanel'
-import { BrandField as BrandField_d4e5f6071829304a5b6c7d8e9f0a1b2c } from '../../src/components/admin/BrandField'
-import { ModelField as ModelField_a1b2c3d4e5f6071829304a5b6c7d8e9f } from '../../src/components/admin/ModelField'
-import { VersionField as VersionField_b2c3d4e5f6071829304a5b6c7d8e9f0a } from '../../src/components/admin/VersionField'
-import { TimeField as TimeField_1829304a5b6c7d8e9f0a1b2c3d4e5f60 } from '../../src/components/admin/TimeField'
-import { YearField as YearField_c3d4e5f6071829304a5b6c7d8e9f0a1b } from '../../src/components/admin/YearField'
-import { VinField as VinField_d4e5f6071829304a5b6c7d8e9f0a1b2d } from '../../src/components/admin/VinField'
+import { VinField as VinField_9cbee51b01c85089f44e4331192f31d3 } from '../../src/components/admin/VinField'
+import { BrandField as BrandField_a30f9ae5de332a9c3da58b1add5bcd28 } from '../../src/components/admin/BrandField'
+import { ModelField as ModelField_39b9a11ef85100db746dd8ae62a59959 } from '../../src/components/admin/ModelField'
+import { YearField as YearField_2b382429fd4d429d3c0c4bc2016fb70c } from '../../src/components/admin/YearField'
+import { VersionField as VersionField_260eccbdcaaca8bb2414704f15c2c63c } from '../../src/components/admin/VersionField'
+import { PriceDescription as PriceDescription_e927004baf2140bdc99b11d9c2546deb } from '../../src/components/admin/PriceDescription'
+import { MileageDescription as MileageDescription_d2f80931d2eb00356f71cb7769008757 } from '../../src/components/admin/MileageDescription'
+import { FacebookMarketplacePanel as FacebookMarketplacePanel_2b49c450657cc330f870bc3e189e4f11 } from '../../src/components/admin/FacebookMarketplacePanel'
+import { TimeField as TimeField_aee11c7403bceb4ec618466b171ffa52 } from '../../src/components/admin/TimeField'
+import { LeadsSummary as LeadsSummary_4280afe82fa366bb4ad919c50cb30248 } from '../../src/components/admin/LeadsSummary'
+import { AdminIcon as AdminIcon_7be396d0766c6c490887ef074dd0ced4 } from '../../src/components/admin/AdminIcon'
+import { AdminDashboardHero as AdminDashboardHero_15ef46a6b2a1b616dc4cfedeac84ecc8 } from '../../src/components/admin/AdminDashboardHero'
+import { LoginBrandPanel as LoginBrandPanel_c6ffc317fffd78c1746e57d25fd433f6 } from '../../src/components/admin/LoginBrandPanel'
+import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
-import { S3ClientUploadHandler as S3ClientUploadHandler_0 } from '@payloadcms/storage-s3/client'
 
+/** @type import('payload').ImportMap */
 export const importMap = {
-  '/components/admin/FacebookMarketplacePanel#FacebookMarketplacePanel':
-    FacebookMarketplacePanel_c4a4d72846c51c5aa7b96959e0afa802,
-  '/components/admin/PriceDescription#PriceDescription':
-    PriceDescription_04da38a0c88a213bc2c55daa703d9285,
-  '/components/admin/MileageDescription#MileageDescription':
-    MileageDescription_ae48e49ee51163c51400a666b3d73aaf,
-  '/components/admin/AdminDashboardHero#AdminDashboardHero':
-    AdminDashboardHero_f6071829304a5b6c7d8e9f0a1b2c3d4e,
-  '/components/admin/AdminIcon#AdminIcon':
-    AdminIcon_071829304a5b6c7d8e9f0a1b2c3d4e5f,
-  '/components/admin/LoginBrandPanel#LoginBrandPanel':
-    LoginBrandPanel_e5f6071829304a5b6c7d8e9f0a1b2c3d,
-  '/components/admin/VinField#VinField':
-    VinField_d4e5f6071829304a5b6c7d8e9f0a1b2d,
-  '/components/admin/BrandField#BrandField':
-    BrandField_d4e5f6071829304a5b6c7d8e9f0a1b2c,
-  '/components/admin/ModelField#ModelField':
-    ModelField_a1b2c3d4e5f6071829304a5b6c7d8e9f,
-  '/components/admin/VersionField#VersionField':
-    VersionField_b2c3d4e5f6071829304a5b6c7d8e9f0a,
-  '/components/admin/TimeField#TimeField':
-    TimeField_1829304a5b6c7d8e9f0a1b2c3d4e5f60,
-  '/components/admin/YearField#YearField':
-    YearField_c3d4e5f6071829304a5b6c7d8e9f0a1b,
-  '@payloadcms/next/rsc#CollectionCards':
-    CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,
-  '@payloadcms/storage-s3/client#S3ClientUploadHandler':
-    S3ClientUploadHandler_0,
+  "/components/admin/VinField#VinField": VinField_9cbee51b01c85089f44e4331192f31d3,
+  "/components/admin/BrandField#BrandField": BrandField_a30f9ae5de332a9c3da58b1add5bcd28,
+  "/components/admin/ModelField#ModelField": ModelField_39b9a11ef85100db746dd8ae62a59959,
+  "/components/admin/YearField#YearField": YearField_2b382429fd4d429d3c0c4bc2016fb70c,
+  "/components/admin/VersionField#VersionField": VersionField_260eccbdcaaca8bb2414704f15c2c63c,
+  "/components/admin/PriceDescription#PriceDescription": PriceDescription_e927004baf2140bdc99b11d9c2546deb,
+  "/components/admin/MileageDescription#MileageDescription": MileageDescription_d2f80931d2eb00356f71cb7769008757,
+  "/components/admin/FacebookMarketplacePanel#FacebookMarketplacePanel": FacebookMarketplacePanel_2b49c450657cc330f870bc3e189e4f11,
+  "/components/admin/TimeField#TimeField": TimeField_aee11c7403bceb4ec618466b171ffa52,
+  "/components/admin/LeadsSummary#LeadsSummary": LeadsSummary_4280afe82fa366bb4ad919c50cb30248,
+  "/components/admin/AdminIcon#AdminIcon": AdminIcon_7be396d0766c6c490887ef074dd0ced4,
+  "/components/admin/AdminDashboardHero#AdminDashboardHero": AdminDashboardHero_15ef46a6b2a1b616dc4cfedeac84ecc8,
+  "/components/admin/LoginBrandPanel#LoginBrandPanel": LoginBrandPanel_c6ffc317fffd78c1746e57d25fd433f6,
+  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
+  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

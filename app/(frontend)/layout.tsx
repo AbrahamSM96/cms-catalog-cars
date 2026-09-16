@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
 import '../globals.css'
+import { AttributionCapture } from '@/components/analytics/AttributionCapture'
 import { BrandTheme } from '@/components/layout/BrandTheme'
 import { getSiteSettings } from '@/lib/payload-client'
 import { poppins } from '@/commons/poppins'
@@ -77,6 +78,10 @@ export default function RootLayout(
   return (
     <html className={`${poppins.variable} antialiased`} lang="es">
       <body>
+        {/* Renders nothing; `useSearchParams` is what needs the boundary. */}
+        <Suspense>
+          <AttributionCapture />
+        </Suspense>
         <Suspense>
           <BrandTheme />
         </Suspense>

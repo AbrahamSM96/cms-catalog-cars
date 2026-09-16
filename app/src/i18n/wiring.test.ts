@@ -6,6 +6,7 @@ import { CarVersions } from '../collections/CarVersions'
 import { Cars } from '../collections/Cars'
 import { Colors } from '../collections/Colors'
 import { Dealerships } from '../collections/Dealerships'
+import { Leads } from '../collections/Leads'
 import { Media } from '../collections/Media'
 import { Users } from '../collections/Users'
 import { VinDecodes } from '../collections/VinDecodes'
@@ -41,6 +42,7 @@ const ENTITIES: Array<[string, EntityLike]> = [
   ['contact', Contact],
   ['dealerships', Dealerships],
   ['homepage', Homepage],
+  ['leads', Leads],
   ['media', Media],
   ['siteSettings', SiteSettings],
   ['users', Users],

@@ -9,6 +9,7 @@ import {
 import { connection } from 'next/server'
 
 import { getContact } from '@/lib/payload-client'
+import { LeadLink } from '@/components/analytics/LeadLink'
 
 const FALLBACK_WHATSAPP = '525512345678'
 const FALLBACK_PHONE = '+52 55 1234 5678'
@@ -49,10 +50,12 @@ export async function ContactDetails(): Promise<React.JSX.Element> {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-4 sm:grid-cols-2">
           {/* WhatsApp */}
-          <a
+          <LeadLink
             className="group shadow-soft hover:shadow-float flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-green-300"
             href={`https://wa.me/${whatsappDigits}`}
+            placement="contact-page"
             rel="noopener noreferrer"
+            source="whatsapp"
             target="_blank"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-50 text-green-600">
@@ -67,12 +70,14 @@ export async function ContactDetails(): Promise<React.JSX.Element> {
                 Escríbenos →
               </span>
             </div>
-          </a>
+          </LeadLink>
 
           {/* Phone */}
-          <a
+          <LeadLink
             className="group shadow-soft hover:shadow-float flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-accent-300"
             href={telHref}
+            placement="contact-page"
+            source="phone"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-600">
               <Phone className="h-6 w-6" />
@@ -84,7 +89,7 @@ export async function ContactDetails(): Promise<React.JSX.Element> {
                 Llamar →
               </span>
             </div>
-          </a>
+          </LeadLink>
 
           {/* Email */}
           {email && (

@@ -1,0 +1,132 @@
+/**
+ * Lead overview shown above the Payload leads list
+ * (`LeadsSummary`, wired through the collection's `admin.components.beforeList`).
+ *
+ * The stat tiles and the header reuse the classes `dashboard.css` already
+ * defines, so only what is new to this screen lives here: the two breakdown
+ * panels and their bars. Every colour, radius and shadow is a token from
+ * `theme.css`, so the block follows the admin's light/dark toggle, and nothing
+ * here touches Payload's own classes.
+ */
+
+/* Payload renders the `beforeList` slot as a sibling *before* the list's
+   `<Gutter>`, not inside it, so this block gets no horizontal padding of its
+   own and would sit flush against the window edge while the list below is
+   inset. Applying the same `--gutter-h` the Gutter uses lines the two up, and
+   keeps them lined up at every breakpoint since Payload redefines the variable
+   rather than hard-coding the value. */
+.admin-leads {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: var(--base);
+  padding-inline: var(--gutter-h);
+}
+
+/* Deliberately smaller than the dashboard hero's title: Payload prints the
+   collection's own `<h1>` directly below this block, and two headings at the
+   same weight read as two pages stacked. This one introduces a panel, not a
+   view, so it sits a step under. */
+.admin-leads__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.admin-leads__title {
+  color: var(--admin-text);
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.admin-leads__intro {
+  color: var(--admin-text-muted);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.admin-leads__panels {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+}
+
+.admin-leads__panel {
+  background-color: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-m);
+  box-shadow: var(--admin-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: 1.125rem 1.25rem;
+}
+
+.admin-leads__panel-title {
+  color: var(--admin-text-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.admin-leads__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Label, bar, count. The label is capped so one long car title cannot squeeze
+   the bars of every other row into nothing. */
+.admin-leads__row {
+  align-items: center;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: minmax(0, 9rem) 1fr auto;
+}
+
+.admin-leads__row-label {
+  color: var(--admin-text);
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-leads__bar {
+  background-color: var(--admin-surface-sunken);
+  border-radius: 999px;
+  display: block;
+  height: 0.5rem;
+  overflow: hidden;
+}
+
+.admin-leads__bar-fill {
+  background-color: var(--brand-accent);
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+  /* Never vanishes: a row present in the list should be visible in the chart
+     even when it is one contact against forty. */
+  min-width: 0.25rem;
+}
+
+.admin-leads__row-count {
+  color: var(--admin-text);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.admin-leads__empty {
+  color: var(--admin-text-muted);
+  font-size: 0.9375rem;
+  margin: 0;
+}

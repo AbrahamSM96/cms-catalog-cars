@@ -20,6 +20,7 @@ import { Contact } from './globals/Contact'
 import { Dealerships } from './collections/Dealerships'
 import { emailAdapter } from './lib/email'
 import { Homepage } from './globals/Homepage'
+import { Leads } from './collections/Leads'
 import { Media } from './collections/Media'
 import { SiteSettings } from './globals/SiteSettings'
 import { Users } from './collections/Users'
@@ -130,6 +131,7 @@ export default buildConfig({
     Cities,
     Colors,
     Dealerships,
+    Leads,
     Media,
     Users,
     VinDecodes,

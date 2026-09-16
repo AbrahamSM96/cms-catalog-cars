@@ -74,6 +74,7 @@ export interface Config {
     cities: City;
     colors: Color;
     dealerships: Dealership;
+    leads: Lead;
     media: Media;
     users: User;
     'vin-decodes': VinDecode;
@@ -91,6 +92,7 @@ export interface Config {
     cities: CitiesSelect<false> | CitiesSelect<true>;
     colors: ColorsSelect<false> | ColorsSelect<true>;
     dealerships: DealershipsSelect<false> | DealershipsSelect<true>;
+    leads: LeadsSelect<false> | LeadsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'vin-decodes': VinDecodesSelect<false> | VinDecodesSelect<true>;
@@ -552,6 +554,61 @@ export interface City {
   createdAt: string;
 }
 /**
+ * Every contact the site produced: who asked, about which car, and where they came from. Records are created automatically when a visitor taps WhatsApp, calls, or sends the contact form — nothing here is typed by hand except the status and the notes.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leads".
+ */
+export interface Lead {
+  id: number;
+  /**
+   * Car the visitor was looking at. Empty when the contact came from the navbar, the footer or the contact page, where no car is in context.
+   */
+  car?: (number | null) | Car;
+  /**
+   * Where this lead stands. Keeping it current is what turns the list into a report — an untouched list only tells you how many people wrote, never how many bought.
+   */
+  status: 'new' | 'contacted' | 'sold' | 'lost';
+  /**
+   * How the visitor chose to get in touch.
+   */
+  source: 'whatsapp' | 'phone' | 'form';
+  /**
+   * Which button on the site was tapped.
+   */
+  placement: 'car-detail' | 'navbar' | 'footer' | 'contact-page';
+  /**
+   * Your own notes about this lead — what was agreed, when to follow up.
+   */
+  notes?: string | null;
+  /**
+   * Where the link was published (e.g. facebook, instagram).
+   */
+  utmSource?: string | null;
+  /**
+   * Kind of traffic (e.g. cpc, social, email).
+   */
+  utmMedium?: string | null;
+  /**
+   * Campaign named in the link (e.g. seminuevos-octubre).
+   */
+  utmCampaign?: string | null;
+  /**
+   * Specific ad or link variant inside the campaign.
+   */
+  utmContent?: string | null;
+  /**
+   * First page of the visit. Tells you which page earned the contact, which is not always the page the contact was sent from.
+   */
+  landingPath?: string | null;
+  /**
+   * Click identifier Facebook appends to the URL. Only present when the visit came from a Facebook or Instagram ad.
+   */
+  fbclid?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -669,6 +726,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'dealerships';
         value: number | Dealership;
+      } | null)
+    | ({
+        relationTo: 'leads';
+        value: number | Lead;
       } | null)
     | ({
         relationTo: 'media';
@@ -924,6 +985,25 @@ export interface DealershipsSelect<T extends boolean = true> {
               close?: T;
             };
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "leads_select".
+ */
+export interface LeadsSelect<T extends boolean = true> {
+  car?: T;
+  status?: T;
+  source?: T;
+  placement?: T;
+  notes?: T;
+  utmSource?: T;
+  utmMedium?: T;
+  utmCampaign?: T;
+  utmContent?: T;
+  landingPath?: T;
+  fbclid?: T;
   updatedAt?: T;
   createdAt?: T;
 }

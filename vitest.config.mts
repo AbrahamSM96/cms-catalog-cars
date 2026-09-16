@@ -16,6 +16,7 @@ export default defineConfig({
     coverage: {
       exclude: [
         'app/src/lib/catalog-actions.ts',
+        'app/src/lib/lead-actions.ts',
         'app/src/lib/payload-client.ts',
         // Talks to Payload directly; exercised end to end, not in unit tests.
         'app/src/lib/vin/payload/**',

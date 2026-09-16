@@ -1,5 +1,8 @@
 'use client'
 
+import { readAttribution } from '@/lib/attribution'
+import { recordLead } from '@/lib/lead-actions'
+
 import type { Car } from '../../types/car'
 
 interface ContactButtonProps {
@@ -29,6 +32,15 @@ export function ContactButton({
     const message = `Hola! Estoy interesado en el ${brandName} ${car.model} ${car.version} ${car.year}. ¿Podrías darme más información?`
     const encodedMessage = encodeURIComponent(message)
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`
+
+    // Fired, not awaited: `window.open` has to stay inside the click's user
+    // gesture or a popup blocker eats it. See `lib/lead-actions.ts`.
+    void recordLead({
+      attribution: readAttribution(),
+      carId: car.id,
+      placement: 'car-detail',
+      source: 'whatsapp',
+    })
 
     window.open(whatsappUrl, '_blank')
   }
