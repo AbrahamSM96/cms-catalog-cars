@@ -236,6 +236,89 @@ export async function getCarBySlug(slug: string): Promise<Car> {
   return getCarById(id)
 }
 
+/** Cómo se define "parecido" en {@link getSimilarCars}. */
+const SIMILAR_PRICE_SPREAD = 0.25
+
+/** Cuántos resultados de la misma marca bastan para no ampliar la búsqueda. */
+const SIMILAR_MIN_SAME_BRAND = 4
+
+/**
+ * Fetch cars similar to the one being viewed.
+ *
+ * Similar means same brand within ±25% of the price. When the brand has no
+ * other stock in that band the search widens to the price band alone, so the
+ * carousel is empty only in a catalogue that really has nothing comparable.
+ *
+ * Takes primitives rather than the car document: the arguments become the
+ * `use cache` key, and a whole car would re-key the entry on every edit to a
+ * field the query never reads.
+ *
+ * @param brandId - id of the current car's brand
+ * @param excludeId - id of the current car, always left out of the results
+ * @param price - price of the current car, centre of the band
+ */
+export async function getSimilarCars(
+  brandId: number | string | null,
+  excludeId: number | string,
+  price: number
+): Promise<Car[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.cars)
+
+  try {
+    const payload = await payloadClient()
+
+    const base: Where[] = [
+      { id: { not_equals: excludeId } },
+      { status: { equals: 'available' } },
+      {
+        price: {
+          greater_than_equal: Math.round(price * (1 - SIMILAR_PRICE_SPREAD)),
+        },
+      },
+      {
+        price: {
+          less_than_equal: Math.round(price * (1 + SIMILAR_PRICE_SPREAD)),
+        },
+      },
+    ]
+
+    /**
+     * Run one similarity query.
+     *
+     * @param and - the clauses every result must satisfy
+     */
+    const find = async (and: Where[]): Promise<Car[]> => {
+      const result = await payload.find({
+        collection: 'cars',
+        depth: 2,
+        limit: 10,
+        where: { and },
+      })
+      return result.docs as unknown as Car[]
+    }
+
+    const sameBrand = brandId
+      ? await find([...base, { brand: { equals: brandId } }])
+      : []
+    if (sameBrand.length >= SIMILAR_MIN_SAME_BRAND) return sameBrand
+
+    // Completa con el resto del rango de precio sin repetir los ya listados.
+    const seen = new Set(sameBrand.map((car) => car.id))
+    const byPrice = await find(base)
+
+    return [...sameBrand, ...byPrice.filter((car) => !seen.has(car.id))].slice(
+      0,
+      10
+    )
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching similar cars:', error)
+    throw error
+  }
+}
+
 /**
  * Fetch all brands.
  */

@@ -1,13 +1,13 @@
 /* eslint-disable react/no-danger */
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 
 import { buildCarImageAlt, getImageUrl } from '@/lib/images'
-import { carCity } from '@/lib/city'
-import { serializeLd } from '@/lib/json-ld'
 import type { Dealership, Media } from '@/types/car'
 import { getCarBySlug, getContact } from '@/lib/payload-client'
 import { absoluteUrl } from '@/lib/seo'
+import { carCity } from '@/lib/city'
 import { CarFeatures } from '@/components/car/CarFeatures'
 import { CarHeader } from '@/components/car/CarHeader'
 import { CarHistory } from '@/components/car/CarHistory'
@@ -16,6 +16,8 @@ import { ContactButton } from '@/components/car/ContactButton'
 import { FinancingCalculator } from '@/components/car/FinancingCalculator'
 import { formatPriceMXN } from '@/lib/currency'
 import { ImageGallery } from '@/components/car/ImageGallery'
+import { serializeLd } from '@/lib/json-ld'
+import { SimilarCars } from '@/components/car/SimilarCars'
 
 interface CarDetailProps {
   /** Passed through as a promise so the page above can stay prerenderable. */
@@ -111,7 +113,9 @@ export async function CarDetail({
   // several landings at once and its dealership can change, so the hierarchy is
   // declared here instead of in the path. Falls back to the catalogue for a car
   // whose dealership has not been set yet.
-  const trail: { name: string; path: string }[] = [{ name: 'Inicio', path: '/' }]
+  const trail: { name: string; path: string }[] = [
+    { name: 'Inicio', path: '/' },
+  ]
   if (city) {
     trail.push({
       name: `Seminuevos en ${city.name}`,
@@ -273,6 +277,14 @@ export async function CarDetail({
         </div>
 
         {dealership && <CarLocation dealership={dealership} />}
+
+        <Suspense
+          fallback={
+            <div className="mt-16 h-96 animate-pulse rounded-2xl bg-slate-200" />
+          }
+        >
+          <SimilarCars car={car} />
+        </Suspense>
 
         {city && brandSlug && (
           <p className="mt-8 text-center">
