@@ -61,9 +61,15 @@ describe('buildLeadData', () => {
     expect(data.fbclid).toBeNull()
   })
 
-  it('accepts a string car id', () => {
+  it('coerces a string car id to the number the relationship expects', () => {
     expect(buildLeadData({ carId: '42', placement: 'car-detail', source: 'whatsapp' }).car).toBe(
-      '42'
+      42
     )
+  })
+
+  it('drops a car id that is not a number', () => {
+    expect(
+      buildLeadData({ carId: 'abc', placement: 'car-detail', source: 'whatsapp' }).car
+    ).toBeNull()
   })
 })

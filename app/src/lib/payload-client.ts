@@ -18,10 +18,13 @@ import type {
   Contact,
   Dealership,
   Homepage,
+  SearchIndex,
+  SearchSuggestion,
   SiteSettings,
 } from '../types/car'
 
 import { CACHE_TAGS } from './cache-tags'
+import { correctSearchTerms, normalize } from './fuzzy-search'
 import { parseCarSlug } from './car-slug'
 
 /**
@@ -112,15 +115,23 @@ export async function getCars(filters?: CarFilters): Promise<CarsResponse> {
     if (filters?.transmission)
       and.push({ transmission: { equals: filters.transmission } })
 
-    // Search across multiple fields (model, version, brand name)
+    // Búsqueda por texto. Cada palabra se corrige contra el vocabulario del
+    // inventario publicado (ver `lib/fuzzy-search.ts`) y luego se exige por
+    // separado: "mazda 3" pide marca/modelo/versión que contenga "mazda" Y que
+    // contenga "3". Con un solo `contains` de la frase entera no matchea nada,
+    // porque ningún campo guarda la marca y el modelo juntos.
     if (filters?.search) {
-      and.push({
-        or: [
-          { model: { contains: filters.search } },
-          { version: { contains: filters.search } },
-          { 'brand.name': { contains: filters.search } },
-        ],
-      })
+      const { vocabulary } = await getSearchIndex()
+      for (const term of correctSearchTerms(filters.search, vocabulary)) {
+        const or: Where[] = [
+          { model: { contains: term } },
+          { version: { contains: term } },
+          { 'brand.name': { contains: term } },
+        ]
+        // Un año escrito en la barra ("civic 2020") es un filtro, no un texto.
+        if (/^\d{4}$/.test(term)) or.push({ year: { equals: Number(term) } })
+        and.push({ or })
+      }
     }
 
     const result = await payload.find({
@@ -396,6 +407,102 @@ export async function getCatalogFacets(): Promise<CatalogFacets> {
     console.error('Error fetching catalog facets:', error)
     throw error
   }
+}
+
+/** Cuántas sugerencias viajan al cliente. Son unos pocos KB de texto. */
+const SUGGESTION_LIMIT = 40
+
+/**
+ * El vocabulario y las sugerencias de la barra de búsqueda.
+ *
+ * Se arma solo con autos `available`: así el autocompletado nunca ofrece algo
+ * que lleve a una página vacía, y la corrección de errores nunca reescribe lo
+ * tecleado hacia una marca que ya no está en venta.
+ *
+ * Una sola consulta para las dos cosas — ambas salen de los mismos autos — y
+ * cacheada como el resto, de modo que teclear en la barra no toca la base.
+ */
+export async function getSearchIndex(): Promise<SearchIndex> {
+  'use cache'
+  cacheLife('days')
+  cacheTag(CACHE_TAGS.brands)
+  cacheTag(CACHE_TAGS.cars)
+
+  try {
+    const payload = await payloadClient()
+
+    const result = await payload.find({
+      collection: 'cars',
+      depth: 1,
+      limit: 0,
+      select: { brand: true, model: true, version: true },
+      where: { status: { equals: 'available' } },
+    })
+
+    const counts = new Map<string, SearchSuggestion>()
+    const vocabulary = new Set<string>()
+
+    /**
+     * Suma un auto a la sugerencia que le corresponde.
+     *
+     * @param label - La etiqueta de la sugerencia, p. ej. "Mazda 3".
+     */
+    const count = (label: string): void => {
+      const entry = counts.get(label)
+      if (entry) {
+        entry.count += 1
+      } else {
+        counts.set(label, { count: 1, label })
+      }
+    }
+
+    for (const car of result.docs as unknown as Car[]) {
+      // Una marca que no se pobló vuelve como id, no como objeto.
+      const brand =
+        car.brand && typeof car.brand === 'object' ? car.brand.name : null
+
+      if (brand) vocabulary.add(brand)
+      if (car.model) vocabulary.add(car.model)
+      if (car.version) vocabulary.add(car.version)
+
+      if (brand) count(brand)
+      if (brand && car.model) count(`${brand} ${car.model}`)
+    }
+
+    return {
+      suggestions: [...counts.values()]
+        .sort(
+          (a, b) => b.count - a.count || a.label.localeCompare(b.label, 'es')
+        )
+        .slice(0, SUGGESTION_LIMIT),
+      vocabulary: [...vocabulary].sort(),
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching search index:', error)
+    throw error
+  }
+}
+
+/**
+ * Cómo se leyó la búsqueda cuando lo tecleado no coincidía con el inventario,
+ * o null si no hubo nada que corregir.
+ *
+ * Es lo que deja escribir "Mostrando resultados para Mazda" arriba de la
+ * cuadrícula: sin eso la corrección es invisible y la persona no entiende por
+ * qué le salieron esos autos.
+ *
+ * @param search - El texto tal como llegó en la URL.
+ */
+export async function getCorrectedSearch(
+  search: string
+): Promise<null | string> {
+  const { vocabulary } = await getSearchIndex()
+  const corrected = correctSearchTerms(search, vocabulary).join(' ')
+
+  return corrected === '' || normalize(corrected) === normalize(search)
+    ? null
+    : corrected
 }
 
 /**

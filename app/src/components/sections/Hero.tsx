@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 
+import type { SearchSuggestion } from '@/types/car'
 import { Badge } from '@/components/ui/Badge'
 import { SearchBar } from '@/components/catalog/SearchBar'
 
@@ -22,6 +23,8 @@ interface HeroText {
 
 interface HeroProps {
   slides?: HeroSlideView[]
+  /** Sugerencias del inventario para el autocompletado de la barra. */
+  suggestions?: SearchSuggestion[]
   text?: HeroText
 }
 
@@ -57,10 +60,12 @@ const TRUST = [
  *
  * @param props -  HeroProps
  * @param props.slides - HeroSlideView[]
+ * @param props.suggestions - SearchSuggestion[]
  * @param props.text - HeroText
  */
 export function Hero({
   slides = DEFAULT_SLIDES,
+  suggestions,
   text,
 }: HeroProps): React.JSX.Element {
   const [current, setCurrent] = useState(0)
@@ -116,12 +121,16 @@ export function Hero({
             {t.subheading}
           </p>
 
-          {/* Integrated search */}
+          {/* Integrated search. `z-30` porque cada `.animate-rise` es su propio
+              contexto de apilamiento (la animación deja un transform aplicado),
+              y sin un z-index explícito los bloques que siguen en el DOM —los
+              sellos de confianza, el carrusel— se pintan encima del
+              desplegable de sugerencias. */}
           <div
-            className="animate-rise mt-8 flex justify-center"
+            className="animate-rise relative z-30 mt-8 flex justify-center"
             style={{ animationDelay: '240ms' }}
           >
-            <SearchBar />
+            <SearchBar suggestions={suggestions} />
           </div>
 
           {/* Trust chips */}

@@ -5,6 +5,13 @@ import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { SearchBar } from './SearchBar'
+import type { SearchSuggestion } from '../../types/car'
+
+const SUGGESTIONS: SearchSuggestion[] = [
+  { count: 12, label: 'Mazda' },
+  { count: 4, label: 'Mazda 3' },
+  { count: 7, label: 'Nissan' },
+]
 
 const mockPush = vi.fn()
 const mockGet = vi.fn()
@@ -70,6 +77,44 @@ describe('SearchBar', () => {
     await user.click(screen.getByRole('button', { name: /limpiar/i }))
     expect(screen.getByPlaceholderText(/buscar por marca/i)).toHaveValue('')
     expect(mockPush).toHaveBeenCalledWith('/catalogo', { scroll: false })
+  })
+
+  it('suggests published cars through a misspelling', async () => {
+    mockGet.mockReturnValue(null)
+    const user = userEvent.setup()
+    render(<SearchBar suggestions={SUGGESTIONS} />)
+    await user.type(screen.getByPlaceholderText(/buscar por marca/i), 'masda')
+    expect(screen.getByRole('option', { name: /Mazda 3/ })).toBeInTheDocument()
+  })
+
+  it('searches the suggestion that was clicked, not what was typed', async () => {
+    mockGet.mockReturnValue(null)
+    const user = userEvent.setup()
+    render(<SearchBar suggestions={SUGGESTIONS} />)
+    await user.type(screen.getByPlaceholderText(/buscar por marca/i), 'masda')
+    await user.click(screen.getByRole('option', { name: /Mazda 3/ }))
+    expect(mockPush).toHaveBeenCalledWith('/catalogo?search=Mazda%203', {
+      scroll: false,
+    })
+  })
+
+  it('picks a suggestion with the keyboard', async () => {
+    mockGet.mockReturnValue(null)
+    const user = userEvent.setup()
+    render(<SearchBar suggestions={SUGGESTIONS} />)
+    await user.type(screen.getByPlaceholderText(/buscar por marca/i), 'masda')
+    await user.keyboard('{ArrowDown}{Enter}')
+    expect(mockPush).toHaveBeenCalledWith('/catalogo?search=Mazda', {
+      scroll: false,
+    })
+  })
+
+  it('suggests nothing when the inventory has no match', async () => {
+    mockGet.mockReturnValue(null)
+    const user = userEvent.setup()
+    render(<SearchBar suggestions={SUGGESTIONS} />)
+    await user.type(screen.getByPlaceholderText(/buscar por marca/i), 'ferrari')
+    expect(screen.queryByRole('listbox')).toBeNull()
   })
 
   it('syncs input with URL search param', () => {

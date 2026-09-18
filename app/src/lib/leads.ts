@@ -25,7 +25,7 @@ export interface LeadInput {
 }
 
 export interface LeadData {
-  car: number | string | null
+  car: number | null
   fbclid: string | null
   landingPath: string | null
   placement: LeadPlacement
@@ -35,6 +35,24 @@ export interface LeadData {
   utmContent: string | null
   utmMedium: string | null
   utmSource: string | null
+}
+
+/**
+ * Normalise a car id to the number the `leads.car` relationship expects.
+ *
+ * `LeadLink` accepts a string because the id reaches it through props that may
+ * have been serialised, but the Postgres adapter types every relationship id as
+ * a number. Anything that is not a finite number lands as `null`: a lead with
+ * no car attached is still a usable lead, a row carrying `NaN` is not.
+ *
+ * @param carId - The car in context, when the lead came from a car page.
+ */
+function toCarId(carId: LeadInput['carId']): number | null {
+  if (carId === null || carId === undefined || carId === '') return null
+
+  const id = Number(carId)
+
+  return Number.isFinite(id) ? id : null
 }
 
 /**
@@ -50,7 +68,7 @@ export function buildLeadData(props: LeadInput): LeadData {
   const { attribution, carId, placement, source } = props
 
   return {
-    car: carId ?? null,
+    car: toCarId(carId),
     fbclid: attribution?.fbclid ?? null,
     landingPath: attribution?.landingPath ?? null,
     placement,

@@ -1,7 +1,7 @@
 import { connection } from 'next/server'
 
 import { Hero, type HeroSlideView } from '@/components/sections/Hero'
-import { getHomepage } from '@/lib/payload-client'
+import { getHomepage, getSearchIndex } from '@/lib/payload-client'
 import { getImageUrl } from '@/lib/images'
 import type { Media } from '@/types/car'
 
@@ -14,7 +14,10 @@ import type { Media } from '@/types/car'
 export async function HomeHero(): Promise<React.JSX.Element> {
   await connection()
 
-  const homepage = await getHomepage()
+  const [homepage, searchIndex] = await Promise.all([
+    getHomepage(),
+    getSearchIndex(),
+  ])
 
   // Resolve hero carousel slides (image relation -> public URL).
   const heroSlides: HeroSlideView[] = (homepage?.heroSlides ?? [])
@@ -32,5 +35,11 @@ export async function HomeHero(): Promise<React.JSX.Element> {
     })
     .filter((s): s is HeroSlideView => s !== null)
 
-  return <Hero slides={heroSlides} text={homepage?.hero} />
+  return (
+    <Hero
+      slides={heroSlides}
+      suggestions={searchIndex.suggestions}
+      text={homepage?.hero}
+    />
+  )
 }

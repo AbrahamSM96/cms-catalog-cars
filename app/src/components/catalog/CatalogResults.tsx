@@ -1,6 +1,10 @@
 /* eslint-disable react/no-danger */
-import { getCars, getCatalogFacets } from '@/lib/payload-client'
 import { buildItemListLd, serializeLd } from '@/lib/json-ld'
+import {
+  getCars,
+  getCatalogFacets,
+  getCorrectedSearch,
+} from '@/lib/payload-client'
 import type { CarFilters } from '@/types/car'
 import { CarGrid } from '@/components/car/CarGrid'
 import { FilterBar } from '@/components/catalog/FilterBar'
@@ -49,9 +53,10 @@ export async function CatalogResults({
     transmission: params.transmission,
   }
 
-  const [carsData, facets] = await Promise.all([
+  const [carsData, facets, corrected] = await Promise.all([
     getCars(filters),
     getCatalogFacets(),
+    params.search ? getCorrectedSearch(params.search) : null,
   ])
 
   const itemListLd = {
@@ -72,11 +77,20 @@ export async function CatalogResults({
       </div>
 
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-slate-900">
-          {params.search
-            ? `Resultados para "${params.search}"`
-            : 'Todos los autos'}
-        </h2>
+        <div>
+          <h2 className="text-xl font-bold text-slate-900">
+            {params.search
+              ? `Resultados para "${corrected ?? params.search}"`
+              : 'Todos los autos'}
+          </h2>
+          {/* Sin esta línea la corrección es invisible y no se entiende por
+              qué salieron estos autos. */}
+          {corrected && (
+            <p className="mt-1 text-sm text-slate-500">
+              Buscaste &quot;{params.search}&quot;
+            </p>
+          )}
+        </div>
         <span className="text-sm font-medium text-slate-500">
           {carsData.totalDocs} {carsData.totalDocs === 1 ? 'auto' : 'autos'}
         </span>

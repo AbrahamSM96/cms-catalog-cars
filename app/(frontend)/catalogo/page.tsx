@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 
 import { CatalogResults } from '@/components/catalog/CatalogResults'
 import type { CatalogSearchParams } from '@/components/catalog/CatalogResults'
-import { SearchBar } from '@/components/catalog/SearchBar'
+import { SearchBox } from '@/components/catalog/SearchBox'
 
 export const metadata: Metadata = {
   alternates: {
@@ -40,7 +40,10 @@ export default function CatalogoPage({
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header band */}
-      <section className="relative overflow-hidden bg-white pt-24 pb-8 sm:pt-32 sm:pb-12">
+      {/* `overflow-x-clip` y no `overflow-hidden`: recorta el halo decorativo
+          para que no provoque scroll horizontal, pero deja que el desplegable
+          de sugerencias se salga por abajo de la banda. */}
+      <section className="relative overflow-x-clip bg-white pt-24 pb-8 sm:pt-32 sm:pb-12">
         <div className="pointer-events-none absolute -top-24 left-1/2 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-accent-500/10 blur-3xl" />
         <div className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)] opacity-50" />
 
@@ -51,15 +54,15 @@ export default function CatalogoPage({
           <p className="mx-auto mt-3 max-w-2xl text-lg text-slate-600">
             Encuentra el auto seminuevo ideal para ti.
           </p>
-          <div className="mt-8 flex justify-center">
-            {/* Reads the query string on the client, so it needs its own
-                boundary. */}
+          <div className="relative z-30 mt-8 flex justify-center">
+            {/* Reads the query string on the client and the suggestions from
+                the database, so it needs its own boundary. */}
             <Suspense
               fallback={
                 <div className="h-14 w-full max-w-2xl animate-pulse rounded-2xl bg-slate-200" />
               }
             >
-              <SearchBar />
+              <SearchBox />
             </Suspense>
           </div>
         </div>

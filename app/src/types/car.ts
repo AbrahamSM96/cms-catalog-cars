@@ -196,6 +196,25 @@ export interface CatalogFacets {
   years: number[]
 }
 
+/** Una opción del autocompletado de la barra de búsqueda. */
+export interface SearchSuggestion {
+  /** Cuántos autos publicados hay detrás. Se muestra junto a la etiqueta. */
+  count: number
+  /** Lo que lee la persona y lo que se envía como `?search=`: "Mazda 3". */
+  label: string
+}
+
+/**
+ * Lo que el inventario publicado le aporta a la barra de búsqueda: el
+ * vocabulario con el que se corrigen los errores de escritura y las sugerencias
+ * que se ofrecen mientras se teclea. Sale de una sola consulta porque ambas
+ * cosas se derivan de los mismos autos.
+ */
+export interface SearchIndex {
+  suggestions: SearchSuggestion[]
+  vocabulary: string[]
+}
+
 export interface CarFilters {
   brand?: string
   /**
