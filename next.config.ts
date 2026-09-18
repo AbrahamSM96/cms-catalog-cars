@@ -19,6 +19,12 @@ const nextConfig: NextConfig = {
   // Solo los <Link prefetch> a rutas que leen params/searchParams piden además
   // los datos por-URL (runtime prefetching).
   partialPrefetching: true,
+  // `app/global-not-found.tsx` handles URLs that match no route. It needs this
+  // flag because the app has two root layouts — `(frontend)` and `(payload)` —
+  // so Next has no single layout to compose a root 404 from.
+  experimental: {
+    globalNotFound: true,
+  },
   output: 'standalone',
   serverExternalPackages: ['payload', '@payloadcms/db-postgres'],
   images: {

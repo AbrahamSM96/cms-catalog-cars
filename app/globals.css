@@ -212,6 +212,24 @@ html {
   }
 }
 
+/* Road lane markings: a dashed centre line that scrolls. Used on the 404 page
+   under the licence plate. The dash colour is neutral on purpose — the accent
+   is already carrying the plate stamp. */
+@keyframes lane-scroll {
+  to {
+    background-position-x: -3rem;
+  }
+}
+
+.road-lane {
+  background-image: repeating-linear-gradient(
+    to right,
+    rgba(15, 23, 42, 0.18) 0 1.5rem,
+    transparent 1.5rem 3rem
+  );
+  animation: lane-scroll 1.6s linear infinite;
+}
+
 /* Subtle dotted/grid backdrop for section texture */
 .bg-grid {
   background-image:
