@@ -72,3 +72,6 @@ graphify-out
 .bbva-cookie
 .bbva-marcas-request.json
 .catalog-scrape-checkpoint.json
+
+# docs
+/docs
