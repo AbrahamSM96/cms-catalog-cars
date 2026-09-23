@@ -5,6 +5,7 @@ import * as migration_20260904_194504_seminuevos_cities from './20260904_194504_
 import * as migration_20260909_193405_vin_decodes from './20260909_193405_vin_decodes';
 import * as migration_20260909_201555_version_optional from './20260909_201555_version_optional';
 import * as migration_20260915_061419_leads from './20260915_061419_leads';
+import * as migration_20260923_211519 from './20260923_211519';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20260915_061419_leads.up,
     down: migration_20260915_061419_leads.down,
-    name: '20260915_061419_leads'
+    name: '20260915_061419_leads',
+  },
+  {
+    up: migration_20260923_211519.up,
+    down: migration_20260923_211519.down,
+    name: '20260923_211519'
   },
 ];
