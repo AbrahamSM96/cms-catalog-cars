@@ -53,6 +53,18 @@ export const Media: CollectionConfig = {
   labels: media.labels,
   slug: 'media',
   upload: {
+    // El editor de imágenes del admin queda apagado por completo: sin "Edit
+    // Image" no hay forma de recortar desde el panel, y el recorte de Payload
+    // es destructivo — reescribe el archivo en R2, sin copia del original y sin
+    // deshacer. Peor aún, actúa sobre el documento de Media, así que recortar
+    // para una tarjeta también recorta la imagen en cualquier otro lugar donde
+    // esté usada. El recorte se hace antes de subir.
+    crop: false,
+    // El punto focal solo lo consulta Payload al generar `imageSizes`
+    // recortados, y el frontend sirve siempre el archivo original
+    // (`getImageUrl` en lib/images.ts), así que nunca cambió un pixel del
+    // sitio: era un control que guardaba coordenadas y nada más.
+    focalPoint: false,
     imageSizes: [
       {
         // Social card used by the Open Graph tags (Facebook, WhatsApp, X).
