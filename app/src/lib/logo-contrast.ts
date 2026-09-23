@@ -4,11 +4,16 @@ import sharp from 'sharp'
  * Server-only logo contrast detection (import from server code only — this
  * pulls in sharp and must never reach the browser bundle).
  *
- * Dealerships upload their own logo from the CMS and a good share of them are
- * white-on-transparent PNGs/SVGs meant for a dark header. Dropped on our white
- * navbar those vanish. Instead of asking every client to re-export their logo,
- * we measure how bright the logo actually is and, when it would disappear, the
- * navbar and footer paint a dark plate behind it.
+ * Dealerships upload their own logo from the CMS and we have no say in it: some
+ * are white-on-transparent PNGs/SVGs meant for a dark header, others are
+ * near-black marks meant for a light one. Either way one of our two themes
+ * makes it disappear. Instead of asking every client to re-export their logo,
+ * we measure how bright the logo actually is and report a *tone*; the navbar
+ * and footer turn that into a contrasting plate for whichever theme needs it.
+ *
+ * The measurement is theme-blind on purpose. The server cannot know the
+ * visitor's colour scheme — it is a client media query — so the verdict
+ * describes the logo, never the surface, and the plate switches in CSS.
  */
 
 /** Downscale target before sampling — plenty for an average, cheap to decode. */
@@ -22,18 +27,32 @@ const SAMPLE_SIZE = 48
 const MIN_ALPHA = 32
 
 /**
- * Minimum WCAG contrast ratio the logo must reach against the white navbar to
- * be left alone. Text needs 4.5, but a logo is a large shape and many brands
+ * Minimum WCAG contrast ratio the logo must reach against a surface to be left
+ * alone there. Text needs 4.5, but a logo is a large shape and many brands
  * legitimately use mid-tone colours, so we only step in when it is close to
  * invisible.
  */
-const MIN_CONTRAST_ON_WHITE = 2.2
+const MIN_CONTRAST = 2.2
 
 /** Relative luminance of pure white, per WCAG 2.1. */
 const WHITE_LUMINANCE = 1
 
+/**
+ * Relative luminance of `--color-white` in the dark theme (`#111a2b`) — the
+ * panel colour the navbar and footer paint in dark mode. Keep it in step with
+ * `globals.css`; a few points either way only shifts the threshold slightly.
+ */
+const DARK_SURFACE_LUMINANCE = 0.0109
+
+/**
+ * How the logo reads on its own: `light` marks are washed out on our light
+ * surfaces, `dark` ones vanish on the dark ones, and `neutral` covers the
+ * mid-tone brand colours that hold up against both.
+ */
+type LogoTone = 'dark' | 'light' | 'neutral'
+
 /** Cache keyed by logo URL — the logo changes about once per deployment. */
-const cache = new Map<string, boolean>()
+const cache = new Map<string, LogoTone>()
 
 /**
  * Convert one 0-255 sRGB channel to its linear-light value, per the WCAG 2.1
@@ -113,35 +132,48 @@ async function visibleLuminance(bytes: Buffer): Promise<null | number> {
 }
 
 /**
- * Whether a decoded logo is too light to read on our white surfaces.
+ * Tone of a decoded logo.
  *
- * Split out from `logoNeedsDarkPlate` so the measurement can be tested without
- * a network round trip.
+ * The two tests are mutually exclusive by construction: a mark bright enough to
+ * fail against white sits far above the luminance that fails against our dark
+ * panel, so the mid-tone band between them falls through to `neutral`.
+ *
+ * Split out from `logoTone` so the measurement can be tested without a network
+ * round trip.
  *
  * @param bytes - Raw image bytes (PNG, WebP, JPEG or SVG).
  */
-export async function needsDarkPlateForBytes(bytes: Buffer): Promise<boolean> {
+export async function logoToneForBytes(bytes: Buffer): Promise<LogoTone> {
   const average = await visibleLuminance(bytes)
 
-  return (
-    average !== null &&
-    contrastRatio(average, WHITE_LUMINANCE) < MIN_CONTRAST_ON_WHITE
-  )
+  if (average === null) {
+    return 'neutral'
+  }
+
+  if (contrastRatio(average, WHITE_LUMINANCE) < MIN_CONTRAST) {
+    return 'light'
+  }
+
+  if (contrastRatio(average, DARK_SURFACE_LUMINANCE) < MIN_CONTRAST) {
+    return 'dark'
+  }
+
+  return 'neutral'
 }
 
 /**
- * Whether the brand logo needs a dark plate behind it to stay legible on the
- * white navbar and footer.
+ * Tone of the brand logo, so the navbar and footer can plate it in whichever
+ * theme would swallow it.
  *
- * Never throws: a logo we cannot fetch or decode is assumed to be fine, since
- * the plate is the unusual case and a wrong plate is more jarring than a
+ * Never throws: a logo we cannot fetch or decode is reported as `neutral`,
+ * since the plate is the unusual case and a wrong plate is more jarring than a
  * missing one.
  *
  * @param logoUrl - Public URL of the logo, or undefined when none is uploaded.
  */
-export async function logoNeedsDarkPlate(logoUrl?: string): Promise<boolean> {
+export async function logoTone(logoUrl?: string): Promise<LogoTone> {
   if (!logoUrl) {
-    return false
+    return 'neutral'
   }
 
   const cached = cache.get(logoUrl)
@@ -149,20 +181,20 @@ export async function logoNeedsDarkPlate(logoUrl?: string): Promise<boolean> {
     return cached
   }
 
-  let needsPlate = false
+  let tone: LogoTone = 'neutral'
 
   try {
     const response = await fetch(logoUrl)
     if (response.ok) {
-      needsPlate = await needsDarkPlateForBytes(
-        Buffer.from(await response.arrayBuffer())
-      )
+      tone = await logoToneForBytes(Buffer.from(await response.arrayBuffer()))
     }
   } catch {
-    needsPlate = false
+    tone = 'neutral'
   }
 
-  cache.set(logoUrl, needsPlate)
+  cache.set(logoUrl, tone)
 
-  return needsPlate
+  return tone
 }
+
+export type { LogoTone }

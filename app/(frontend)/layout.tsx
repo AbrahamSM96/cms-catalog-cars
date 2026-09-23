@@ -1,5 +1,5 @@
 import { connection } from 'next/server'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Suspense } from 'react'
 
 import '../globals.css'
@@ -12,6 +12,18 @@ import { resolveSiteConfig } from '@/config/site'
 import { SITE_URL } from '@/lib/seo'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { SiteHeader } from '@/components/layout/SiteHeader'
+
+/**
+ * Paints the mobile browser chrome to match the theme the OS asks for, so the
+ * address bar does not stay white above a dark page. The two colours mirror
+ * `--background` in `globals.css` for each scheme.
+ */
+export const viewport: Viewport = {
+  themeColor: [
+    { color: '#ffffff', media: '(prefers-color-scheme: light)' },
+    { color: '#080d17', media: '(prefers-color-scheme: dark)' },
+  ],
+}
 
 /**
  * generateMetadata — build the site metadata from the CMS `site-settings`

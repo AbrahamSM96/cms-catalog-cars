@@ -2,7 +2,7 @@ import { connection } from 'next/server'
 
 import { getContact, getSiteSettings } from '@/lib/payload-client'
 import { Footer } from '@/components/layout/Footer'
-import { logoNeedsDarkPlate } from '@/lib/logo-contrast'
+import { logoTone } from '@/lib/logo-contrast'
 import { resolveSiteConfig } from '@/config/site'
 
 /**
@@ -19,9 +19,7 @@ export async function SiteFooter(): Promise<React.JSX.Element> {
     getSiteSettings().then(resolveSiteConfig),
   ])
 
-  const needsDarkPlate = await logoNeedsDarkPlate(site.logoUrl)
+  const tone = await logoTone(site.logoUrl)
 
-  return (
-    <Footer contact={contact} logoNeedsDarkPlate={needsDarkPlate} site={site} />
-  )
+  return <Footer contact={contact} logoTone={tone} site={site} />
 }

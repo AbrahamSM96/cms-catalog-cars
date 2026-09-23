@@ -7,7 +7,7 @@
  */
 function DefaultMarkerIcon(): React.JSX.Element {
   return (
-    <div className="relative h-4 w-4 rounded-full border-2 border-white bg-blue-500 shadow-lg" />
+    <div className="relative h-4 w-4 rounded-full border-2 border-fixed-white bg-blue-500 shadow-lg" />
   )
 }
 

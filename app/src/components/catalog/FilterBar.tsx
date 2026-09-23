@@ -127,7 +127,7 @@ export function FilterBar(props: FilterBarProps): React.JSX.Element {
             Filtrar inventario
           </h3>
           {activeChips.length > 0 && (
-            <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-accent-500 px-1.5 text-xs font-semibold text-white">
+            <span className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-accent-500 px-1.5 text-xs font-semibold text-fixed-white">
               {activeChips.length}
               <span className="sr-only"> filtros activos</span>
             </span>

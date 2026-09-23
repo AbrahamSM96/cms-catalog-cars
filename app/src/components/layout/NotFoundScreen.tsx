@@ -71,7 +71,7 @@ export function NotFoundScreen(props: NotFoundScreenProps): React.JSX.Element {
 
         <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
-            className="group inline-flex cursor-pointer items-center gap-2 rounded-xl bg-accent-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:bg-accent-700 hover:shadow-accent-600/30"
+            className="group inline-flex cursor-pointer items-center gap-2 rounded-xl bg-accent-600 px-8 py-4 font-semibold text-fixed-white shadow-lg transition-all duration-300 hover:bg-accent-700 hover:shadow-accent-600/30"
             href="/catalogo"
           >
             Ver catálogo completo

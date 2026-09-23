@@ -187,7 +187,7 @@ export function Hero({
                   />
                   {slide.caption && (
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-6 pt-16">
-                      <p className="text-lg font-semibold text-white drop-shadow sm:text-xl">
+                      <p className="text-lg font-semibold text-fixed-white drop-shadow sm:text-xl">
                         {slide.caption}
                       </p>
                     </div>
@@ -263,7 +263,7 @@ export function Hero({
                       aria-label={`Ir al slide ${i + 1}`}
                       className={`h-2 cursor-pointer rounded-full transition-all ${i === current
                         ? 'w-8 bg-accent-500'
-                        : 'w-2 bg-white/70 hover:bg-white'
+                        : 'w-2 bg-fixed-white/70 hover:bg-fixed-white'
                         }`}
                       key={i}
                       onClick={() => goTo(i)}

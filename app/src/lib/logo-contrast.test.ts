@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import sharp from 'sharp'
 
-import { logoNeedsDarkPlate, needsDarkPlateForBytes } from '@/lib/logo-contrast'
+import { logoTone, logoToneForBytes } from '@/lib/logo-contrast'
 
 /**
  * Render a solid mark of the given colour on a transparent canvas — the shape
@@ -15,31 +15,37 @@ async function logo(fill: string): Promise<Buffer> {
   return sharp(Buffer.from(svg)).png().toBuffer()
 }
 
-describe('needsDarkPlateForBytes', () => {
-  it('asks for a plate for a white-on-transparent logo', async () => {
-    expect(await needsDarkPlateForBytes(await logo('#ffffff'))).toBe(true)
+describe('logoToneForBytes', () => {
+  it('reads a white-on-transparent logo as light', async () => {
+    expect(await logoToneForBytes(await logo('#ffffff'))).toBe('light')
   })
 
-  it('asks for a plate for a very light grey logo', async () => {
-    expect(await needsDarkPlateForBytes(await logo('#e5e5e5'))).toBe(true)
+  it('reads a very light grey logo as light', async () => {
+    expect(await logoToneForBytes(await logo('#e5e5e5'))).toBe('light')
   })
 
-  it('leaves a mid-grey logo alone', async () => {
-    expect(await needsDarkPlateForBytes(await logo('#808080'))).toBe(false)
+  it('reads a mid-grey logo as neutral', async () => {
+    expect(await logoToneForBytes(await logo('#808080'))).toBe('neutral')
   })
 
-  it('leaves a saturated brand colour alone', async () => {
-    expect(await needsDarkPlateForBytes(await logo('#276CF5'))).toBe(false)
+  it('reads a saturated brand colour as neutral', async () => {
+    expect(await logoToneForBytes(await logo('#276CF5'))).toBe('neutral')
   })
 
-  it('leaves a dark logo alone', async () => {
-    expect(await needsDarkPlateForBytes(await logo('#0f172a'))).toBe(false)
+  it('reads a near-black logo as dark', async () => {
+    expect(await logoToneForBytes(await logo('#0f172a'))).toBe('dark')
   })
 
   // Channels at or below 0.04045 of full scale take the linear branch of the
   // WCAG luminance formula instead of the gamma one.
-  it('leaves a pure black logo alone', async () => {
-    expect(await needsDarkPlateForBytes(await logo('#000000'))).toBe(false)
+  it('reads a pure black logo as dark', async () => {
+    expect(await logoToneForBytes(await logo('#000000'))).toBe('dark')
+  })
+
+  // The band between the two thresholds is what keeps a plate off the logos
+  // that read on both themes; without it every mark would get one.
+  it('reads a dark-but-not-black grey as neutral', async () => {
+    expect(await logoToneForBytes(await logo('#5a5a5a'))).toBe('neutral')
   })
 
   it('ignores transparent padding instead of reading it as dark', async () => {
@@ -55,10 +61,10 @@ describe('needsDarkPlateForBytes', () => {
       .png()
       .toBuffer()
 
-    expect(await needsDarkPlateForBytes(padded)).toBe(true)
+    expect(await logoToneForBytes(padded)).toBe('light')
   })
 
-  it('leaves a fully transparent image alone', async () => {
+  it('reads a fully transparent image as neutral', async () => {
     const blank = await sharp({
       create: {
         background: { alpha: 0, b: 0, g: 0, r: 0 },
@@ -70,7 +76,7 @@ describe('needsDarkPlateForBytes', () => {
       .png()
       .toBuffer()
 
-    expect(await needsDarkPlateForBytes(blank)).toBe(false)
+    expect(await logoToneForBytes(blank)).toBe('neutral')
   })
 })
 
@@ -96,44 +102,44 @@ function okResponse(bytes: Buffer): unknown {
   return { arrayBuffer: () => Promise.resolve(bytes), ok: true }
 }
 
-describe('logoNeedsDarkPlate', () => {
-  it('returns false when no logo is uploaded', async () => {
+describe('logoTone', () => {
+  it('returns neutral when no logo is uploaded', async () => {
     const fetchMock = stubFetch(okResponse(await logo('#ffffff')))
 
-    expect(await logoNeedsDarkPlate(undefined)).toBe(false)
+    expect(await logoTone(undefined)).toBe('neutral')
     expect(fetchMock).not.toHaveBeenCalled()
   })
 
-  it('asks for a plate when the fetched logo is too light', async () => {
+  it('reports a light fetched logo', async () => {
     stubFetch(okResponse(await logo('#ffffff')))
 
-    expect(await logoNeedsDarkPlate('https://cdn.test/white.png')).toBe(true)
+    expect(await logoTone('https://cdn.test/white.png')).toBe('light')
   })
 
-  it('leaves a dark fetched logo alone', async () => {
+  it('reports a dark fetched logo', async () => {
     stubFetch(okResponse(await logo('#0f172a')))
 
-    expect(await logoNeedsDarkPlate('https://cdn.test/dark.png')).toBe(false)
+    expect(await logoTone('https://cdn.test/dark.png')).toBe('dark')
   })
 
   it('caches the verdict per URL instead of refetching', async () => {
     const fetchMock = stubFetch(okResponse(await logo('#ffffff')))
     const url = 'https://cdn.test/cached.png'
 
-    expect(await logoNeedsDarkPlate(url)).toBe(true)
-    expect(await logoNeedsDarkPlate(url)).toBe(true)
+    expect(await logoTone(url)).toBe('light')
+    expect(await logoTone(url)).toBe('light')
     expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
-  it('assumes no plate when the logo cannot be downloaded', async () => {
+  it('assumes neutral when the logo cannot be downloaded', async () => {
     stubFetch({ ok: false })
 
-    expect(await logoNeedsDarkPlate('https://cdn.test/404.png')).toBe(false)
+    expect(await logoTone('https://cdn.test/404.png')).toBe('neutral')
   })
 
-  it('assumes no plate when the request throws', async () => {
+  it('assumes neutral when the request throws', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')))
 
-    expect(await logoNeedsDarkPlate('https://cdn.test/offline.png')).toBe(false)
+    expect(await logoTone('https://cdn.test/offline.png')).toBe('neutral')
   })
 })

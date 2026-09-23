@@ -2,7 +2,7 @@
 import { connection } from 'next/server'
 
 import { getContact, getSiteSettings } from '@/lib/payload-client'
-import { logoNeedsDarkPlate } from '@/lib/logo-contrast'
+import { logoTone } from '@/lib/logo-contrast'
 import { serializeLd } from '@/lib/json-ld'
 import { Navbar } from '@/components/layout/Navbar'
 import { resolveSiteConfig } from '@/config/site'
@@ -26,10 +26,11 @@ export async function SiteHeader(): Promise<React.JSX.Element> {
     getSiteSettings().then(resolveSiteConfig),
   ])
 
-  // Clients upload their own logo and some are white-on-transparent, which is
-  // invisible on the white navbar and footer. Measure it once and let the two
-  // put a dark plate behind it when it would not read.
-  const needsDarkPlate = await logoNeedsDarkPlate(site.logoUrl)
+  // Clients upload their own logo on transparent backgrounds — some white, some
+  // near-black — and each kind vanishes on one of our two themes. Measure the
+  // brightness once and let the navbar and footer plate it where it would not
+  // read. The tone is theme-blind; the plate switches in CSS.
+  const tone = await logoTone(site.logoUrl)
 
   const socials = [
     contact?.social?.facebook,
@@ -43,15 +44,15 @@ export async function SiteHeader(): Promise<React.JSX.Element> {
     '@type': 'Organization',
     ...(contact?.phone
       ? {
-        contactPoint: [
-          {
-            '@type': 'ContactPoint',
-            availableLanguage: ['es'],
-            contactType: 'sales',
-            telephone: contact.phone,
-          },
-        ],
-      }
+          contactPoint: [
+            {
+              '@type': 'ContactPoint',
+              availableLanguage: ['es'],
+              contactType: 'sales',
+              telephone: contact.phone,
+            },
+          ],
+        }
       : {}),
     name: site.name,
     ...(socials.length > 0 ? { sameAs: socials } : {}),
@@ -65,11 +66,7 @@ export async function SiteHeader(): Promise<React.JSX.Element> {
         dangerouslySetInnerHTML={{ __html: serializeLd(organizationLd) }}
         type="application/ld+json"
       />
-      <Navbar
-        logoNeedsDarkPlate={needsDarkPlate}
-        site={site}
-        whatsapp={contact?.whatsapp}
-      />
+      <Navbar logoTone={tone} site={site} whatsapp={contact?.whatsapp} />
     </>
   )
 }

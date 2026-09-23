@@ -103,7 +103,7 @@ export function CarCard({
           {/* Badges */}
           <div className="absolute inset-x-0 top-0 flex items-start justify-between p-3">
             {car.featured ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-600 px-3 py-1 text-xs font-semibold text-white shadow-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-600 px-3 py-1 text-xs font-semibold text-fixed-white shadow-sm">
                 <svg
                   aria-hidden="true"
                   className="h-3.5 w-3.5"

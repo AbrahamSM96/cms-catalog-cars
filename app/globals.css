@@ -1,11 +1,32 @@
 @import 'tailwindcss';
 
-/* Light-first, cinematic design. Dark utilities are opt-in (require a `.dark`
-   ancestor) so the site renders as an intentional light theme regardless of the
-   OS color scheme. Existing `dark:` classes stay dormant until we opt in. */
-@custom-variant dark (&:where(.dark, .dark *));
+/* Cinematic design, themed by the OS colour scheme.
+ *
+ * The site was written light-first with the raw Tailwind neutrals (`bg-white`,
+ * `text-slate-900`, `border-slate-200`, …) rather than semantic utilities. In
+ * Tailwind v4 every one of those compiles to `var(--color-white)` /
+ * `var(--color-slate-*)`, so the dark theme is built by re-pointing those
+ * palette variables under `prefers-color-scheme: dark` instead of adding a
+ * `dark:` class to ~450 call sites. Read the dark block below as the design
+ * system's second half: `white` is the card surface, and the slate ramp is
+ * flipped end for end (900 is the heading colour in both themes).
+ *
+ * Consequence to keep in mind when writing new markup: `text-white` follows the
+ * theme. Use `*-fixed-white` (defined in @theme) for the whites that must stay
+ * white in both themes — text and icons that sit on a photo, on the brand
+ * accent, or inside the black lightbox. */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    @slot;
+  }
+  &:where(.dark, .dark *) {
+    @slot;
+  }
+}
 
 :root {
+  color-scheme: light;
+
   /* Surfaces */
   --background: #ffffff;
   --surface: #f8fafc;
@@ -13,11 +34,28 @@
   --foreground: #0f172a;
   --muted: #475569;
   --border: #e2e8f0;
+  --ring: #94a3b8;
 
   /* Brand */
   --primary: #0f172a;
   --accent: #dc2626;
   --accent-strong: #b91c1c;
+
+  /* The colour the light end of the accent scale mixes into: paper in light
+     mode, the page itself in dark, so accent-50/100 stay subtle tints of the
+     surface they sit on instead of turning into pink blocks. */
+  --accent-tint: white;
+
+  /* Chrome: shadows, hairlines and the scrollbar, expressed as tokens so the
+     dark theme restates them once instead of per rule. */
+  --shadow-soft:
+    0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --shadow-float:
+    0 2px 6px rgba(15, 23, 42, 0.05), 0 18px 40px rgba(15, 23, 42, 0.1),
+    0 40px 80px rgba(15, 23, 42, 0.06);
+  --hairline: rgba(15, 23, 42, 0.04);
+  --lane-marking: rgba(15, 23, 42, 0.18);
+  --scrollbar-thumb: #cbd5e1;
 }
 
 @theme inline {
@@ -26,16 +64,23 @@
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
 
+  /* Never themed: for content that sits on a photo, on the accent, or in the
+     lightbox, where white is the design and not the light theme. `fixed-ink` is
+     its opposite — the plate a light logo needs, which must stay dark even when
+     the page around it already is. */
+  --color-fixed-white: #ffffff;
+  --color-fixed-ink: #0f172a;
+
   /* Brand accent scale, derived from the single --accent value (set per client
      in site.config). Changing --accent re-themes the whole scale via color-mix,
      so components use accent-* utilities instead of hardcoded red-*. */
   --color-accent: var(--accent);
-  --color-accent-50: color-mix(in oklab, var(--accent) 8%, white);
-  --color-accent-100: color-mix(in oklab, var(--accent) 14%, white);
-  --color-accent-200: color-mix(in oklab, var(--accent) 26%, white);
-  --color-accent-300: color-mix(in oklab, var(--accent) 40%, white);
-  --color-accent-400: color-mix(in oklab, var(--accent) 62%, white);
-  --color-accent-500: color-mix(in oklab, var(--accent) 82%, white);
+  --color-accent-50: color-mix(in oklab, var(--accent) 8%, var(--accent-tint));
+  --color-accent-100: color-mix(in oklab, var(--accent) 14%, var(--accent-tint));
+  --color-accent-200: color-mix(in oklab, var(--accent) 26%, var(--accent-tint));
+  --color-accent-300: color-mix(in oklab, var(--accent) 40%, var(--accent-tint));
+  --color-accent-400: color-mix(in oklab, var(--accent) 62%, var(--accent-tint));
+  --color-accent-500: color-mix(in oklab, var(--accent) 82%, var(--accent-tint));
   --color-accent-600: var(--accent);
   --color-accent-700: color-mix(in oklab, var(--accent) 84%, black);
   --color-accent-800: color-mix(in oklab, var(--accent) 68%, black);
@@ -43,14 +88,74 @@
   --color-accent-950: color-mix(in oklab, var(--accent) 42%, black);
 
   /* Neutral tokens consumed by the mapcn map component (controls, popups). */
-  --color-muted: #f1f5f9;
-  --color-muted-foreground: #64748b;
-  --color-popover: #ffffff;
-  --color-popover-foreground: #0f172a;
-  --color-border: #e2e8f0;
-  --color-ring: #94a3b8;
+  --color-muted: var(--surface-2);
+  --color-muted-foreground: var(--muted);
+  --color-popover: var(--background);
+  --color-popover-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
 
   --font-sans: var(--font-poppins);
+}
+
+/* Dark theme.
+ *
+ * Re-points the palette variables the utilities already read. Nothing here is a
+ * new utility: `bg-white` becomes the dark card surface, the slate ramp is
+ * mirrored (50 is the quietest fill, 900 the headings), and the handful of
+ * status tints used by badges follow. Zinc is deliberately left alone — the map
+ * and CarSpecs author their own `dark:` pairs on it. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --background: #080d17;
+    --surface: #0e1523;
+    --surface-2: #16202f;
+    --foreground: #f1f5fb;
+    --muted: #a9b6cb;
+    --border: #253044;
+    --primary: #f1f5fb;
+    --ring: #475569;
+
+    --accent-tint: #0b1220;
+
+    --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.45);
+    --shadow-float:
+      0 2px 6px rgba(0, 0, 0, 0.5), 0 18px 40px rgba(0, 0, 0, 0.55),
+      0 40px 80px rgba(0, 0, 0, 0.45);
+    --hairline: rgba(226, 232, 240, 0.05);
+    --lane-marking: rgba(226, 232, 240, 0.22);
+    --scrollbar-thumb: #33405a;
+
+    /* `bg-white` is the card/panel surface, one step above the page. */
+    --color-white: #111a2b;
+
+    /* Slate, mirrored: fills at the low end, text at the high end. */
+    --color-slate-50: #16202f;
+    --color-slate-100: #1b2536;
+    --color-slate-200: #253044;
+    --color-slate-300: #33405a;
+    --color-slate-400: #7b8aa3;
+    --color-slate-500: #8b9ab2;
+    --color-slate-600: #a9b6cb;
+    --color-slate-700: #c5d0e0;
+    --color-slate-800: #dde5f0;
+    --color-slate-900: #f1f5fb;
+    --color-slate-950: #ffffff;
+
+    /* Status tints used by the condition badges and the financing panel. */
+    --color-emerald-50: #0c2118;
+    --color-emerald-200: #1f4d3a;
+    --color-emerald-600: #34d399;
+    --color-emerald-700: #6ee7b7;
+    --color-green-50: #0c2118;
+    --color-green-100: #123020;
+    --color-amber-50: #241a06;
+    --color-amber-200: #5a410f;
+    --color-amber-700: #fbbf24;
+    --color-rose-100: #2a1016;
+  }
 }
 
 /* Respect Reduced Motion */
@@ -99,7 +204,7 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--scrollbar-thumb);
   border-radius: 6px;
   border: 3px solid var(--surface);
 }
@@ -120,18 +225,14 @@ html {
   color: white;
 }
 
-/* Cinematic soft shadows tuned for light surfaces */
+/* Cinematic soft shadows. The values are tokens (see :root) because a shadow
+   tuned for paper disappears on a dark surface and has to be restated. */
 .shadow-soft {
-  box-shadow:
-    0 1px 2px rgba(15, 23, 42, 0.04),
-    0 8px 24px rgba(15, 23, 42, 0.06);
+  box-shadow: var(--shadow-soft);
 }
 
 .shadow-float {
-  box-shadow:
-    0 2px 6px rgba(15, 23, 42, 0.05),
-    0 18px 40px rgba(15, 23, 42, 0.1),
-    0 40px 80px rgba(15, 23, 42, 0.06);
+  box-shadow: var(--shadow-float);
 }
 
 /* Entrance animation used across the home page */
@@ -224,7 +325,7 @@ html {
 .road-lane {
   background-image: repeating-linear-gradient(
     to right,
-    rgba(15, 23, 42, 0.18) 0 1.5rem,
+    var(--lane-marking) 0 1.5rem,
     transparent 1.5rem 3rem
   );
   animation: lane-scroll 1.6s linear infinite;
@@ -233,7 +334,7 @@ html {
 /* Subtle dotted/grid backdrop for section texture */
 .bg-grid {
   background-image:
-    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, var(--hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hairline) 1px, transparent 1px);
   background-size: 3rem 3rem;
 }

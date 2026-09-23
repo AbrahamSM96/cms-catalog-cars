@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 import { BrandLogo } from '@/components/layout/BrandLogo'
 import { LeadLink } from '@/components/analytics/LeadLink'
+import type { LogoTone } from '@/lib/logo-contrast'
 import type { SiteConfig } from '@/config/site'
 
 const LINKS = [
@@ -18,17 +19,17 @@ const LINKS = [
  * Navbar
  *
  * @param props - Component props.
- * @param props.logoNeedsDarkPlate - Whether the uploaded logo is too light for
- *   the white header and needs a dark plate behind it.
+ * @param props.logoTone - How bright the uploaded logo is, so the plate lands
+ *   on the theme that would swallow it.
  * @param props.site - Resolved per-client site configuration (logo, brand).
  * @param props.whatsapp - The WhatsApp number to use in the CTA button.
  */
 export function Navbar({
-  logoNeedsDarkPlate = false,
+  logoTone = 'neutral',
   site,
   whatsapp,
 }: {
-  logoNeedsDarkPlate?: boolean
+  logoTone?: LogoTone
   site: SiteConfig
   whatsapp?: string
 }): React.JSX.Element {
@@ -49,14 +50,15 @@ export function Navbar({
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled
-        ? 'shadow-soft border-b border-slate-200/80 bg-white/85 backdrop-blur-xl'
-        : 'border-b border-transparent bg-white/40 backdrop-blur-md'
-        }`}
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'shadow-soft border-b border-slate-200/80 bg-white/85 backdrop-blur-xl'
+          : 'border-b border-transparent bg-white/40 backdrop-blur-md'
+      }`}
     >
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <BrandLogo needsDarkPlate={logoNeedsDarkPlate} priority site={site} />
+        <BrandLogo logoTone={logoTone} priority site={site} />
 
         {/* Desktop links */}
         <div className="hidden items-center gap-1 md:flex">
@@ -74,7 +76,7 @@ export function Navbar({
         {/* CTA */}
         <div className="flex items-center gap-2">
           <LeadLink
-            className="hidden cursor-pointer items-center gap-2 rounded-xl bg-accent-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-accent-700 hover:shadow-lg hover:shadow-accent-600/25 sm:inline-flex"
+            className="hidden cursor-pointer items-center gap-2 rounded-xl bg-accent-600 px-4 py-2 text-sm font-semibold text-fixed-white shadow-sm transition-all duration-300 hover:bg-accent-700 hover:shadow-lg hover:shadow-accent-600/25 sm:inline-flex"
             href={whatsappUrl}
             placement="navbar"
             rel="noopener noreferrer"
@@ -142,7 +144,7 @@ export function Navbar({
               </Link>
             ))}
             <LeadLink
-              className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent-600 px-4 py-3 text-base font-semibold text-white"
+              className="mt-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-accent-600 px-4 py-3 text-base font-semibold text-fixed-white"
               href={whatsappUrl}
               placement="navbar"
               rel="noopener noreferrer"

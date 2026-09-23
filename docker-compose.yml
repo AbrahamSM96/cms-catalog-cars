@@ -90,8 +90,14 @@ services:
       # bundle inlines both), so they must be build args, not just runtime env.
       # They are public by definition — no secret is baked into the image.
       args:
+        # Analytics is off unless a provider is named, so these default to
+        # empty: a local image build stays out of the client's numbers.
+        NEXT_PUBLIC_ANALYTICS_PROVIDER: ${NEXT_PUBLIC_ANALYTICS_PROVIDER:-}
+        NEXT_PUBLIC_GA_MEASUREMENT_ID: ${NEXT_PUBLIC_GA_MEASUREMENT_ID:-}
         NEXT_PUBLIC_R2_PUBLIC_URL: ${NEXT_PUBLIC_R2_PUBLIC_URL:?set NEXT_PUBLIC_R2_PUBLIC_URL in .env}
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+        NEXT_PUBLIC_UMAMI_SRC: ${NEXT_PUBLIC_UMAMI_SRC:-}
+        NEXT_PUBLIC_UMAMI_WEBSITE_ID: ${NEXT_PUBLIC_UMAMI_WEBSITE_ID:-}
     container_name: cms-cars-app
     restart: unless-stopped
     depends_on:

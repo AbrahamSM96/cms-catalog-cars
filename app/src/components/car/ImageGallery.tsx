@@ -332,12 +332,12 @@ export function ImageGallery({
         >
           {/* Top bar */}
           <div className="flex items-center justify-between gap-4 p-4">
-            <span className="rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-sm">
+            <span className="rounded-full bg-fixed-white/10 px-4 py-1.5 text-sm font-medium text-fixed-white backdrop-blur-sm">
               {selectedIndex + 1} / {totalImages}
             </span>
             <button
               aria-label="Cerrar"
-              className="cursor-pointer rounded-full bg-white/10 p-3 text-white backdrop-blur-sm transition hover:bg-white/20"
+              className="cursor-pointer rounded-full bg-fixed-white/10 p-3 text-fixed-white backdrop-blur-sm transition hover:bg-fixed-white/20"
               onClick={() => setIsExpanded(false)}
               type="button"
             >
@@ -369,7 +369,7 @@ export function ImageGallery({
               <>
                 <button
                   aria-label="Imagen anterior"
-                  className="absolute top-1/2 left-4 -translate-y-1/2 cursor-pointer rounded-full bg-white/10 p-3 text-white backdrop-blur-sm transition hover:bg-white/20"
+                  className="absolute top-1/2 left-4 -translate-y-1/2 cursor-pointer rounded-full bg-fixed-white/10 p-3 text-fixed-white backdrop-blur-sm transition hover:bg-fixed-white/20"
                   onClick={(e) => {
                     e.stopPropagation()
                     goPrev()
@@ -380,7 +380,7 @@ export function ImageGallery({
                 </button>
                 <button
                   aria-label="Siguiente imagen"
-                  className="absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer rounded-full bg-white/10 p-3 text-white backdrop-blur-sm transition hover:bg-white/20"
+                  className="absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer rounded-full bg-fixed-white/10 p-3 text-fixed-white backdrop-blur-sm transition hover:bg-fixed-white/20"
                   onClick={(e) => {
                     e.stopPropagation()
                     goNext()

@@ -60,7 +60,7 @@ export function ContactButton({
 
   return (
     <button
-      className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-green-600 px-6 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:bg-green-700 hover:shadow-green-600/30"
+      className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-green-600 px-6 py-4 text-lg font-semibold text-fixed-white shadow-lg transition-all duration-300 hover:bg-green-700 hover:shadow-green-600/30"
       onClick={handleWhatsAppClick}
       type="button"
     >

@@ -206,7 +206,7 @@ export function SearchBar(props: SearchBarProps): React.JSX.Element {
 
         {/* Search Button */}
         <button
-          className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-xl bg-accent-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-accent-700 hover:shadow-lg hover:shadow-accent-600/30 active:scale-95"
+          className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-xl bg-accent-600 px-6 py-2.5 text-sm font-semibold text-fixed-white shadow-sm transition-all duration-300 hover:bg-accent-700 hover:shadow-lg hover:shadow-accent-600/30 active:scale-95"
           type="submit"
         >
           Buscar
