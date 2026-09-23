@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
 import '../globals.css'
+import { Analytics } from '@/components/analytics/Analytics'
 import { AttributionCapture } from '@/components/analytics/AttributionCapture'
 import { BrandTheme } from '@/components/layout/BrandTheme'
 import { getSiteSettings } from '@/lib/payload-client'
@@ -97,6 +98,9 @@ export default function RootLayout(
         >
           <SiteFooter />
         </Suspense>
+        {/* Last in the body and script-only: renders nothing, so it can neither
+            shift the page nor delay anything above it. */}
+        <Analytics />
       </body>
     </html>
   )
