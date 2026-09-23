@@ -1,19 +1,24 @@
 'use client'
 
 import { Banknote, CreditCard, Tag } from 'lucide-react'
+import clsx from 'clsx'
 import { useState } from 'react'
 
 import {
   calculateMonthlyPayment,
   resolveFinancingDefaults,
+  resolveReserveDefaults,
   sliderPercentage,
 } from '../../lib/financing'
-import type { Financing } from '../../types/car'
+import type { Financing, Reserve } from '../../types/car'
 import { formatPriceMXN } from '../../lib/currency'
 
 interface FinancingCalculatorProps {
   price: number
   financing?: Financing
+  reserve?: Reserve
+  showFinancing?: boolean
+  showReserve?: boolean
 }
 
 type Tab = 'credit' | 'reserve' | 'cash'
@@ -31,12 +36,23 @@ const currency = (value: number): string => formatPriceMXN(value)
  * @param props - FinancingCalculatorProps
  * @param props.financing - Financing | undefined
  * @param props.price - number
+ * @param props.reserve - Reserve | undefined
+ * @param props.showFinancing - boolean | undefined
+ * @param props.showReserve - boolean | undefined
  */
 export function FinancingCalculator({
   financing,
   price,
+  reserve,
+  showFinancing,
+  showReserve,
 }: FinancingCalculatorProps): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState<Tab>('credit')
+  const creditEnabled = showFinancing !== false
+  const reserveEnabled = showReserve !== false
+
+  const [activeTab, setActiveTab] = useState<Tab>(
+    creditEnabled ? 'credit' : reserveEnabled ? 'reserve' : 'cash'
+  )
 
   const {
     availableTerms,
@@ -84,9 +100,15 @@ export function FinancingCalculator({
     background: `linear-gradient(to right, rgb(220 38 38) 0%, rgb(220 38 38) ${pct}%, rgb(226 232 240) ${pct}%, rgb(226 232 240) 100%)`,
   })
 
+  const reserveCopy = resolveReserveDefaults(reserve)
+
   const tabs: { id: Tab; label: string; icon: typeof CreditCard }[] = [
-    { icon: CreditCard, id: 'credit', label: 'Crédito' },
-    { icon: Tag, id: 'reserve', label: 'Apártalo' },
+    ...(creditEnabled
+      ? [{ icon: CreditCard, id: 'credit' as const, label: 'Crédito' }]
+      : []),
+    ...(reserveEnabled
+      ? [{ icon: Tag, id: 'reserve' as const, label: 'Apártalo' }]
+      : []),
     { icon: Banknote, id: 'cash', label: 'Contado' },
   ]
 
@@ -97,14 +119,20 @@ export function FinancingCalculator({
       </h3>
 
       {/* Tabs */}
-      <div className="mb-6 grid grid-cols-3 gap-1 rounded-xl bg-slate-100 p-1">
+      <div
+        className={clsx(
+          'mb-6 grid gap-1 rounded-xl bg-slate-100 p-1',
+          tabs.length === 1 && 'grid-cols-1',
+          tabs.length === 2 && 'grid-cols-2',
+          tabs.length === 3 && 'grid-cols-3'
+        )}
+      >
         {tabs.map(({ icon: Icon, id, label }) => (
           <button
-            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-              activeTab === id
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'cursor-pointer text-slate-500 hover:text-slate-900'
-            }`}
+            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition ${activeTab === id
+              ? 'bg-white text-slate-900 shadow-sm'
+              : 'cursor-pointer text-slate-500 hover:text-slate-900'
+              }`}
             key={id}
             onClick={() => setActiveTab(id)}
             type="button"
@@ -116,7 +144,7 @@ export function FinancingCalculator({
       </div>
 
       {/* Credit */}
-      {activeTab === 'credit' && (
+      {creditEnabled && activeTab === 'credit' && (
         <div className="space-y-6">
           <div className="rounded-xl bg-gradient-to-br from-accent-50 to-rose-100 p-6">
             <div className="mb-1 text-sm font-medium text-slate-600">
@@ -217,19 +245,32 @@ export function FinancingCalculator({
       )}
 
       {/* Reserve */}
-      {activeTab === 'reserve' && (
+      {reserveEnabled && activeTab === 'reserve' && (
         <div className="space-y-5 py-6 text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent-50">
             <Tag aria-hidden="true" className="h-7 w-7 text-accent-600" />
           </div>
           <div>
             <h4 className="text-lg font-bold text-slate-900">
-              Aparta este auto
+              {reserveCopy.title}
             </h4>
             <p className="mt-1 text-sm text-slate-600">
-              Reserva este vehículo con un depósito inicial.
+              {reserveCopy.description}
             </p>
           </div>
+          {reserveCopy.amount !== undefined && (
+            <div className="rounded-xl bg-gradient-to-br from-accent-50 to-rose-100 p-6">
+              <div className="mb-1 text-sm font-medium text-slate-600">
+                Monto del apartado
+              </div>
+              <div className="text-4xl font-bold text-accent-600">
+                {currency(reserveCopy.amount)}
+              </div>
+              <div className="mt-2 text-sm text-slate-600">
+                Se descuenta del precio final.
+              </div>
+            </div>
+          )}
         </div>
       )}
 

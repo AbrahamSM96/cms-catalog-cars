@@ -85,6 +85,12 @@ export interface Financing {
   interestRate?: number
 }
 
+export interface Reserve {
+  amount?: number
+  title?: string
+  description?: string
+}
+
 export interface FeatureItem {
   feature: string
   id?: string
@@ -142,6 +148,9 @@ export interface Car {
   // Financiamiento
   showFinancing?: boolean
   financing?: Financing
+
+  showReserve?: boolean
+  reserve?: Reserve
 
   // Colores (relación con la colección "colors")
   exteriorColor?: Color | string | number

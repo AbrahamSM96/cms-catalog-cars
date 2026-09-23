@@ -275,6 +275,24 @@ export interface Car {
     interestRate?: number | null;
   };
   /**
+   * Shows the "Reserve it" tab on the vehicle detail page.
+   */
+  showReserve?: boolean | null;
+  reserve?: {
+    /**
+     * Deposit required to hold the vehicle (MXN). Leave empty to show only the text.
+     */
+    amount?: number | null;
+    /**
+     * Headline of the "Reserve it" tab.
+     */
+    title?: string | null;
+    /**
+     * Short paragraph shown under the title in the "Reserve it" tab.
+     */
+    description?: string | null;
+  };
+  /**
    * Engine specification (e.g. L4 2.0t, V6 3.5L)
    */
   engine?: string | null;
@@ -853,6 +871,14 @@ export interface CarsSelect<T extends boolean = true> {
             };
         defaultLoanTerm?: T;
         interestRate?: T;
+      };
+  showReserve?: T;
+  reserve?:
+    | T
+    | {
+        amount?: T;
+        title?: T;
+        description?: T;
       };
   engine?: T;
   horsepower?: T;

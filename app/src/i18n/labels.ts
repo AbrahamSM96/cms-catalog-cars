@@ -294,6 +294,30 @@ export const cars = {
       label: msg('Price', 'Precio'),
       placeholder: msg('e.g., 25000', 'ej., 25000'),
     },
+    reserveAmount: {
+      description: msg(
+        'Deposit required to hold the vehicle (MXN). Leave empty to show only the text.',
+        'Depósito requerido para apartar el vehículo (MXN). Déjalo vacío para mostrar solo el texto.'
+      ),
+      label: msg('Reservation deposit', 'Monto del apartado'),
+    },
+    reserveDescription: {
+      description: msg(
+        'Short paragraph shown under the title in the "Reserve it" tab.',
+        'Párrafo corto que aparece bajo el título en la pestaña "Apártalo".'
+      ),
+      label: msg('Reservation text', 'Texto del apartado'),
+    },
+    reserveOptions: {
+      label: msg('Reservation options', 'Opciones del apartado'),
+    },
+    reserveTitle: {
+      description: msg(
+        'Headline of the "Reserve it" tab.',
+        'Título de la pestaña "Apártalo".'
+      ),
+      label: msg('Reservation title', 'Título del apartado'),
+    },
     showFinancing: {
       description: msg(
         'Turn it off for cash-only cars; hides the calculator on the vehicle detail page.',
@@ -303,6 +327,13 @@ export const cars = {
         'Show financing calculator',
         'Mostrar calculadora de financiamiento'
       ),
+    },
+    showReserve: {
+      description: msg(
+        'Shows the "Reserve it" tab on the vehicle detail page.',
+        'Muestra la pestaña "Apártalo" en la página de detalle del vehículo.'
+      ),
+      label: msg('Show reservation option', 'Mostrar opción de apartado'),
     },
     status: {
       description: msg(
@@ -535,17 +566,17 @@ export const dealerships = {
     ),
   },
   fields: {
-    closed: {
-      label: msg('Closed', 'Cerrado'),
-    },
-    closes: {
-      label: msg('Closes', 'Cierra'),
-    },
     city: {
       description: msg(
         'City this dealership is in. Pick it from the list — its own page (/seminuevos/<city>) lists every car stored here, and the state on the site comes from the city too.',
         'Ciudad donde está esta agencia. Elígela de la lista: su página (/seminuevos/<ciudad>) lista todos los autos guardados aquí, y el estado que se muestra en el sitio también viene de la ciudad.'
       ),
+    },
+    closed: {
+      label: msg('Closed', 'Cerrado'),
+    },
+    closes: {
+      label: msg('Closes', 'Cierra'),
     },
     coordinates: {
       description: msg(
@@ -696,6 +727,10 @@ export const groups = {
 export const homepage = {
   fields: {
     hero: {
+      description: msg(
+        'Title and copy for the main header.',
+        'Título y texto para el encabezado principal.'
+      ),
       fields: {
         badge: {
           label: msg('Badge', 'Etiqueta'),
@@ -714,10 +749,7 @@ export const homepage = {
           label: msg('Subheading', 'Subtítulo'),
         },
       },
-      description: msg(
-        'Title and copy for the main header.',
-        'Título y texto para el encabezado principal.'
-      ),
+
       label: msg('Hero text', 'Texto del hero'),
     },
     heroSlides: {
@@ -915,77 +947,6 @@ export const siteSettings = {
       },
       label: msg('Brand', 'Marca'),
     },
-    seo: {
-      description: msg(
-        'Text seen by search engines (Google) and social networks when the site is shared.',
-        'Texto visto por buscadores (Google) y redes sociales cuando se comparte el sitio.'
-      ),
-      fields: {
-        description: {
-          description: msg(
-            'Long description (meta description).',
-            'Descripción larga (meta descripción).'
-          ),
-          label: msg('SEO description', 'Descripción SEO'),
-        },
-        keywords: {
-          fields: {
-            value: {
-              label: msg('Keyword', 'Palabra clave'),
-            },
-          },
-          description: msg(
-            'Keywords (one per row).',
-            'Palabras clave (una por fila).'
-          ),
-          label: msg('Keywords', 'Palabras clave'),
-        },
-        ogDescription: {
-          description: msg(
-            'Short description for social media (Open Graph).',
-            'Descripción corta para redes sociales (Open Graph).'
-          ),
-          label: msg('Social description', 'Descripción social'),
-        },
-        titleDefault: {
-          description: msg(
-            'Default title, also used on the home page.',
-            'Título por defecto, también usado en la página de inicio.'
-          ),
-          label: msg('Default title', 'Título por defecto'),
-        },
-        titleTemplate: {
-          description: msg(
-            'Template for inner pages. Use %s where the page title goes.',
-            'Plantilla para páginas internas. Usa %s donde va el título de la página.'
-          ),
-          label: msg('Title template', 'Plantilla de título'),
-        },
-      },
-      label: msg('SEO', 'SEO'),
-    },
-    theme: {
-      description: msg(
-        'Brand colors. Applied to buttons, highlights and the loading bar.',
-        'Colores de marca. Aplicados a botones, destacados y la barra de carga.'
-      ),
-      fields: {
-        accent: {
-          label: msg('Accent', 'Acento'),
-        },
-        accentStrong: {
-          label: msg('Accent (hover)', 'Acento (hover)'),
-        },
-        primary: {
-          description: msg(
-            'Main neutral color (text, dark surfaces).',
-            'Color neutro principal (texto, superficies oscuras).'
-          ),
-          label: msg('Primary', 'Primario'),
-        },
-      },
-      label: msg('Colors', 'Colores'),
-    },
     media: {
       description: msg(
         'Brand images. The logo shows in the top bar and footer; the favicon is the browser tab icon; the share image appears when the link is pasted on social media.',
@@ -1019,6 +980,80 @@ export const siteSettings = {
       },
       label: msg('Images', 'Imágenes'),
     },
+    seo: {
+      description: msg(
+        'Text seen by search engines (Google) and social networks when the site is shared.',
+        'Texto visto por buscadores (Google) y redes sociales cuando se comparte el sitio.'
+      ),
+      fields: {
+        description: {
+          description: msg(
+            'Long description (meta description).',
+            'Descripción larga (meta descripción).'
+          ),
+          label: msg('SEO description', 'Descripción SEO'),
+        },
+        keywords: {
+          description: msg(
+            'Keywords (one per row).',
+            'Palabras clave (una por fila).'
+          ),
+          fields: {
+            value: {
+              label: msg('Keyword', 'Palabra clave'),
+            },
+          },
+
+          label: msg('Keywords', 'Palabras clave'),
+        },
+        ogDescription: {
+          description: msg(
+            'Short description for social media (Open Graph).',
+            'Descripción corta para redes sociales (Open Graph).'
+          ),
+          label: msg('Social description', 'Descripción social'),
+        },
+        titleDefault: {
+          description: msg(
+            'Default title, also used on the home page.',
+            'Título por defecto, también usado en la página de inicio.'
+          ),
+          label: msg('Default title', 'Título por defecto'),
+        },
+        titleTemplate: {
+          description: msg(
+            'Template for inner pages. Use %s where the page title goes.',
+            'Plantilla para páginas internas. Usa %s donde va el título de la página.'
+          ),
+          label: msg('Title template', 'Plantilla de título'),
+        },
+      },
+      label: msg('SEO', 'SEO'),
+    },
+
+    theme: {
+      description: msg(
+        'Brand colors. Applied to buttons, highlights and the loading bar.',
+        'Colores de marca. Aplicados a botones, destacados y la barra de carga.'
+      ),
+      fields: {
+        accent: {
+          label: msg('Accent', 'Acento'),
+        },
+        accentStrong: {
+          label: msg('Accent (hover)', 'Acento (hover)'),
+        },
+        primary: {
+          description: msg(
+            'Main neutral color (text, dark surfaces).',
+            'Color neutro principal (texto, superficies oscuras).'
+          ),
+          label: msg('Primary', 'Primario'),
+        },
+      },
+      label: msg('Colors', 'Colores'),
+    },
+
   },
   label: msg('Site settings', 'Configuración del sitio'),
 }

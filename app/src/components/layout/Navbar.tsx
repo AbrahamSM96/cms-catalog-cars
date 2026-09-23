@@ -36,7 +36,8 @@ export function Navbar({
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
-  const whatsappUrl = `https://wa.me/${(whatsapp || '525512345678').replace(/\D/g, '')}`
+  const whatsappMessage = `Hola! Vi su sitio ${site.name} y me gustaría recibir información sobre los autos disponibles.`
+  const whatsappUrl = `https://wa.me/${(whatsapp || '525512345678').replace(/\D/g, '')}?text=${encodeURIComponent(whatsappMessage)}`
 
   useEffect(() => {
     /**
@@ -50,11 +51,10 @@ export function Navbar({
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled
           ? 'shadow-soft border-b border-slate-200/80 bg-white/85 backdrop-blur-xl'
           : 'border-b border-transparent bg-white/40 backdrop-blur-md'
-      }`}
+        }`}
     >
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}

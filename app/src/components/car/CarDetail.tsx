@@ -265,11 +265,14 @@ export async function CarDetail({
                 </div>
               </div>
 
-              {/* Financing (optional — hidden for cash-only cars) */}
-              {car.showFinancing !== false && (
+              {/* Financing / reservation (optional — hidden for cash-only cars) */}
+              {(car.showFinancing !== false || car.showReserve !== false) && (
                 <FinancingCalculator
                   financing={car.financing}
                   price={car.price}
+                  reserve={car.reserve}
+                  showFinancing={car.showFinancing}
+                  showReserve={car.showReserve}
                 />
               )}
             </div>

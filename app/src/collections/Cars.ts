@@ -6,16 +6,16 @@ import {
   CONDITION_OPTIONS,
   VEHICLE_TYPE_OPTIONS,
 } from '../lib/marketplace'
+import { cars, common, groups } from '../i18n/labels'
 import { resolveBrandName, toTitleCase } from '../lib/car-title'
 import {
   revalidateAfterChange,
   revalidateAfterDelete,
 } from '../hooks/revalidate'
-import { cars, common, groups } from '../i18n/labels'
+import { CACHE_TAGS } from '../lib/cache-tags'
 import { decodeVinEndpoint } from '../endpoints/decodeVin'
 import { isValidVin } from '../lib/vin/vin'
 import { pick } from '../i18n/locales'
-import { CACHE_TAGS } from '../lib/cache-tags'
 import { renameCarMedia } from '../hooks/renameCarMedia'
 
 /**
@@ -70,6 +70,7 @@ export const Cars: CollectionConfig = {
     group: groups.content,
     useAsTitle: 'title',
   },
+  endpoints: [decodeVinEndpoint],
   fields: [
     {
       admin: {
@@ -473,6 +474,67 @@ export const Cars: CollectionConfig = {
               label: cars.fields.financingOptions.label,
               type: 'collapsible',
             },
+            {
+              admin: {
+                description: cars.fields.showReserve.description,
+              },
+              defaultValue: true,
+              label: cars.fields.showReserve.label,
+              name: 'showReserve',
+              type: 'checkbox',
+            },
+            {
+              admin: {
+                /**
+                 * Condition to show the reservation section
+                 *
+                 * @param data - The car document data
+                 * @returns Whether to show the reservation section
+                 */
+                condition: (data): boolean => data?.showReserve !== false,
+                initCollapsed: true,
+              },
+              fields: [
+                {
+                  fields: [
+                    {
+                      admin: {
+                        description: cars.fields.reserveAmount.description,
+                        placeholder: '10000',
+                      },
+                      label: cars.fields.reserveAmount.label,
+                      min: 0,
+                      name: 'amount',
+                      type: 'number',
+                    },
+                    {
+                      admin: {
+                        description: cars.fields.reserveTitle.description,
+                        placeholder: 'Aparta este auto',
+                      },
+                      label: cars.fields.reserveTitle.label,
+                      name: 'title',
+                      type: 'text',
+                    },
+                    {
+                      admin: {
+                        description: cars.fields.reserveDescription.description,
+                        placeholder:
+                          'Reserva este vehículo con un depósito inicial.',
+                      },
+                      label: cars.fields.reserveDescription.label,
+                      name: 'description',
+                      type: 'textarea',
+                    },
+                  ],
+                  label: false,
+                  name: 'reserve',
+                  type: 'group',
+                },
+              ],
+              label: cars.fields.reserveOptions.label,
+              type: 'collapsible',
+            },
           ],
           label: cars.tabs.price.label,
         },
@@ -823,7 +885,6 @@ export const Cars: CollectionConfig = {
       type: 'tabs',
     },
   ],
-  endpoints: [decodeVinEndpoint],
   hooks: {
     afterChange: [renameCarMedia, revalidateAfterChange(CACHE_TAGS.cars)],
     afterDelete: [revalidateAfterDelete(CACHE_TAGS.cars)],

@@ -1,4 +1,10 @@
-import type { Financing } from '../types/car'
+import type { Financing, Reserve } from '../types/car'
+
+export interface ReserveDefaults {
+  amount?: number
+  description: string
+  title: string
+}
 
 export interface FinancingDefaults {
   availableTerms: number[]
@@ -36,6 +42,32 @@ export function resolveFinancingDefaults(
     interestRate,
     maxDown,
     minDown,
+  }
+}
+
+/**
+ * Resolve the reservation ("apartado") configuration with fallback copy when
+ * the CMS record is incomplete or undefined.
+ *
+ * @param reserve - the optional Reserve record from Payload.
+ */
+export function resolveReserveDefaults(
+  reserve: Reserve | undefined
+): ReserveDefaults {
+  const title = reserve?.title?.trim()
+  const description = reserve?.description?.trim()
+  const amount =
+    typeof reserve?.amount === 'number' && reserve.amount > 0
+      ? reserve.amount
+      : undefined
+
+  return {
+    amount,
+    description:
+      description && description.length > 0
+        ? description
+        : 'Reserva este vehículo con un depósito inicial.',
+    title: title && title.length > 0 ? title : 'Aparta este auto',
   }
 }
 
