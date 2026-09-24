@@ -22,6 +22,7 @@
     "**/.claude/**",
     "**/.vscode/**",
     "**/generated/**",
+    "CHANGELOG.md",
     "migrations/**",
     "**/next-env.d.ts",
     "**/*.min.js"
