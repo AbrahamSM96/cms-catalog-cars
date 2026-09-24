@@ -1,9 +1,9 @@
 import { connection } from 'next/server'
 
-import { getContact, getSiteSettings } from '@/lib/payload-client'
 import { Footer } from '@/components/layout/Footer'
-import { logoTone } from '@/lib/logo-contrast'
 import { resolveSiteConfig } from '@/config/site'
+import { logoTone } from '@/lib/logo-contrast'
+import { getContact, getSiteSettings } from '@/lib/payload-client'
 
 /**
  * SiteFooter — the CMS-driven footer, streamed like the header.

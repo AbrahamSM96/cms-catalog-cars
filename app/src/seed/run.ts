@@ -3,8 +3,8 @@ import type { Payload } from 'payload'
 
 import config from '../payload.config'
 
-import { type CatalogVersion, vehicleCatalog } from './vehicleCatalog'
 import { colorsList } from './colors'
+import { type CatalogVersion, vehicleCatalog } from './vehicleCatalog'
 
 /**
  * Reference-data seed, run as an explicit provisioning step.

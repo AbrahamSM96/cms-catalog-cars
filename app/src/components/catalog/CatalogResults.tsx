@@ -1,4 +1,6 @@
 /* eslint-disable react/no-danger */
+import { CarGrid } from '@/components/car/CarGrid'
+import { FilterBar } from '@/components/catalog/FilterBar'
 import { buildItemListLd, serializeLd } from '@/lib/json-ld'
 import {
   getCars,
@@ -6,8 +8,6 @@ import {
   getCorrectedSearch,
 } from '@/lib/payload-client'
 import type { CarFilters } from '@/types/car'
-import { CarGrid } from '@/components/car/CarGrid'
-import { FilterBar } from '@/components/catalog/FilterBar'
 
 /** The filters the catalogue accepts through the URL. */
 export interface CatalogSearchParams {

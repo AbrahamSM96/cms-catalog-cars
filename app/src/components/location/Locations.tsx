@@ -1,16 +1,16 @@
 'use client'
 
-import { MapPin, Navigation, Phone, Search } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
 import { clsx } from 'clsx'
+import { MapPin, Navigation, Phone, Search } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-import type { Dealership, Media } from '@/types/car'
 import { dealershipCity } from '@/lib/city'
+import { normalizeCoords } from '@/lib/geo'
 import { useOpenStatuses } from '@/lib/hours-client'
 import { getImageUrl } from '@/lib/images'
-import { normalizeCoords } from '@/lib/geo'
+import type { Dealership, Media } from '@/types/car'
 
 const LocationsMap = dynamic(
   () => import('./LocationsMap').then((m) => m.LocationsMap),

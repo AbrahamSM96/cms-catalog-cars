@@ -1,5 +1,5 @@
-import { connection } from 'next/server'
 import type { MetadataRoute } from 'next'
+import { connection } from 'next/server'
 
 import { buildCarSlug } from '@/lib/car-slug'
 import { carCity } from '@/lib/city'

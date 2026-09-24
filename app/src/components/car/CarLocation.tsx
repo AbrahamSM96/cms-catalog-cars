@@ -4,9 +4,9 @@ import { MapPin, Navigation, Phone } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
 import { dealershipCity } from '@/lib/city'
+import { normalizeCoords } from '@/lib/geo'
 import { useOpenStatus } from '@/lib/hours-client'
 import type { Dealership } from '@/types/car'
-import { normalizeCoords } from '@/lib/geo'
 
 const LocationsMap = dynamic(
   () =>

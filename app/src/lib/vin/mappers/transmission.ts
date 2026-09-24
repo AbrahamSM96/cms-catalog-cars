@@ -1,8 +1,8 @@
+import { cars } from '../../../i18n/labels'
+import { detectTransmission } from '../../transmission'
 import type { DecodedVin, FieldMapper, FieldSuggestion } from '../types'
 
 import { lookup, type LookupTable } from './lookup'
-import { detectTransmission } from '../../transmission'
-import { cars } from '../../../i18n/labels'
 
 /**
  * Transmission.

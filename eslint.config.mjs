@@ -108,6 +108,7 @@ export default tseslint.config(
       'import/order': [
         'error',
         {
+          alphabetize: { caseInsensitive: true, order: 'asc' },
           'newlines-between': 'always',
           groups: [
             'builtin',
@@ -158,7 +159,7 @@ export default tseslint.config(
         {
           allowSeparatedGroups: true,
           ignoreCase: true,
-          ignoreDeclarationSort: false,
+          ignoreDeclarationSort: true,
           ignoreMemberSort: false,
           memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
         },
@@ -259,13 +260,20 @@ export default tseslint.config(
   },
   {
     ignores: [
-      '.next',
+      '.next/**',
       '.agents/**',
+      '.claude/**',
       'coverage',
-      '.open-next',
+      '.open-next/**',
+      '.payload/**',
+      '.vercel/**',
+      'build/**',
       'eslint.config.mjs',
+      'graphify-out/**',
+      'out/**',
       'postcss.config.js',
       'postcss.config.mjs',
+      'public/maplibre/**',
       'next-env.d.ts',
       'next.config.js',
       'next.config.ts',
@@ -278,7 +286,6 @@ export default tseslint.config(
       '__mocks__/**',
       'scripts/**',
       'node_modules/**',
-      '.claude/**',
     ],
   },
   eslintConfigPrettier

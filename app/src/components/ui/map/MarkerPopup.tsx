@@ -1,13 +1,13 @@
 'use client'
 
+import { clsx } from 'clsx'
 import * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useMemo } from 'react'
-import { clsx } from 'clsx'
 import { createPortal } from 'react-dom'
 
-import type { MarkerPopupProps } from './types'
-import { PopupCloseButton } from './PopupCloseButton'
 import { useMarkerContext } from './context'
+import { PopupCloseButton } from './PopupCloseButton'
+import type { MarkerPopupProps } from './types'
 
 /**
  * Popup anchored to the enclosing marker, opened on marker click.

@@ -1,13 +1,12 @@
+import { describe, expect, it, vi } from 'vitest'
+
+import { MEMORY_CACHE_MAX, withMemoryCache, withStoreCache } from './cache'
 import type {
   DecodedVin,
   DecodeOutcome,
   VinCacheStore,
   VinDecoder,
 } from './types'
-
-import { describe, expect, it, vi } from 'vitest'
-
-import { MEMORY_CACHE_MAX, withMemoryCache, withStoreCache } from './cache'
 
 // Same model, year and plant; different serial number. They share a squish VIN
 // and therefore decode identically.

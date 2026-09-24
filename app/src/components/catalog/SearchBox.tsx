@@ -1,7 +1,7 @@
 import { connection } from 'next/server'
 
-import { getSearchIndex } from '@/lib/payload-client'
 import { SearchBar } from '@/components/catalog/SearchBar'
+import { getSearchIndex } from '@/lib/payload-client'
 
 /**
  * SearchBox — la barra de búsqueda con las sugerencias del inventario.

@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from 'react'
 
-import { ControlButton } from './ControlButton'
 import { useMap } from './context'
+import { ControlButton } from './ControlButton'
 
 /**
  * Compass control that reflects the map bearing/pitch and resets north on click.

@@ -19,6 +19,7 @@ const VARIANTS: Record<BadgeVariant, string> = {
 
 /**
  * Rounded pill used for section eyebrows and status labels.
+ *
  * @param props - Component props.
  */
 export function Badge(props: BadgeProps): React.JSX.Element {

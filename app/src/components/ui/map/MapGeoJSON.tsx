@@ -4,6 +4,8 @@ import type * as GeoJSON from 'geojson'
 import type * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useId, useMemo, useRef } from 'react'
 
+import { useMap } from './context'
+import type { Theme } from './theme'
 import type {
   MapFillPaint,
   MapGeoJSONFeature,
@@ -11,8 +13,6 @@ import type {
   MapLinePaint,
 } from './types'
 import { mergeHoverPaint } from './utils'
-import type { Theme } from './theme'
-import { useMap } from './context'
 
 // Monochrome defaults: a neutral-gray fill (hex of the grayscale chart tokens)
 // with a fixed near-surface line for thin separators. Colors are hardcoded (not

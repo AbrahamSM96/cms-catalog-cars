@@ -1,12 +1,12 @@
 /* eslint-disable react/no-array-index-key */
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useCallback, useEffect, useState } from 'react'
 
-import type { SearchSuggestion } from '@/types/car'
-import { Badge } from '@/components/ui/Badge'
 import { SearchBar } from '@/components/catalog/SearchBar'
+import { Badge } from '@/components/ui/Badge'
+import type { SearchSuggestion } from '@/types/car'
 
 export interface HeroSlideView {
   url: string

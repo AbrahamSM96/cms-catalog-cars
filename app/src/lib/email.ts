@@ -1,7 +1,6 @@
-import type { EmailAdapter, PayloadRequest } from 'payload'
-
-import { formatAdminURL } from 'payload/shared'
 import { resendAdapter } from '@payloadcms/email-resend'
+import type { EmailAdapter, PayloadRequest } from 'payload'
+import { formatAdminURL } from 'payload/shared'
 
 /**
  * Outgoing email for the admin panel (Resend HTTP API).

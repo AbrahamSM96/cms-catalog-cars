@@ -1,11 +1,11 @@
-import type * as GeoJSON from 'geojson'
-import type * as MapLibreGL from 'maplibre-gl'
 import type {
   FillLayerSpecification,
   LineLayerSpecification,
   ProjectionSpecification,
   StyleSpecification,
 } from '@maplibre/maplibre-gl-style-spec'
+import type * as GeoJSON from 'geojson'
+import type * as MapLibreGL from 'maplibre-gl'
 import type { MarkerOptions, PopupOptions } from 'maplibre-gl'
 import type { ReactNode } from 'react'
 

@@ -3,8 +3,8 @@
 import type * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useId } from 'react'
 
-import type { MapRouteProps } from './types'
 import { useMap } from './context'
+import type { MapRouteProps } from './types'
 
 /**
  * Draws a polyline route on the map from an array of coordinates.

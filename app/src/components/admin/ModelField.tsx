@@ -9,9 +9,10 @@ import {
 } from '@payloadcms/ui'
 import { useEffect, useRef, useState } from 'react'
 
-import { pick } from '../../i18n/locales'
-import { takeSuggestion } from './vin-suggestions'
 import { ui } from '../../i18n/labels'
+import { pick } from '../../i18n/locales'
+
+import { takeSuggestion } from './vin-suggestions'
 
 interface ModelFieldProps {
   field?: { admin?: { width?: string }; label?: unknown; required?: boolean }

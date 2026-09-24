@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
 
-import { afterEach, describe, expect, it, vi } from 'vitest'
 import { renderHook } from '@testing-library/react'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import type { Dealership, WeeklyHours } from '@/types/car'
 import { useOpenStatus, useOpenStatuses } from '@/lib/hours-client'
+import type { Dealership, WeeklyHours } from '@/types/car'
 
 // Wed 2024-01-17, 09:00 and 20:00 in America/Mexico_City (UTC-6).
 const DURING_HOURS = '2024-01-17T18:00:00Z'
@@ -48,6 +48,8 @@ function makeDealer(overrides: Partial<Dealership> = {}): Dealership {
  * Renders both hooks so a server render can be asserted on their output.
  *
  * @param props - Component props.
+ * @param props.dealerships - Dealerships whose statuses should be rendered.
+ * @param props.hours - Weekly hours for the single-status hook.
  */
 function Probe(props: {
   dealerships: Dealership[]

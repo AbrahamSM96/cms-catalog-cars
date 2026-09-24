@@ -3,8 +3,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useTranslation } from '@payloadcms/ui'
 
-import { fill, pick } from '../../i18n/locales'
 import { ui } from '../../i18n/labels'
+import { fill, pick } from '../../i18n/locales'
 
 /**
  * CopyBtn

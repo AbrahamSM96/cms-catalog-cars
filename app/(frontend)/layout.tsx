@@ -1,17 +1,17 @@
-import { connection } from 'next/server'
 import type { Metadata, Viewport } from 'next'
+import { connection } from 'next/server'
 import { Suspense } from 'react'
 
 import '../globals.css'
+import { poppins } from '@/commons/poppins'
 import { Analytics } from '@/components/analytics/Analytics'
 import { AttributionCapture } from '@/components/analytics/AttributionCapture'
 import { BrandTheme } from '@/components/layout/BrandTheme'
-import { getSiteSettings } from '@/lib/payload-client'
-import { poppins } from '@/commons/poppins'
-import { resolveSiteConfig } from '@/config/site'
-import { SITE_URL } from '@/lib/seo'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { SiteHeader } from '@/components/layout/SiteHeader'
+import { resolveSiteConfig } from '@/config/site'
+import { getSiteSettings } from '@/lib/payload-client'
+import { SITE_URL } from '@/lib/seo'
 
 /**
  * Paints the mobile browser chrome to match the theme the OS asks for, so the

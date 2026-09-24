@@ -11,6 +11,7 @@ interface ErrorBoundaryProps {
  * ErrorBoundary — 500 for every route under the public site. Error boundaries
  * must be Client Components, so the header and footer above this segment keep
  * rendering while only the page is replaced.
+ *
  * @param props - Component props.
  */
 export default function ErrorBoundary(

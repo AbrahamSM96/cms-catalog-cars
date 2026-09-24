@@ -1,9 +1,10 @@
 'use client'
 
-import { Banknote, CreditCard, Tag } from 'lucide-react'
 import clsx from 'clsx'
+import { Banknote, CreditCard, Tag } from 'lucide-react'
 import { useState } from 'react'
 
+import { formatPriceMXN } from '../../lib/currency'
 import {
   calculateMonthlyPayment,
   resolveFinancingDefaults,
@@ -11,7 +12,6 @@ import {
   sliderPercentage,
 } from '../../lib/financing'
 import type { Financing, Reserve } from '../../types/car'
-import { formatPriceMXN } from '../../lib/currency'
 
 interface FinancingCalculatorProps {
   price: number

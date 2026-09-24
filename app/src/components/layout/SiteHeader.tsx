@@ -1,11 +1,11 @@
 /* eslint-disable react/no-danger */
 import { connection } from 'next/server'
 
-import { getContact, getSiteSettings } from '@/lib/payload-client'
-import { logoTone } from '@/lib/logo-contrast'
-import { serializeLd } from '@/lib/json-ld'
 import { Navbar } from '@/components/layout/Navbar'
 import { resolveSiteConfig } from '@/config/site'
+import { serializeLd } from '@/lib/json-ld'
+import { logoTone } from '@/lib/logo-contrast'
+import { getContact, getSiteSettings } from '@/lib/payload-client'
 import { SITE_URL } from '@/lib/seo'
 
 /**

@@ -1,7 +1,7 @@
 import { connection } from 'next/server'
 
-import { getDealerships } from '@/lib/payload-client'
 import { Locations } from '@/components/location/Locations'
+import { getDealerships } from '@/lib/payload-client'
 
 /**
  * HomeLocations — the dealership section on the home page, hidden entirely

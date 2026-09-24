@@ -1,6 +1,5 @@
-import type { Translated } from '../i18n/locales'
-
 import { cars, common } from '../i18n/labels'
+import type { Translated } from '../i18n/locales'
 
 /**
  * Facebook Marketplace (Vehicles) helpers.

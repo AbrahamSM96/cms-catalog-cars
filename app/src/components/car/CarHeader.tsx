@@ -10,8 +10,8 @@ import {
 
 import { ShareButton } from '@/components/ui/ShareButton'
 
-import type { Brand, Car } from '../../types/car'
 import { carCity, formatCity } from '../../lib/city'
+import type { Brand, Car } from '../../types/car'
 
 interface CarHeaderProps {
   car: Car

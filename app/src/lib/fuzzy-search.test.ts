@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
+import type { SearchSuggestion } from '../types/car'
+
 import {
   correctSearchTerms,
   editDistance,
@@ -8,7 +10,6 @@ import {
   phoneticKey,
   tokenize,
 } from './fuzzy-search'
-import type { SearchSuggestion } from '../types/car'
 
 const VOCABULARY = [
   'Mazda',

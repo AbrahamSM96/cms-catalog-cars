@@ -15,6 +15,10 @@ interface DealershipData {
  * Typed coordinates win: the numbers are only written when they are empty or
  * when the link itself changed. A link that carries no place leaves the fields
  * untouched instead of clearing them.
+ *
+ * @param root0 - Payload hook arguments.
+ * @param root0.data - The incoming dealership data.
+ * @param root0.originalDoc - The dealership data currently stored.
  */
 export const fillCoordinatesFromMapsUrl: CollectionBeforeChangeHook = async ({
   data,

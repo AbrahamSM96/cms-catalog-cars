@@ -4,8 +4,8 @@ import type * as GeoJSON from 'geojson'
 import type * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useId, useRef } from 'react'
 
-import type { MapClusterLayerProps } from './types'
 import { useMap } from './context'
+import type { MapClusterLayerProps } from './types'
 
 const DEFAULT_CLUSTER_COLORS: [string, string, string] = [
   '#3b82f6',

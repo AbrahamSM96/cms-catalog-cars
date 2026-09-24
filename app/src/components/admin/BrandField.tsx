@@ -4,8 +4,8 @@
 import { SelectInput, useField, useTranslation } from '@payloadcms/ui'
 import { useEffect, useState } from 'react'
 
-import { pick } from '../../i18n/locales'
 import { ui } from '../../i18n/labels'
+import { pick } from '../../i18n/locales'
 
 interface BrandDoc {
   id?: number | string

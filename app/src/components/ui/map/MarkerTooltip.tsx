@@ -1,12 +1,12 @@
 'use client'
 
+import { clsx } from 'clsx'
 import * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useMemo } from 'react'
-import { clsx } from 'clsx'
 import { createPortal } from 'react-dom'
 
-import type { MarkerTooltipProps } from './types'
 import { useMarkerContext } from './context'
+import type { MarkerTooltipProps } from './types'
 
 /**
  * Tooltip anchored to the enclosing marker, shown on hover.

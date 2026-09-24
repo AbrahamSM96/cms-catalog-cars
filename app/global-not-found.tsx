@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 import './globals.css'
-import { NotFoundScreen } from '@/components/layout/NotFoundScreen'
 import { poppins } from '@/commons/poppins'
+import { NotFoundScreen } from '@/components/layout/NotFoundScreen'
 
 export const metadata: Metadata = {
   description: 'La dirección que buscas no existe en este sitio.',

@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
 import { clsx } from 'clsx'
 import { MapPin } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 
 import {
   Map,
@@ -11,8 +11,8 @@ import {
   type MapRef,
   MarkerContent,
 } from '@/components/ui/map'
-import type { Dealership } from '@/types/car'
 import { normalizeCoords } from '@/lib/geo'
+import type { Dealership } from '@/types/car'
 
 interface LocationsMapProps {
   /** Dealerships that have valid coordinates. */

@@ -1,14 +1,14 @@
 'use client'
 
+import { clsx } from 'clsx'
 import { Loader2, Locate, Maximize, Minus, Plus } from 'lucide-react'
 import { useCallback, useState } from 'react'
-import { clsx } from 'clsx'
 
 import { CompassButton } from './CompassButton'
+import { useMap } from './context'
 import { ControlButton } from './ControlButton'
 import { ControlGroup } from './ControlGroup'
 import type { MapControlsProps } from './types'
-import { useMap } from './context'
 
 const positionClasses = {
   'bottom-left': 'bottom-2 left-2',

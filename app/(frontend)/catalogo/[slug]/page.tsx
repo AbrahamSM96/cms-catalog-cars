@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
-import { absoluteUrl } from '@/lib/seo'
-import { buildCarImageAlt, getImageUrl } from '@/lib/images'
 import { CarDetail } from '@/components/car/CarDetail'
+import { buildCarImageAlt, getImageUrl } from '@/lib/images'
 import { getCarBySlug } from '@/lib/payload-client'
+import { absoluteUrl } from '@/lib/seo'
 
 interface CarDetailPageProps {
   params: Promise<{ slug: string }>
@@ -87,6 +87,8 @@ export async function generateMetadata({
 export default function CarDetailPage(
   props: CarDetailPageProps
 ): React.JSX.Element {
+  const { params } = props
+
   return (
     <div className="min-h-screen bg-slate-50">
       <Suspense
@@ -105,7 +107,7 @@ export default function CarDetailPage(
           </div>
         }
       >
-        <CarDetail params={props.params} />
+        <CarDetail params={params} />
       </Suspense>
     </div>
   )

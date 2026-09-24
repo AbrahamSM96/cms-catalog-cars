@@ -1,5 +1,5 @@
-import type { Car } from '../../types/car'
 import { formatPriceMXN } from '../../lib/currency'
+import type { Car } from '../../types/car'
 
 interface CarSpecsProps {
   car: Car

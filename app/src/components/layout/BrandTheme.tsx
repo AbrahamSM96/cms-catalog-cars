@@ -1,8 +1,8 @@
 import { connection } from 'next/server'
 import NextTopLoader from 'nextjs-toploader'
 
-import { getSiteSettings } from '@/lib/payload-client'
 import { resolveSiteConfig } from '@/config/site'
+import { getSiteSettings } from '@/lib/payload-client'
 
 /**
  * BrandTheme — paints the client's brand colours over the defaults in

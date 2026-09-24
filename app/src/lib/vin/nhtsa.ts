@@ -1,5 +1,4 @@
 import type { DecodedVin, DecodeOutcome, VinDecoder } from './types'
-
 import { isValidVin, modelYearFromVin, normalizeVin } from './vin'
 
 /**

@@ -1,10 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { nhtsaVinDecoder } from './nhtsa'
-
 import hondaAccord from './__fixtures__/honda-accord-2003.json'
 import nissanSentra from './__fixtures__/nissan-sentra-mx-2019.json'
 import vwJetta from './__fixtures__/vw-jetta-mx-2013.json'
+import { nhtsaVinDecoder } from './nhtsa'
 
 const VW_JETTA_MX_2013 = '3VWDX7AJ1DM389728'
 const HONDA_ACCORD_2003 = '1HGCM82633A004352'

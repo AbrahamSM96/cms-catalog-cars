@@ -1,9 +1,9 @@
+import { googleAnalyticsProvider } from '@/lib/analytics/google-analytics'
 import type {
   AnalyticsEventData,
   AnalyticsProvider,
   AnalyticsTag,
 } from '@/lib/analytics/types'
-import { googleAnalyticsProvider } from '@/lib/analytics/google-analytics'
 import { umamiProvider } from '@/lib/analytics/umami'
 
 /**

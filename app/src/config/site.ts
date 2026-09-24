@@ -1,6 +1,6 @@
-import type { Media, SiteSettings } from '@/types/car'
-import { getImageUrl } from '@/lib/images'
 import { safeBrandColor } from '@/lib/brand-color'
+import { getImageUrl } from '@/lib/images'
+import type { Media, SiteSettings } from '@/types/car'
 
 /**
  * Per-client brand configuration.

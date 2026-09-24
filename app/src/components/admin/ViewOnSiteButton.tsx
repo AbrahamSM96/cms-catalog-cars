@@ -3,8 +3,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useLivePreviewContext, useTranslation } from '@payloadcms/ui'
 
-import { pick } from '../../i18n/locales'
 import { ui } from '../../i18n/labels'
+import { pick } from '../../i18n/locales'
 
 /**
  * ViewOnSiteButton — replaces Payload's stock preview button in the Cars edit

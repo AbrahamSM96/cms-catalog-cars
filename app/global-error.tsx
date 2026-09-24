@@ -13,6 +13,7 @@ interface GlobalErrorProps {
  * replaces the layout, so it renders its own document. `next/font` cannot run
  * in a Client Component, so the type falls back to the system stack declared in
  * `globals.css`.
+ *
  * @param props - Component props.
  */
 export default function GlobalError(

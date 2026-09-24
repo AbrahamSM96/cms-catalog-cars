@@ -1,14 +1,14 @@
-import { connection } from 'next/server'
-import Link from 'next/link'
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { connection } from 'next/server'
 import { Suspense } from 'react'
 
-import { getSiteSettings } from '@/lib/payload-client'
-import { Badge } from '@/components/ui/Badge'
 import { HomeFeatured } from '@/components/sections/HomeFeatured'
 import { HomeHero } from '@/components/sections/HomeHero'
 import { HomeLocations } from '@/components/sections/HomeLocations'
+import { Badge } from '@/components/ui/Badge'
 import { resolveSiteConfig } from '@/config/site'
+import { getSiteSettings } from '@/lib/payload-client'
 
 /**
  * generateMetadata — home page SEO from the CMS `site-settings` global.

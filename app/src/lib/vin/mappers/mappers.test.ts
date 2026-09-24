@@ -1,9 +1,9 @@
-import type { FieldSuggestion } from '../types'
-
 import { describe, expect, it } from 'vitest'
 
-import { mapDecodedVin } from './registry'
 import { decodedVin } from '../__fixtures__/decoded'
+import type { FieldSuggestion } from '../types'
+
+import { mapDecodedVin } from './registry'
 
 /**
  * Read one proposal out of a mapping run.

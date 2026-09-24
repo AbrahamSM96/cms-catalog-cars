@@ -1,13 +1,13 @@
 'use client'
 
+import { clsx } from 'clsx'
 import * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useMemo, useRef } from 'react'
-import { clsx } from 'clsx'
 import { createPortal } from 'react-dom'
 
-import type { MapPopupProps } from './types'
-import { PopupCloseButton } from './PopupCloseButton'
 import { useMap } from './context'
+import { PopupCloseButton } from './PopupCloseButton'
+import type { MapPopupProps } from './types'
 
 /**
  * Standalone popup anchored to a coordinate (independent of any marker).

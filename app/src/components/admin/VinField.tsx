@@ -12,9 +12,9 @@ import {
 import { reduceFieldsToValues } from 'payload/shared'
 import { useState } from 'react'
 
+import { ui } from '../../i18n/labels'
 import { fill, pick } from '../../i18n/locales'
 import type { Translated } from '../../i18n/locales'
-import { ui } from '../../i18n/labels'
 
 import { publishSuggestions } from './vin-suggestions'
 

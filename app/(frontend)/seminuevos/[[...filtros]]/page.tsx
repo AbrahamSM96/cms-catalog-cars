@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
-import { getCars, getCatalogFacets, getCityFacets } from '@/lib/payload-client'
-import { resolveLandingPath } from '@/lib/landing-routes'
 import type { LandingParams } from '@/components/catalog/LandingResults'
 import { LandingResults } from '@/components/catalog/LandingResults'
+import { resolveLandingPath } from '@/lib/landing-routes'
+import { getCars, getCatalogFacets, getCityFacets } from '@/lib/payload-client'
 
 interface SeminuevosPageProps {
   params: Promise<LandingParams>
@@ -88,6 +88,8 @@ export async function generateMetadata(
 export default function SeminuevosPage(
   props: SeminuevosPageProps
 ): React.JSX.Element {
+  const { params } = props
+
   return (
     <div className="min-h-screen bg-slate-50">
       <section className="relative overflow-hidden bg-white pt-24 pb-16 sm:pt-32 sm:pb-20">
@@ -111,7 +113,7 @@ export default function SeminuevosPage(
               </div>
             }
           >
-            <LandingResults params={props.params} />
+            <LandingResults params={params} />
           </Suspense>
         </div>
       </section>

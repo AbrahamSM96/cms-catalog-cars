@@ -1,20 +1,19 @@
 import type { Endpoint, PayloadRequest } from 'payload'
 import type { Payload } from 'payload'
 
-import type { VinDecoder } from '../lib/vin/types'
-
+import { editorsAndAdmins } from '../access'
 import {
   MEMORY_CACHE_MAX,
   withMemoryCache,
   withStoreCache,
 } from '../lib/vin/cache'
-import { createRateLimiter } from '../lib/vin/rate-limit'
 import { decodeVinToSuggestions } from '../lib/vin/decode-vin'
-import { editorsAndAdmins } from '../access'
-import { isValidVin, normalizeVin } from '../lib/vin/vin'
 import { nhtsaVinDecoder } from '../lib/vin/nhtsa'
 import { payloadCatalogRepository } from '../lib/vin/payload/catalog-repository'
 import { payloadVinCacheStore } from '../lib/vin/payload/vin-cache-store'
+import { createRateLimiter } from '../lib/vin/rate-limit'
+import type { VinDecoder } from '../lib/vin/types'
+import { isValidVin, normalizeVin } from '../lib/vin/vin'
 
 /**
  * `POST /api/cars/decode-vin` — the composition root of the VIN feature.

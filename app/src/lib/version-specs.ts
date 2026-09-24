@@ -1,5 +1,4 @@
 import type { Transmission } from './transmission'
-
 import { detectTransmission } from './transmission'
 
 /**

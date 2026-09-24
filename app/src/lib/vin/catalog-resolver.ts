@@ -1,8 +1,9 @@
-import type { DecodedVin, FieldSuggestion, SuggestionConfidence } from './types'
 
-import { detectTransmission } from '../transmission'
-import { slugify } from '../slugify'
 import { cars, common } from '../../i18n/labels'
+import { slugify } from '../slugify'
+import { detectTransmission } from '../transmission'
+
+import type { DecodedVin, FieldSuggestion, SuggestionConfidence } from './types'
 
 /**
  * Resolving a decoded VIN against our own catalogue.

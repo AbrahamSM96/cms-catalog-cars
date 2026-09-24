@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from 'vitest'
 import sharp from 'sharp'
+import { describe, expect, it, vi } from 'vitest'
 
 import { logoTone, logoToneForBytes } from '@/lib/logo-contrast'
 

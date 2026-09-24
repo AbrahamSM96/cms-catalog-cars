@@ -1,7 +1,7 @@
-import type { CatalogBrand, CatalogModel, CatalogRepository } from './catalog-resolver'
-
 import { describe, expect, it } from 'vitest'
 
+import { decodedVin } from './__fixtures__/decoded'
+import type { CatalogBrand, CatalogModel, CatalogRepository } from './catalog-resolver'
 import {
   resolveBrand,
   resolveCatalogFields,
@@ -9,7 +9,6 @@ import {
   resolveVersion,
   scoreVersion,
 } from './catalog-resolver'
-import { decodedVin } from './__fixtures__/decoded'
 
 const BRANDS: CatalogBrand[] = [
   { id: 1, name: 'Volkswagen', slug: 'volkswagen' },

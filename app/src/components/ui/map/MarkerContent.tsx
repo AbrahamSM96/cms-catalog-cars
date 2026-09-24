@@ -3,9 +3,9 @@
 import { clsx } from 'clsx'
 import { createPortal } from 'react-dom'
 
+import { useMarkerContext } from './context'
 import { DefaultMarkerIcon } from './DefaultMarkerIcon'
 import type { MarkerContentProps } from './types'
-import { useMarkerContext } from './context'
 
 /**
  * Renders custom content into a marker's DOM element via a portal.

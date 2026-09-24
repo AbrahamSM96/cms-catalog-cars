@@ -24,8 +24,8 @@ import type {
 } from '../types/car'
 
 import { CACHE_TAGS } from './cache-tags'
-import { correctSearchTerms, normalize } from './fuzzy-search'
 import { parseCarSlug } from './car-slug'
+import { correctSearchTerms, normalize } from './fuzzy-search'
 
 /**
  * Payload Local API client.

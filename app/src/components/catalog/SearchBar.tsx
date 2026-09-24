@@ -4,8 +4,8 @@ import clsx from 'clsx'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
-import type { SearchSuggestion } from '@/types/car'
 import { filterSuggestions } from '@/lib/fuzzy-search'
+import type { SearchSuggestion } from '@/types/car'
 
 /** Cuántas sugerencias se despliegan a la vez. */
 const VISIBLE_SUGGESTIONS = 6

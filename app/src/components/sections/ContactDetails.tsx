@@ -8,8 +8,8 @@ import {
 } from 'lucide-react'
 import { connection } from 'next/server'
 
-import { getContact } from '@/lib/payload-client'
 import { LeadLink } from '@/components/analytics/LeadLink'
+import { getContact } from '@/lib/payload-client'
 
 const FALLBACK_WHATSAPP = '525512345678'
 const FALLBACK_PHONE = '+52 55 1234 5678'

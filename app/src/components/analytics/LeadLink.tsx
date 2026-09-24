@@ -1,8 +1,8 @@
 'use client'
 
-import type { LeadPlacement, LeadSource } from '@/lib/leads'
 import { readAttribution } from '@/lib/attribution'
 import { recordLead } from '@/lib/lead-actions'
+import type { LeadPlacement, LeadSource } from '@/lib/leads'
 
 interface LeadLinkProps {
   /** Car in context, when the link sits on a car page. */

@@ -1,8 +1,8 @@
 import { connection } from 'next/server'
 
 import { Hero, type HeroSlideView } from '@/components/sections/Hero'
-import { getHomepage, getSearchIndex } from '@/lib/payload-client'
 import { getImageUrl } from '@/lib/images'
+import { getHomepage, getSearchIndex } from '@/lib/payload-client'
 import type { Media } from '@/types/car'
 
 /**

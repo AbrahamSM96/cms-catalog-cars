@@ -1,13 +1,12 @@
 import type { CatalogRepository } from './catalog-resolver'
+import { resolveCatalogFields } from './catalog-resolver'
+import { mapDecodedVin } from './mappers/registry'
 import type {
   DecodeFailure,
   DecodeSource,
   FieldSuggestion,
   VinDecoder,
 } from './types'
-
-import { resolveCatalogFields } from './catalog-resolver'
-import { mapDecodedVin } from './mappers/registry'
 import { normalizeVin } from './vin'
 
 /**

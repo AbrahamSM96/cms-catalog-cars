@@ -1,9 +1,9 @@
+import { revalidateTag } from 'next/cache'
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
   GlobalAfterChangeHook,
 } from 'payload'
-import { revalidateTag } from 'next/cache'
 
 /**
  * Purge the cached readers in `lib/payload-client.ts` whenever the CMS changes,

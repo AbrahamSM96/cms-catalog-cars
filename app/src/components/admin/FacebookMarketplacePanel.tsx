@@ -1,16 +1,16 @@
 'use client'
 /* eslint-disable import/no-extraneous-dependencies */
-import { useEffect, useMemo, useState } from 'react'
-import { reduceFieldsToValues } from 'payload/shared'
 import { useAllFormFields, useTranslation } from '@payloadcms/ui'
+import { reduceFieldsToValues } from 'payload/shared'
+import { useEffect, useMemo, useState } from 'react'
 
+import { ui } from '../../i18n/labels'
+import { fill, pick } from '../../i18n/locales'
 import {
   buildMarketplaceDescription,
   buildMarketplaceFields,
   type MarketplaceValues,
 } from '../../lib/marketplace'
-import { fill, pick } from '../../i18n/locales'
-import { ui } from '../../i18n/labels'
 
 import { CopyBtn } from './CopyBtn'
 

@@ -113,6 +113,7 @@ export async function LeadsSummary(
   const { i18n, payload } = props
   const copy = COPY[resolveLanguage(i18n?.language ?? undefined)]
 
+  // oxlint-disable-next-line react/purity -- This async server summary needs one consistent rolling-window boundary.
   const now = Date.now()
   const since = new Date(now - WINDOW_DAYS * DAY).toISOString()
   const previousSince = new Date(now - 2 * WINDOW_DAYS * DAY).toISOString()

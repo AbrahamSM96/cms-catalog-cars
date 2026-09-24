@@ -1,6 +1,5 @@
-import type { DecodedVin, FieldMapper, FieldSuggestion } from '../types'
-
 import { cars } from '../../../i18n/labels'
+import type { DecodedVin, FieldMapper, FieldSuggestion } from '../types'
 
 /**
  * Mappers for the values the VIN states outright: no translation table, no

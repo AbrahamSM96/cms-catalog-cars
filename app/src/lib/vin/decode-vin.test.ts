@@ -1,10 +1,9 @@
-import type { CatalogBrand, CatalogModel, CatalogRepository } from './catalog-resolver'
-import type { DecodeOutcome, VinDecoder } from './types'
-
 import { describe, expect, it } from 'vitest'
 
-import { decodeVinToSuggestions, inFormOrder } from './decode-vin'
 import { decodedVin } from './__fixtures__/decoded'
+import type { CatalogBrand, CatalogModel, CatalogRepository } from './catalog-resolver'
+import { decodeVinToSuggestions, inFormOrder } from './decode-vin'
+import type { DecodeOutcome, VinDecoder } from './types'
 
 const VW_JETTA_MX_2013 = '3vwdx7aj1dm389728'
 

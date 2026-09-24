@@ -1,10 +1,10 @@
 import Link from 'next/link'
 
-import { BrandLogo } from '@/components/layout/BrandLogo'
-import type { Contact } from '@/types/car'
 import { LeadLink } from '@/components/analytics/LeadLink'
-import type { LogoTone } from '@/lib/logo-contrast'
+import { BrandLogo } from '@/components/layout/BrandLogo'
 import type { SiteConfig } from '@/config/site'
+import type { LogoTone } from '@/lib/logo-contrast'
+import type { Contact } from '@/types/car'
 
 interface FooterProps {
   contact: Contact | null

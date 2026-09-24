@@ -22,6 +22,12 @@ interface ShareTarget {
 const SHARE_TARGETS: ShareTarget[] = [
   {
     bg: 'bg-[#25D366]',
+    /**
+     * Builds a WhatsApp sharing URL.
+     *
+     * @param url - The page URL to share.
+     * @param text - The accompanying share text.
+     */
     href: (url, text) => `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`,
     icon: (
       <svg
@@ -36,6 +42,11 @@ const SHARE_TARGETS: ShareTarget[] = [
   },
   {
     bg: 'bg-white ring-1 ring-slate-900/10',
+    /**
+     * Builds a Facebook sharing URL.
+     *
+     * @param url - The page URL to share.
+     */
     href: (url) =>
       `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
     icon: (
@@ -51,6 +62,12 @@ const SHARE_TARGETS: ShareTarget[] = [
   },
   {
     bg: 'bg-white ring-1 ring-slate-900/10',
+    /**
+     * Builds a Telegram sharing URL.
+     *
+     * @param url - The page URL to share.
+     * @param text - The accompanying share text.
+     */
     href: (url, text) =>
       `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
     icon: (
@@ -66,6 +83,12 @@ const SHARE_TARGETS: ShareTarget[] = [
   },
   {
     bg: 'bg-black',
+    /**
+     * Builds an X sharing URL.
+     *
+     * @param url - The page URL to share.
+     * @param text - The accompanying share text.
+     */
     href: (url, text) =>
       `https://x.com/intent/post?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
     icon: (
@@ -112,6 +135,7 @@ export function ShareSheet(props: ShareSheetProps): React.JSX.Element | null {
   useEffect(() => {
     /**
      * Closes the sheet on Escape.
+     *
      * @param event - The keyboard event.
      */
     const handleKeyDown = (event: KeyboardEvent): void => {
@@ -143,6 +167,7 @@ export function ShareSheet(props: ShareSheetProps): React.JSX.Element | null {
 
   /**
    * Opens a share target in a new tab and dismisses the sheet.
+   *
    * @param href - The share URL to open.
    */
   const handleOpen = (href: string): void => {

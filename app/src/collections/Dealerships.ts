@@ -7,11 +7,10 @@ import {
   revalidateAfterDelete,
 } from '../hooks/revalidate'
 import { common, dealerships, groups } from '../i18n/labels'
-import { isTimeOfDay } from '../lib/hours'
-import { validateLatitude, validateLongitude } from '../lib/coordinates'
-import { CACHE_TAGS } from '../lib/cache-tags'
-
 import type { Translated } from '../i18n/locales'
+import { CACHE_TAGS } from '../lib/cache-tags'
+import { validateLatitude, validateLongitude } from '../lib/coordinates'
+import { isTimeOfDay } from '../lib/hours'
 
 const DAYS: { label: Translated; name: string }[] = [
   { label: dealerships.fields.monday.label, name: 'monday' },
@@ -57,6 +56,12 @@ const dayFields: Field[] = DAYS.map((day) => ({
              * @returns Whether to show the field
              */
             components: { Field: '/components/admin/TimeField#TimeField' },
+            /**
+             * Shows the opening time unless the dealership is closed.
+             *
+             * @param _ - The field value, which is unused.
+             * @param siblingData - The sibling field data.
+             */
             condition: (_, siblingData) => !siblingData?.closed,
             description: dealerships.fields.opens.description,
             width: '33%',
@@ -76,6 +81,12 @@ const dayFields: Field[] = DAYS.map((day) => ({
              * @returns Whether to show the field
              */
             components: { Field: '/components/admin/TimeField#TimeField' },
+            /**
+             * Shows the closing time unless the dealership is closed.
+             *
+             * @param _ - The field value, which is unused.
+             * @param siblingData - The sibling field data.
+             */
             condition: (_, siblingData) => !siblingData?.closed,
             description: dealerships.fields.opens.description,
             width: '33%',

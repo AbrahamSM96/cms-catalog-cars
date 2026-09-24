@@ -4,6 +4,7 @@ import type * as GeoJSON from 'geojson'
 import type * as MapLibreGL from 'maplibre-gl'
 import { useEffect, useId, useMemo, useRef } from 'react'
 
+import { useMap } from './context'
 import type {
   MapArcDatum,
   MapArcLineLayout,
@@ -11,7 +12,6 @@ import type {
   MapArcProps,
 } from './types'
 import { mergeHoverPaint } from './utils'
-import { useMap } from './context'
 
 const DEFAULT_ARC_CURVATURE = 0.2
 const DEFAULT_ARC_SAMPLES = 64

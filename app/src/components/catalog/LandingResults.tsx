@@ -2,17 +2,17 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { CarGrid } from '@/components/car/CarGrid'
+import { LandingHub } from '@/components/sections/LandingHub'
+import { buildItemListLd, serializeLd } from '@/lib/json-ld'
+import { landingCrumbs, resolveLandingPath } from '@/lib/landing-routes'
 import {
   getBrandsInCity,
   getCars,
   getCatalogFacets,
   getCityFacets,
 } from '@/lib/payload-client'
-import { landingCrumbs, resolveLandingPath } from '@/lib/landing-routes'
 import { absoluteUrl } from '@/lib/seo'
-import { buildItemListLd, serializeLd } from '@/lib/json-ld'
-import { CarGrid } from '@/components/car/CarGrid'
-import { LandingHub } from '@/components/sections/LandingHub'
 
 /** The path segments after `/seminuevos`. */
 export interface LandingParams {
@@ -39,7 +39,8 @@ interface LandingResultsProps {
 export async function LandingResults(
   props: LandingResultsProps
 ): Promise<React.JSX.Element> {
-  const { filtros = [] } = await props.params
+  const { params } = props
+  const { filtros = [] } = await params
 
   const [facets, cities] = await Promise.all([
     getCatalogFacets(),

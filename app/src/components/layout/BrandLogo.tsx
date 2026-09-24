@@ -2,8 +2,8 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import type { LogoTone } from '@/lib/logo-contrast'
 import type { SiteConfig } from '@/config/site'
+import type { LogoTone } from '@/lib/logo-contrast'
 
 interface BrandLogoProps {
   /** Extra classes for the link wrapper. */

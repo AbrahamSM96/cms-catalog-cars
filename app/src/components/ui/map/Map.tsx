@@ -1,6 +1,8 @@
 'use client'
 
 import 'maplibre-gl/dist/maplibre-gl.css'
+import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec'
+import { clsx } from 'clsx'
 import * as MapLibreGL from 'maplibre-gl'
 import {
   forwardRef,
@@ -10,13 +12,11 @@ import {
   useRef,
   useState,
 } from 'react'
-import { clsx } from 'clsx'
-import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec'
 
-import type { MapProps, MapRef, MapStyleOption, MapViewport } from './types'
-import { DefaultLoader } from './DefaultLoader'
 import { MapContext } from './context'
+import { DefaultLoader } from './DefaultLoader'
 import { useResolvedTheme } from './theme'
+import type { MapProps, MapRef, MapStyleOption, MapViewport } from './types'
 
 MapLibreGL.setWorkerUrl('/maplibre/maplibre-gl-worker.mjs')
 

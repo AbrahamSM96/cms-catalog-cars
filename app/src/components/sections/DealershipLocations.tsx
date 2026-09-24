@@ -1,8 +1,8 @@
 import { connection } from 'next/server'
 
+import { Locations } from '@/components/location/Locations'
 import { buildAutoDealerLd, serializeLd } from '@/lib/json-ld'
 import { getDealerships } from '@/lib/payload-client'
-import { Locations } from '@/components/location/Locations'
 
 /**
  * DealershipLocations — the locations list plus its AutoDealer structured data.
@@ -22,8 +22,9 @@ export async function DealershipLocations(): Promise<React.JSX.Element> {
 
   return (
     <>
-      {/* eslint-disable-next-line react/no-danger */}
       <script
+        // Structured data must be emitted as raw JSON inside the script element.
+        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: serializeLd(autoDealerLd) }}
         type="application/ld+json"
       />

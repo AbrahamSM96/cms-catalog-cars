@@ -12,13 +12,13 @@ import {
 import { reduceFieldsToValues } from 'payload/shared'
 import { useEffect, useRef, useState } from 'react'
 
+import { ui } from '../../i18n/labels'
+import { pick } from '../../i18n/locales'
 import type { VersionDoc, VersionOption } from '../../lib/car-versions'
-
 import { buildVersionOptions } from '../../lib/car-versions'
 import { parseVersionDescription } from '../../lib/version-specs'
-import { pick } from '../../i18n/locales'
+
 import { takeSuggestion } from './vin-suggestions'
-import { ui } from '../../i18n/labels'
 
 interface VersionFieldProps {
   field?: { admin?: { width?: string }; label?: unknown; required?: boolean }

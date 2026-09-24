@@ -1,13 +1,12 @@
 'use client'
 
+import clsx from 'clsx'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
-import clsx from 'clsx'
-
 import { applyFilter, hasActiveFilters } from '../../lib/catalog-filters'
-import type { Brand, CatalogFacets } from '../../types/car'
 import type { FilterKey } from '../../lib/catalog-filters'
+import type { Brand, CatalogFacets } from '../../types/car'
 
 interface FilterBarProps {
   /** Brands and years that actually have a car behind them. */
@@ -71,7 +70,8 @@ function filterLabel(brands: Brand[], key: FilterKey, value: string): string {
  * @param props - FilterBarProps
  */
 export function FilterBar(props: FilterBarProps): React.JSX.Element {
-  const { brands, years } = props.facets
+  const { facets } = props
+  const { brands, years } = facets
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()

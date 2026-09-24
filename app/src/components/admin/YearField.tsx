@@ -3,8 +3,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { SelectInput, useField, useTranslation } from '@payloadcms/ui'
 
-import { pick } from '../../i18n/locales'
 import { ui } from '../../i18n/labels'
+import { pick } from '../../i18n/locales'
 
 interface YearFieldProps {
   field?: { admin?: { width?: string }; label?: unknown; required?: boolean }

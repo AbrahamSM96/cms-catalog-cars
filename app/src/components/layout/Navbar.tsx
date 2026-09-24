@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
-import { BrandLogo } from '@/components/layout/BrandLogo'
 import { LeadLink } from '@/components/analytics/LeadLink'
-import type { LogoTone } from '@/lib/logo-contrast'
+import { BrandLogo } from '@/components/layout/BrandLogo'
 import type { SiteConfig } from '@/config/site'
+import type { LogoTone } from '@/lib/logo-contrast'
 
 const LINKS = [
   { href: '/#featured', label: 'Destacados' },

@@ -1,7 +1,7 @@
+import { cars } from '../../../i18n/labels'
 import type { DecodedVin, FieldMapper, FieldSuggestion } from '../types'
 
 import { lookup, type LookupTable } from './lookup'
-import { cars } from '../../../i18n/labels'
 
 /**
  * Body style and vehicle type.

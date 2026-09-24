@@ -1,8 +1,8 @@
 import type { Car, Dealership, WeekdayKey } from '../types/car'
 
-import { absoluteUrl } from './seo'
 import { buildCarSlug } from './car-slug'
 import { dealershipCity } from './city'
+import { absoluteUrl } from './seo'
 
 const WEEKDAY_NAMES: Record<WeekdayKey, string> = {
   friday: 'Friday',

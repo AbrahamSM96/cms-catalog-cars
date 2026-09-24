@@ -4,7 +4,6 @@ import type {
   VinCacheStore,
   VinDecoder,
 } from './types'
-
 import { isValidVin, normalizeVin, squishVin } from './vin'
 
 /**

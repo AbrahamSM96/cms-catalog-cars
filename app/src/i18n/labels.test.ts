@@ -7,9 +7,8 @@ import { Colors } from '../collections/Colors'
 import { Media } from '../collections/Media'
 import { Users } from '../collections/Users'
 
-import type { Translated } from './locales'
-
 import * as catalog from './labels'
+import type { Translated } from './locales'
 import { LOCALES } from './locales'
 
 // Rutas donde el inglés y el español coinciden legítimamente.

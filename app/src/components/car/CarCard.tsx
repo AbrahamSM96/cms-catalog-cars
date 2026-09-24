@@ -4,12 +4,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 
-import type { CarCardSizesVariant } from '../../lib/images'
-
-import { buildCarImageAlt, carCardSizes, getImageUrl } from '../../lib/images'
 import { buildCarSlug } from '../../lib/car-slug'
-import type { Car } from '../../types/car'
 import { formatPriceMXN } from '../../lib/currency'
+import type { CarCardSizesVariant } from '../../lib/images'
+import { buildCarImageAlt, carCardSizes, getImageUrl } from '../../lib/images'
+import type { Car } from '../../types/car'
 
 interface CarCardProps {
   car: Car
@@ -82,7 +81,7 @@ export function CarCard({
     <Link
       className="group block"
       href={`/catalogo/${buildCarSlug(car)}`}
-      prefetch={true}
+      prefetch
     >
       <article className="shadow-soft hover:shadow-float relative overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-slate-300">
         {/* Image */}
