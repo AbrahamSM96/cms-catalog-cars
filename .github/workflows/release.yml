@@ -1,0 +1,113 @@
+# Changelog, versión, tag y GitHub Release — todo en el push a `main`.
+#
+# En cada push a `main` este job:
+#   1. Calcula la versión siguiente leyendo los commits desde el último tag.
+#   2. Reescribe CHANGELOG.md completo con git-cliff.
+#   3. Sube la versión en package.json.
+#   4. Commitea eso a `main` como `chore(release): vX.Y.Z [skip ci]`.
+#   5. Crea el tag vX.Y.Z y el GitHub Release con las notas de esa versión.
+#
+# No hay pull request de por medio: el changelog queda en `main` en el mismo
+# push. Ver CONTRIBUTING.md para el formato de commit que alimenta todo esto.
+#
+# Dos cosas que hay que saber:
+# - Si desde el último tag solo hay commits `chore`/`ci`/`style`/`test`, el job
+#   no publica nada y termina en verde. Es lo esperado.
+# - El commit que hace el bot lleva `[skip ci]`, así que no se dispara a sí
+#   mismo. El `if` del job es un segundo seguro por si alguien lo quita.
+#
+# Si `main` tiene branch protection, hay que permitir que GITHUB_TOKEN empuje
+# (bypass para GitHub Actions) o el paso de push falla.
+
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  # Permite dispararlo a mano desde la pestaña Actions.
+  workflow_dispatch:
+
+# Dos pushes seguidos no deben generar dos releases encimados: el segundo
+# espera a que termine el primero para ver los tags ya actualizados.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # fetch-depth: 0 porque git-cliff necesita el historial y los tags
+      # completos para saber desde dónde generar.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Configurar identidad de git
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      # El repo nació sin tags. El primero se ancla al commit donde arrancó este
+      # flujo, para que el changelog no intente reconstruir todo el historial
+      # viejo (que no seguía la convención).
+      - name: Anclar tag inicial v0.1.0
+        run: |
+          if [ -z "$(git tag --list 'v[0-9]*')" ]; then
+            git tag v0.1.0 51f983cbdcc3db711cd6156996f02586225bb945
+            git push origin v0.1.0
+            echo "Tag inicial v0.1.0 creado."
+          fi
+
+      - name: Calcular versión siguiente
+        id: version
+        run: |
+          NEXT="$(npx --yes git-cliff@2 --bumped-version)"
+          LATEST="$(git describe --tags --abbrev=0 --match 'v[0-9]*')"
+          echo "Último tag: $LATEST — siguiente: $NEXT"
+
+          if [ "$NEXT" = "$LATEST" ]; then
+            echo "Sin commits publicables desde $LATEST. No se genera release."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "release=true" >> "$GITHUB_OUTPUT"
+            echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generar CHANGELOG.md y notas de la versión
+        if: steps.version.outputs.release == 'true'
+        run: |
+          npx --yes git-cliff@2 --bump --output CHANGELOG.md
+          npx --yes git-cliff@2 --bump --unreleased --strip all --output /tmp/release-notes.md
+
+      - name: Subir versión en package.json
+        if: steps.version.outputs.release == 'true'
+        run: npm version --no-git-tag-version --allow-same-version "${{ steps.version.outputs.next }}"
+
+      - name: Commitear, taggear y empujar
+        if: steps.version.outputs.release == 'true'
+        env:
+          NEXT: ${{ steps.version.outputs.next }}
+        run: |
+          git add CHANGELOG.md package.json
+          git commit -m "chore(release): ${NEXT} [skip ci]"
+          git tag -a "${NEXT}" -m "${NEXT}"
+          git push origin HEAD:main --follow-tags
+
+      - name: Crear GitHub Release
+        if: steps.version.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEXT: ${{ steps.version.outputs.next }}
+        run: |
+          gh release create "${NEXT}" \
+            --title "${NEXT}" \
+            --notes-file /tmp/release-notes.md
