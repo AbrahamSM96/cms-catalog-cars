@@ -25,19 +25,19 @@ Reglas:
 
 ## Tipos y qué hacen
 
-| Tipo | Sección en el CHANGELOG | Efecto en la versión |
-| --- | --- | --- |
-| `feat` | Features | sube **minor** (0.1.0 → 0.2.0) |
-| `fix` | Bug Fixes | sube **patch** (0.2.0 → 0.2.1) |
-| `perf` | Performance | patch |
-| `refactor` | Refactors | patch |
-| `revert` | Reverts | patch |
-| `docs` | Documentation | patch |
-| `build` | Build & Dependencies | patch |
-| `ci` | oculto | ninguno |
-| `chore` | oculto | ninguno |
-| `style` | oculto | ninguno |
-| `test` | oculto | ninguno |
+| Tipo       | Sección en el CHANGELOG | Efecto en la versión           |
+| ---------- | ----------------------- | ------------------------------ |
+| `feat`     | Features                | sube **minor** (0.1.0 → 0.2.0) |
+| `fix`      | Bug Fixes               | sube **patch** (0.2.0 → 0.2.1) |
+| `perf`     | Performance             | patch                          |
+| `refactor` | Refactors               | patch                          |
+| `revert`   | Reverts                 | patch                          |
+| `docs`     | Documentation           | patch                          |
+| `build`    | Build & Dependencies    | patch                          |
+| `ci`       | oculto                  | ninguno                        |
+| `chore`    | oculto                  | ninguno                        |
+| `style`    | oculto                  | ninguno                        |
+| `test`     | oculto                  | ninguno                        |
 
 `style` es formato de código (oxfmt, comillas, espacios), **no** cambios de CSS.
 Un cambio visual real es `feat` o `fix`.

@@ -21,9 +21,7 @@ interface LeadsBreakdownProps {
  *
  * @param props - Component props.
  */
-export function LeadsBreakdown(
-  props: LeadsBreakdownProps
-): React.JSX.Element {
+export function LeadsBreakdown(props: LeadsBreakdownProps): React.JSX.Element {
   const { emptyText, rows, title } = props
   const top = rows[0]?.count ?? 1
 

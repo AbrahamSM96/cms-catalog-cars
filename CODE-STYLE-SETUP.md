@@ -649,7 +649,7 @@ Key: `strict: true`, `noEmit: true`, `moduleResolution: bundler`,
   "oxc.path.oxlint": "./node_modules/.bin/oxlint",
   "oxc.path.oxfmt": "./node_modules/.bin/oxfmt",
   "[typescript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.defaultFormatter": "oxc.oxc-vscode",
     "editor.formatOnSave": true
   },
   "[javascript]": {
@@ -661,7 +661,7 @@ Key: `strict: true`, `noEmit: true`, `moduleResolution: bundler`,
     "editor.formatOnSave": true
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.defaultFormatter": "oxc.oxc-vscode",
     "editor.formatOnSave": true
   },
   "[json]": { "editor.defaultFormatter": "oxc.oxc-vscode" },

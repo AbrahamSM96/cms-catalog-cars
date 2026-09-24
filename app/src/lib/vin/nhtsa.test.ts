@@ -18,7 +18,10 @@ const NO_YEAR_CODE = '1HGCM826X0A004313'
  * @param body - The payload the fake response resolves to.
  */
 function jsonResponse(body: unknown): Response {
-  return { json: (): Promise<unknown> => Promise.resolve(body), ok: true } as Response
+  return {
+    json: (): Promise<unknown> => Promise.resolve(body),
+    ok: true,
+  } as Response
 }
 
 describe('nhtsaVinDecoder', () => {

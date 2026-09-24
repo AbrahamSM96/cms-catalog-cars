@@ -33,9 +33,7 @@ describe('buildLeadData', () => {
   })
 
   it('nulls every unknown when there is no attribution and no car', () => {
-    expect(
-      buildLeadData({ placement: 'footer', source: 'phone' })
-    ).toEqual({
+    expect(buildLeadData({ placement: 'footer', source: 'phone' })).toEqual({
       car: null,
       fbclid: null,
       landingPath: null,
@@ -62,14 +60,22 @@ describe('buildLeadData', () => {
   })
 
   it('coerces a string car id to the number the relationship expects', () => {
-    expect(buildLeadData({ carId: '42', placement: 'car-detail', source: 'whatsapp' }).car).toBe(
-      42
-    )
+    expect(
+      buildLeadData({
+        carId: '42',
+        placement: 'car-detail',
+        source: 'whatsapp',
+      }).car
+    ).toBe(42)
   })
 
   it('drops a car id that is not a number', () => {
     expect(
-      buildLeadData({ carId: 'abc', placement: 'car-detail', source: 'whatsapp' }).car
+      buildLeadData({
+        carId: 'abc',
+        placement: 'car-detail',
+        source: 'whatsapp',
+      }).car
     ).toBeNull()
   })
 })

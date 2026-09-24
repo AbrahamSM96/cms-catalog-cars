@@ -35,12 +35,12 @@ export async function ContactDetails(): Promise<React.JSX.Element> {
   const addr = contact?.address
   const addressText = addr
     ? [
-      addr.line1,
-      [addr.postalCode, addr.city, addr.state].filter(Boolean).join(', '),
-      addr.country,
-    ]
-      .filter(Boolean)
-      .join(', ')
+        addr.line1,
+        [addr.postalCode, addr.city, addr.state].filter(Boolean).join(', '),
+        addr.country,
+      ]
+        .filter(Boolean)
+        .join(', ')
     : null
   const mapsHref = addr?.googleMapsUrl
   const hours = contact?.hoursNote

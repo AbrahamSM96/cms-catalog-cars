@@ -118,9 +118,7 @@ export function SearchBar(props: SearchBarProps): React.JSX.Element {
       setHighlighted((index) => (index + 1) % matches.length)
     } else if (e.key === 'ArrowUp') {
       e.preventDefault()
-      setHighlighted((index) =>
-        index <= 0 ? matches.length - 1 : index - 1
-      )
+      setHighlighted((index) => (index <= 0 ? matches.length - 1 : index - 1))
     } else if (e.key === 'Enter') {
       const match = matches[highlighted]
       if (match) {

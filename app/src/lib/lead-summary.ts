@@ -81,9 +81,7 @@ function tally(entries: string[], otherLabel: string): LeadTally[] {
 
   if (sorted.length <= TOP_N) return sorted
 
-  const rest = sorted
-    .slice(TOP_N)
-    .reduce((total, row) => total + row.count, 0)
+  const rest = sorted.slice(TOP_N).reduce((total, row) => total + row.count, 0)
 
   return [...sorted.slice(0, TOP_N), { count: rest, label: otherLabel }]
 }

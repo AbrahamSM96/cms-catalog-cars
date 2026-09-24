@@ -78,9 +78,9 @@ function airbagFeature(decoded: DecodedVin): string | null {
 export const featuresMapper: FieldMapper = (
   decoded: DecodedVin
 ): FieldSuggestion | null => {
-  const features = EQUIPMENT.filter(
-    ([key]) => decoded[key] === STANDARD
-  ).map(([, name]) => name)
+  const features = EQUIPMENT.filter(([key]) => decoded[key] === STANDARD).map(
+    ([, name]) => name
+  )
 
   const airbags = airbagFeature(decoded)
   if (airbags !== null) features.push(airbags)

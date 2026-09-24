@@ -70,16 +70,16 @@ export const umamiProvider: AnalyticsProvider = {
   tags: (): AnalyticsTag[] =>
     WEBSITE_ID && DOMAIN
       ? [
-        {
-          attributes: {
-            'data-domains': DOMAIN,
-            'data-website-id': WEBSITE_ID,
+          {
+            attributes: {
+              'data-domains': DOMAIN,
+              'data-website-id': WEBSITE_ID,
+            },
+            id: 'umami',
+            src: SRC,
+            strategy: 'afterInteractive',
           },
-          id: 'umami',
-          src: SRC,
-          strategy: 'afterInteractive',
-        },
-      ]
+        ]
       : [],
   /**
    * track

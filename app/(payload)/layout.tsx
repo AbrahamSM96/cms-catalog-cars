@@ -11,7 +11,6 @@ import type { ReactNode } from 'react'
 
 import { serverFunction } from './actions'
 
-
 type Args = {
   children: ReactNode
 }

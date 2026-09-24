@@ -15,7 +15,7 @@ export default function Loading(): React.JSX.Element {
             <div className="mx-auto mt-6 h-6 w-2/3 animate-pulse rounded-lg bg-slate-200" />
             <div className="mx-auto mt-8 h-14 w-full max-w-2xl animate-pulse rounded-2xl bg-slate-200" />
           </div>
-          <div className="mx-auto mt-10 aspect-[21/9] sm:mt-14 w-full max-w-6xl animate-pulse rounded-3xl bg-slate-200" />
+          <div className="mx-auto mt-10 aspect-[21/9] w-full max-w-6xl animate-pulse rounded-3xl bg-slate-200 sm:mt-14" />
         </div>
       </div>
 

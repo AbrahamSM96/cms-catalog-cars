@@ -67,14 +67,16 @@ function useDealershipCity(value: unknown): DealershipCity {
     let cancelled = false
     fetch(`/api/dealerships/${String(id)}?depth=1`)
       .then((r) => (r.ok ? r.json() : null))
-      .then((doc: { address?: { city?: { name?: string; state?: string } } }) => {
-        if (cancelled) return
-        const city = doc?.address?.city
-        setFetched({
-          city: { city: city?.name ?? '', state: city?.state ?? '' },
-          id,
-        })
-      })
+      .then(
+        (doc: { address?: { city?: { name?: string; state?: string } } }) => {
+          if (cancelled) return
+          const city = doc?.address?.city
+          setFetched({
+            city: { city: city?.name ?? '', state: city?.state ?? '' },
+            id,
+          })
+        }
+      )
       .catch(() => {
         if (!cancelled) setFetched({ city: NO_CITY, id })
       })

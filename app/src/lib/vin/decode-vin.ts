@@ -101,7 +101,10 @@ export async function decodeVinToSuggestions(props: {
   return {
     ok: true,
     source: outcome.source,
-    suggestions: inFormOrder([...catalogFields, ...mapDecodedVin(outcome.data)]),
+    suggestions: inFormOrder([
+      ...catalogFields,
+      ...mapDecodedVin(outcome.data),
+    ]),
     vin: normalizeVin(vin),
   }
 }

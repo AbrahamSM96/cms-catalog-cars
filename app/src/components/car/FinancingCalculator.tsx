@@ -129,10 +129,11 @@ export function FinancingCalculator({
       >
         {tabs.map(({ icon: Icon, id, label }) => (
           <button
-            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition ${activeTab === id
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'cursor-pointer text-slate-500 hover:text-slate-900'
-              }`}
+            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition ${
+              activeTab === id
+                ? 'bg-white text-slate-900 shadow-sm'
+                : 'cursor-pointer text-slate-500 hover:text-slate-900'
+            }`}
             key={id}
             onClick={() => setActiveTab(id)}
             type="button"

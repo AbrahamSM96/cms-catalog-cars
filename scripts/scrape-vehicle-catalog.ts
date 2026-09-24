@@ -227,7 +227,10 @@ class SessionExpired extends Error {}
 function titleCase(value: string): string {
   return value
     .split(' ')
-    .map((word) => `${word.slice(0, 1).toUpperCase()}${word.slice(1).toLowerCase()}`)
+    .map(
+      (word) =>
+        `${word.slice(0, 1).toUpperCase()}${word.slice(1).toLowerCase()}`
+    )
     .join(' ')
 }
 
@@ -373,7 +376,10 @@ function baseBody(year: number): Record<string, unknown> {
  * @param cookie - The captured cookie header.
  * @param year - The model year to list brands for.
  */
-async function fetchBrands(cookie: string, year: number): Promise<CatalogRef[]> {
+async function fetchBrands(
+  cookie: string,
+  year: number
+): Promise<CatalogRef[]> {
   const brands = await post({
     body: {
       listaProductoPlan: PRODUCT_PLAN,

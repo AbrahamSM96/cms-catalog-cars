@@ -44,12 +44,12 @@ const nextConfig: NextConfig = {
       },
       ...(r2Hostname
         ? [
-          {
-            protocol: 'https' as const,
-            hostname: r2Hostname,
-            pathname: '/**',
-          },
-        ]
+            {
+              protocol: 'https' as const,
+              hostname: r2Hostname,
+              pathname: '/**',
+            },
+          ]
         : []),
     ],
   },

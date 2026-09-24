@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
 import { decodedVin } from './__fixtures__/decoded'
-import type { CatalogBrand, CatalogModel, CatalogRepository } from './catalog-resolver'
+import type {
+  CatalogBrand,
+  CatalogModel,
+  CatalogRepository,
+} from './catalog-resolver'
 import { decodeVinToSuggestions, inFormOrder } from './decode-vin'
 import type { DecodeOutcome, VinDecoder } from './types'
 

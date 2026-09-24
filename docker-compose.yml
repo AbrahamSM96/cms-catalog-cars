@@ -70,7 +70,8 @@ services:
     container_name: cms-cars-seed
     # The migrator stage is Node-based (see Dockerfile), so this mirrors the
     # `seed` package script without going through bun.
-    command: ['node', 'node_modules/payload/bin.js', 'run', 'app/src/seed/run.ts']
+    command:
+      ['node', 'node_modules/payload/bin.js', 'run', 'app/src/seed/run.ts']
     restart: 'no'
     depends_on:
       migrate:

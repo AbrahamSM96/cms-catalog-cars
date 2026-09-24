@@ -47,7 +47,7 @@ const JETTA: DecodedVin = {
   transmissionSpeeds: null,
   transmissionStyle: 'Automatic',
   trim: 'Comfortline, Sportline',
-  vehicleType: null
+  vehicleType: null,
 }
 
 /**
@@ -59,9 +59,13 @@ function countingDecoder(data: DecodedVin): {
   calls: () => number
   decoder: VinDecoder
 } {
-  const decode = vi.fn(
-    (): Promise<DecodeOutcome> =>
-      Promise.resolve({ data, ok: true, raw: { Make: data.make }, source: 'network' })
+  const decode = vi.fn((): Promise<DecodeOutcome> =>
+    Promise.resolve({
+      data,
+      ok: true,
+      raw: { Make: data.make },
+      source: 'network',
+    })
   )
   return { calls: (): number => decode.mock.calls.length, decoder: { decode } }
 }
@@ -69,7 +73,10 @@ function countingDecoder(data: DecodedVin): {
 /**
  * Build an in-memory stand-in for the durable store.
  */
-function fakeStore(): { entries: Map<string, DecodedVin>; store: VinCacheStore } {
+function fakeStore(): {
+  entries: Map<string, DecodedVin>
+  store: VinCacheStore
+} {
   const entries = new Map<string, DecodedVin>()
   return {
     entries,
@@ -88,7 +95,10 @@ function fakeStore(): { entries: Map<string, DecodedVin>; store: VinCacheStore }
        * @param props.decoded - The decoded attributes.
        * @param props.squish - The squish VIN key.
        */
-      write: (props: { decoded: DecodedVin; squish: string }): Promise<void> => {
+      write: (props: {
+        decoded: DecodedVin
+        squish: string
+      }): Promise<void> => {
         entries.set(props.squish, props.decoded)
         return Promise.resolve()
       },
@@ -122,9 +132,8 @@ describe('withMemoryCache', () => {
   })
 
   it('does not cache a failed decode', async () => {
-    const decode = vi.fn(
-      (): Promise<DecodeOutcome> =>
-        Promise.resolve({ ok: false, reason: 'unavailable' })
+    const decode = vi.fn((): Promise<DecodeOutcome> =>
+      Promise.resolve({ ok: false, reason: 'unavailable' })
     )
     const cached = withMemoryCache({ decode }, MEMORY_CACHE_MAX)
 
@@ -192,9 +201,8 @@ describe('withStoreCache', () => {
   })
 
   it('does not persist a failed decode', async () => {
-    const decode = vi.fn(
-      (): Promise<DecodeOutcome> =>
-        Promise.resolve({ ok: false, reason: 'not-found' })
+    const decode = vi.fn((): Promise<DecodeOutcome> =>
+      Promise.resolve({ ok: false, reason: 'not-found' })
     )
     const { entries, store } = fakeStore()
 

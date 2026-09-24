@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  isValidVin,
-  modelYearFromVin,
-  normalizeVin,
-  squishVin,
-} from './vin'
+import { isValidVin, modelYearFromVin, normalizeVin, squishVin } from './vin'
 
 // Real, checksum-valid VINs used across the suite.
 const HONDA_ACCORD_2003 = '1HGCM82633A004352'

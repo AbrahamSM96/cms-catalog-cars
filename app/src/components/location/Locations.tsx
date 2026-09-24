@@ -63,7 +63,13 @@ function addressLines(d: Dealership): string[] {
   const a = d.address
   if (!a) return []
   const city = dealershipCity(d)
-  const rest = [a.neighborhood, a.postalCode, city?.name, city?.state, a.country]
+  const rest = [
+    a.neighborhood,
+    a.postalCode,
+    city?.name,
+    city?.state,
+    a.country,
+  ]
     .filter(Boolean)
     .join(', ')
   return [a.line1, rest].filter(Boolean) as string[]

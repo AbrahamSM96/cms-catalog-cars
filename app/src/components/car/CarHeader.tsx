@@ -121,7 +121,7 @@ export function CarHeader({ car }: CarHeaderProps): React.JSX.Element | null {
 
       {/* Info pills */}
       {pills.length > 0 && (
-        <div className="hidden sm:flex mt-5 flex-wrap gap-2">
+        <div className="mt-5 hidden flex-wrap gap-2 sm:flex">
           {pills.map(({ icon: Icon, label }) => (
             <span
               className="shadow-soft inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700"

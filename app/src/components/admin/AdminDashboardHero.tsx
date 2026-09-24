@@ -203,7 +203,9 @@ export async function AdminDashboardHero(
                   {currency.format(car.price)}
                 </span>
                 <span className="admin-card__meta">
-                  {car.mileage ? `${car.mileage.toLocaleString(locale)} km` : '—'}
+                  {car.mileage
+                    ? `${car.mileage.toLocaleString(locale)} km`
+                    : '—'}
                   <span aria-hidden="true"> · </span>
                   {date.format(new Date(car.updatedAt))}
                 </span>

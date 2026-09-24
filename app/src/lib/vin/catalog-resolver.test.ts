@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
 import { decodedVin } from './__fixtures__/decoded'
-import type { CatalogBrand, CatalogModel, CatalogRepository } from './catalog-resolver'
+import type {
+  CatalogBrand,
+  CatalogModel,
+  CatalogRepository,
+} from './catalog-resolver'
 import {
   resolveBrand,
   resolveCatalogFields,
@@ -143,8 +147,12 @@ describe('scoreVersion', () => {
   it('matches a short trim as a whole word, not as a fragment', () => {
     const decoded = decodedVin({ trim: 'GT' })
 
-    expect(scoreVersion(decoded, '2.0L GTI ESTANDAR HATCHBACK 4 CIL 5 P')).toBe(0)
-    expect(scoreVersion(decoded, '2.0L GT ESTANDAR HATCHBACK 4 CIL 5 P')).toBe(3)
+    expect(scoreVersion(decoded, '2.0L GTI ESTANDAR HATCHBACK 4 CIL 5 P')).toBe(
+      0
+    )
+    expect(scoreVersion(decoded, '2.0L GT ESTANDAR HATCHBACK 4 CIL 5 P')).toBe(
+      3
+    )
   })
 
   it('does not count a transmission the description contradicts', () => {
@@ -164,7 +172,9 @@ describe('scoreVersion', () => {
   })
 
   it('scores nothing when the VIN describes none of it', () => {
-    expect(scoreVersion(decodedVin(), '2.0L EX ESTANDAR SEDAN 4 CIL 4 P')).toBe(0)
+    expect(scoreVersion(decodedVin(), '2.0L EX ESTANDAR SEDAN 4 CIL 4 P')).toBe(
+      0
+    )
   })
 })
 

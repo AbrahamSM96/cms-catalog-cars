@@ -71,25 +71,25 @@ export async function CarDetail({
     vehicleModelDate: String(car.year),
     ...(car.mileage
       ? {
-        mileageFromOdometer: {
-          '@type': 'QuantitativeValue',
-          unitCode: 'KMT',
-          value: car.mileage,
-        },
-      }
+          mileageFromOdometer: {
+            '@type': 'QuantitativeValue',
+            unitCode: 'KMT',
+            value: car.mileage,
+          },
+        }
       : {}),
     ...(car.fuelType ? { fuelType: car.fuelType } : {}),
     ...(car.horsepower
       ? {
-        vehicleEngine: {
-          '@type': 'EngineSpecification',
-          enginePower: {
-            '@type': 'QuantitativeValue',
-            unitCode: 'HP',
-            value: car.horsepower,
+          vehicleEngine: {
+            '@type': 'EngineSpecification',
+            enginePower: {
+              '@type': 'QuantitativeValue',
+              unitCode: 'HP',
+              value: car.horsepower,
+            },
           },
-        },
-      }
+        }
       : {}),
     ...(featuredFilename ? { image: getImageUrl(featuredFilename) } : {}),
     offers: {

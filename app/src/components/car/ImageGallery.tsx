@@ -228,10 +228,11 @@ export function ImageGallery({
               return (
                 <button
                   aria-label={`Seleccionar imagen ${index + 1}`}
-                  className={`relative h-20 w-full cursor-pointer overflow-hidden rounded-xl border-2 transition ${index === selectedIndex
+                  className={`relative h-20 w-full cursor-pointer overflow-hidden rounded-xl border-2 transition ${
+                    index === selectedIndex
                       ? 'border-accent-600 ring-2 ring-accent-600/30'
                       : 'border-slate-200 hover:border-slate-300'
-                    }`}
+                  }`}
                   key={imgItem.media.id}
                   onClick={() => setSelectedIndex(index)}
                   type="button"
@@ -404,10 +405,11 @@ export function ImageGallery({
                 return (
                   <button
                     aria-label={`Seleccionar imagen ${index + 1}`}
-                    className={`relative h-16 w-24 shrink-0 cursor-pointer overflow-hidden rounded-lg border-2 transition sm:h-20 sm:w-28 ${index === selectedIndex
+                    className={`relative h-16 w-24 shrink-0 cursor-pointer overflow-hidden rounded-lg border-2 transition sm:h-20 sm:w-28 ${
+                      index === selectedIndex
                         ? 'border-accent-600 opacity-100'
                         : 'border-transparent opacity-60 hover:opacity-100'
-                      }`}
+                    }`}
                     key={imgItem.media.id}
                     onClick={() => setSelectedIndex(index)}
                     type="button"

@@ -173,8 +173,9 @@ export function Hero({
               slides.map((slide, i) => (
                 <div
                   aria-hidden={i !== current}
-                  className={`absolute inset-0 transition-opacity duration-1000 ${i === current ? 'opacity-100' : 'opacity-0'
-                    }`}
+                  className={`absolute inset-0 transition-opacity duration-1000 ${
+                    i === current ? 'opacity-100' : 'opacity-0'
+                  }`}
                   key={i}
                 >
                   <Image
@@ -261,10 +262,11 @@ export function Hero({
                   {slides.map((_, i) => (
                     <button
                       aria-label={`Ir al slide ${i + 1}`}
-                      className={`h-2 cursor-pointer rounded-full transition-all ${i === current
-                        ? 'w-8 bg-accent-500'
-                        : 'w-2 bg-fixed-white/70 hover:bg-fixed-white'
-                        }`}
+                      className={`h-2 cursor-pointer rounded-full transition-all ${
+                        i === current
+                          ? 'w-8 bg-accent-500'
+                          : 'w-2 bg-fixed-white/70 hover:bg-fixed-white'
+                      }`}
                       key={i}
                       onClick={() => goTo(i)}
                       type="button"

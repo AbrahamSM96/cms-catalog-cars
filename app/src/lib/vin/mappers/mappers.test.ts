@@ -41,8 +41,18 @@ describe('numeric mappers', () => {
     })
 
     expect(mapDecodedVin(decoded)).toEqual([
-      { confidence: 'exact', label: expect.anything(), path: 'year', value: 2013 },
-      { confidence: 'exact', label: expect.anything(), path: 'doors', value: 4 },
+      {
+        confidence: 'exact',
+        label: expect.anything(),
+        path: 'year',
+        value: 2013,
+      },
+      {
+        confidence: 'exact',
+        label: expect.anything(),
+        path: 'doors',
+        value: 4,
+      },
       {
         confidence: 'exact',
         label: expect.anything(),
@@ -65,12 +75,12 @@ describe('numeric mappers', () => {
 
 describe('fuel mapper', () => {
   it('reads the primary fuel', () => {
-    expect(valueFor(decodedVin({ fuelTypePrimary: 'Gasoline' }), 'fuelType')).toBe(
-      'gasoline'
-    )
-    expect(valueFor(decodedVin({ fuelTypePrimary: 'Diesel' }), 'fuelType')).toBe(
-      'diesel'
-    )
+    expect(
+      valueFor(decodedVin({ fuelTypePrimary: 'Gasoline' }), 'fuelType')
+    ).toBe('gasoline')
+    expect(
+      valueFor(decodedVin({ fuelTypePrimary: 'Diesel' }), 'fuelType')
+    ).toBe('diesel')
     expect(
       valueFor(decodedVin({ fuelTypePrimary: 'Electric' }), 'fuelType')
     ).toBe('electric')
@@ -99,17 +109,22 @@ describe('fuel mapper', () => {
 
   it('proposes nothing for a fuel the catalogue has no option for', () => {
     expect(
-      valueFor(decodedVin({ fuelTypePrimary: 'Compressed Natural Gas' }), 'fuelType')
+      valueFor(
+        decodedVin({ fuelTypePrimary: 'Compressed Natural Gas' }),
+        'fuelType'
+      )
     ).toBeUndefined()
   })
 })
 
 describe('body mappers', () => {
   it('translates vPIC body classes into the catalogue options', () => {
-    expect(valueFor(decodedVin({ bodyClass: 'Sedan/Saloon' }), 'bodyType')).toBe(
-      'sedan'
+    expect(
+      valueFor(decodedVin({ bodyClass: 'Sedan/Saloon' }), 'bodyType')
+    ).toBe('sedan')
+    expect(valueFor(decodedVin({ bodyClass: 'Coupe' }), 'bodyType')).toBe(
+      'coupe'
     )
-    expect(valueFor(decodedVin({ bodyClass: 'Coupe' }), 'bodyType')).toBe('coupe')
     expect(
       valueFor(
         decodedVin({
@@ -118,14 +133,21 @@ describe('body mappers', () => {
         'bodyType'
       )
     ).toBe('suv')
-    expect(valueFor(decodedVin({ bodyClass: 'Pickup' }), 'bodyType')).toBe('truck')
+    expect(valueFor(decodedVin({ bodyClass: 'Pickup' }), 'bodyType')).toBe(
+      'truck'
+    )
     expect(
-      valueFor(decodedVin({ bodyClass: 'Hatchback/Liftback/Notchback' }), 'bodyType')
+      valueFor(
+        decodedVin({ bodyClass: 'Hatchback/Liftback/Notchback' }),
+        'bodyType'
+      )
     ).toBe('hatchback')
     expect(
       valueFor(decodedVin({ bodyClass: 'Convertible/Cabriolet' }), 'bodyType')
     ).toBe('convertible')
-    expect(valueFor(decodedVin({ bodyClass: 'Wagon' }), 'bodyType')).toBe('wagon')
+    expect(valueFor(decodedVin({ bodyClass: 'Wagon' }), 'bodyType')).toBe(
+      'wagon'
+    )
     expect(valueFor(decodedVin({ bodyClass: 'Minivan' }), 'bodyType')).toBe(
       'minivan'
     )
@@ -133,7 +155,10 @@ describe('body mappers', () => {
 
   it('proposes nothing for a body class the catalogue has no option for', () => {
     expect(
-      valueFor(decodedVin({ bodyClass: 'Incomplete - Chassis Cab' }), 'bodyType')
+      valueFor(
+        decodedVin({ bodyClass: 'Incomplete - Chassis Cab' }),
+        'bodyType'
+      )
     ).toBeUndefined()
   })
 
@@ -186,7 +211,9 @@ describe('transmission mapper', () => {
   it('does not read an automated manual as a stick shift', () => {
     expect(
       valueFor(
-        decodedVin({ transmissionStyle: 'Automated Manual Transmission (AMT)' }),
+        decodedVin({
+          transmissionStyle: 'Automated Manual Transmission (AMT)',
+        }),
         'transmission'
       )
     ).toBe('automatic')
@@ -237,7 +264,9 @@ describe('engine mapper', () => {
   })
 
   it('proposes nothing without both the displacement and the cylinders', () => {
-    expect(valueFor(decodedVin({ engineCylinders: 4 }), 'engine')).toBeUndefined()
+    expect(
+      valueFor(decodedVin({ engineCylinders: 4 }), 'engine')
+    ).toBeUndefined()
     expect(valueFor(decodedVin({ displacementL: 2 }), 'engine')).toBeUndefined()
   })
 })

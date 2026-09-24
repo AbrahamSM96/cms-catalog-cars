@@ -90,8 +90,7 @@ export function buildVersionOptions(props: {
 
   return [...borrowed.entries()]
     .sort((left, right) => {
-      const distance =
-        Math.abs(left[1] - year) - Math.abs(right[1] - year)
+      const distance = Math.abs(left[1] - year) - Math.abs(right[1] - year)
       return distance === 0 ? left[0].localeCompare(right[0]) : distance
     })
     .map(([description, from]) => ({

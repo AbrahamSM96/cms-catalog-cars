@@ -1,4 +1,3 @@
-
 import { cars, common } from '../../i18n/labels'
 import { slugify } from '../slugify'
 import { detectTransmission } from '../transmission'
@@ -168,7 +167,9 @@ export function resolveBrand(
   if (!needle) return null
 
   for (const strategy of BRAND_STRATEGIES) {
-    const brand = brands.find((candidate) => strategy.matches(candidate, needle))
+    const brand = brands.find((candidate) =>
+      strategy.matches(candidate, needle)
+    )
     if (brand) return { brand, confidence: strategy.confidence }
   }
 
@@ -214,10 +215,7 @@ export function resolveModel(
  * @param decoded - The vehicle as described by its VIN.
  * @param description - One catalogue version description.
  */
-export function scoreVersion(
-  decoded: DecodedVin,
-  description: string
-): number {
+export function scoreVersion(decoded: DecodedVin, description: string): number {
   const haystack = description.toUpperCase()
   let score = 0
 
@@ -244,7 +242,9 @@ export function scoreVersion(
 
   const style = decoded.transmissionStyle
   if (style !== null) {
-    const wanted = style.toUpperCase().includes('MANUAL') ? 'manual' : 'automatic'
+    const wanted = style.toUpperCase().includes('MANUAL')
+      ? 'manual'
+      : 'automatic'
     if (detectTransmission(description) === wanted) score += 1
   }
 

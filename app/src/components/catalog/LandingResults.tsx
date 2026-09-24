@@ -106,8 +106,9 @@ export async function LandingResults(
       ) : null}
 
       <p className="mt-4 text-sm font-medium text-slate-500">
-        {cars.totalDocs} {cars.totalDocs === 1 ? 'auto disponible' : 'autos disponibles'}{' '}
-        en {page.city.name}, {page.city.state}
+        {cars.totalDocs}{' '}
+        {cars.totalDocs === 1 ? 'auto disponible' : 'autos disponibles'} en{' '}
+        {page.city.name}, {page.city.state}
       </p>
 
       <div className="mt-10 text-left">
@@ -117,7 +118,9 @@ export async function LandingResults(
           <div className="mt-10 text-center">
             <Link
               className="shadow-soft inline-flex items-center rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-600 transition hover:border-accent-500"
-              href={page.brand ? `/catalogo?brand=${page.brand.slug}` : '/catalogo'}
+              href={
+                page.brand ? `/catalogo?brand=${page.brand.slug}` : '/catalogo'
+              }
             >
               Ver los {cars.totalDocs} autos en el catálogo
             </Link>

@@ -64,9 +64,7 @@ export async function generateMetadata(
       type: 'website',
       url: page.canonical,
     },
-    ...(cars.totalDocs === 0
-      ? { robots: { follow: true, index: false } }
-      : {}),
+    ...(cars.totalDocs === 0 ? { robots: { follow: true, index: false } } : {}),
     title: page.title,
   }
 }

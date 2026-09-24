@@ -34,8 +34,7 @@ const engineMapper: FieldMapper = (
   if (displacementL === null || engineCylinders === null) return null
 
   const layout =
-    lookup(CONFIGURATIONS, decoded.engineConfiguration) ??
-    DEFAULT_CONFIGURATION
+    lookup(CONFIGURATIONS, decoded.engineConfiguration) ?? DEFAULT_CONFIGURATION
 
   return {
     confidence: 'inferred',

@@ -1053,7 +1053,6 @@ export const siteSettings = {
       },
       label: msg('Colors', 'Colores'),
     },
-
   },
   label: msg('Site settings', 'Configuración del sitio'),
 }

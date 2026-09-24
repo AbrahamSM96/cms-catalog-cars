@@ -23,10 +23,9 @@ interface Window {
  * @param props.max - How many calls a key may make per window.
  * @param props.windowMs - Length of the window, in milliseconds.
  */
-export function createRateLimiter(props: {
-  max: number
-  windowMs: number
-}): { allow: (key: string, now: number) => boolean } {
+export function createRateLimiter(props: { max: number; windowMs: number }): {
+  allow: (key: string, now: number) => boolean
+} {
   const { max, windowMs } = props
   const windows = new Map<string, Window>()
 

@@ -28,7 +28,8 @@ const SHARE_TARGETS: ShareTarget[] = [
      * @param url - The page URL to share.
      * @param text - The accompanying share text.
      */
-    href: (url, text) => `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`,
+    href: (url, text) =>
+      `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`,
     icon: (
       <svg
         aria-hidden="true"
@@ -181,7 +182,7 @@ export function ShareSheet(props: ShareSheetProps): React.JSX.Element | null {
         aria-label="Cerrar"
         className={clsx(
           'absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] transition-opacity duration-200',
-          visible ? 'opacity-100' : 'opacity-0',
+          visible ? 'opacity-100' : 'opacity-0'
         )}
         onClick={close}
         tabIndex={-1}
@@ -195,7 +196,7 @@ export function ShareSheet(props: ShareSheetProps): React.JSX.Element | null {
           'relative m-2 w-full max-w-md origin-bottom overflow-hidden rounded-[26px] bg-white/85 shadow-2xl ring-1 ring-slate-900/10 backdrop-blur-2xl transition duration-300 ease-out motion-reduce:transition-none sm:m-0',
           visible
             ? 'translate-y-0 scale-100 opacity-100'
-            : 'translate-y-8 scale-[0.98] opacity-0',
+            : 'translate-y-8 scale-[0.98] opacity-0'
         )}
         role="dialog"
       >
@@ -226,7 +227,7 @@ export function ShareSheet(props: ShareSheetProps): React.JSX.Element | null {
         <div className="h-px bg-slate-900/10" />
 
         {/* App row */}
-        <div className="flex gap-4 overflow-x-auto px-5 py-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex [scrollbar-width:none] gap-4 overflow-x-auto px-5 py-4 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {SHARE_TARGETS.map((target) => (
             <button
               className="group flex w-16 shrink-0 cursor-pointer flex-col items-center gap-1.5"
@@ -239,7 +240,7 @@ export function ShareSheet(props: ShareSheetProps): React.JSX.Element | null {
               <span
                 className={clsx(
                   'flex h-15 w-15 items-center justify-center rounded-[18px] shadow-sm transition-transform duration-150 group-active:scale-95',
-                  target.bg,
+                  target.bg
                 )}
               >
                 {target.icon}
@@ -268,7 +269,11 @@ export function ShareSheet(props: ShareSheetProps): React.JSX.Element | null {
                   strokeWidth={2}
                 />
               ) : (
-                <Copy aria-hidden="true" className="h-6 w-6" strokeWidth={1.8} />
+                <Copy
+                  aria-hidden="true"
+                  className="h-6 w-6"
+                  strokeWidth={1.8}
+                />
               )}
             </span>
             <span className="w-full truncate text-center text-[11px] font-medium text-slate-700">
@@ -280,7 +285,7 @@ export function ShareSheet(props: ShareSheetProps): React.JSX.Element | null {
             className="group flex w-16 shrink-0 cursor-pointer flex-col items-center gap-1.5"
             onClick={(): void => {
               handleOpen(
-                `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${text}\n\n${url}`)}`,
+                `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${text}\n\n${url}`)}`
               )
             }}
             type="button"
@@ -305,6 +310,6 @@ export function ShareSheet(props: ShareSheetProps): React.JSX.Element | null {
         </button>
       </div>
     </div>,
-    document.body,
+    document.body
   )
 }

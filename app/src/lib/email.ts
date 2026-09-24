@@ -101,11 +101,12 @@ export function forgotPasswordHTML(args?: {
 
   return `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:#111">
   <p>You received this email because a password reset was requested for your account on ${senderName()}.</p>
-  ${url
+  ${
+    url
       ? `<p><a href="${url}" style="display:inline-block;padding:12px 20px;background:#111;color:#fff;border-radius:8px;text-decoration:none">Reset password</a></p>
   <p style="font-size:13px;color:#555">If the button does not work, copy and paste this address into your browser:<br /><a href="${url}">${url}</a></p>`
       : '<p>Request the reset again from the panel to get a valid link.</p>'
-    }
+  }
   <p style="font-size:13px;color:#555">The link expires in ${expiration} minutes and can only be used once.</p>
   <p style="font-size:13px;color:#555">If you did not request this change, ignore this email: your password stays the same.</p>
 </div>`

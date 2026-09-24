@@ -307,8 +307,8 @@ const counts = await seed()
 // eslint-disable-next-line no-console
 console.log(
   `Seed complete — created ${counts.colors} colors, ${counts.brands} brands, ` +
-  `${counts.carModels} models, ${counts.carVersions} versions; ` +
-  `updated the years of ${counts.updatedVersions} existing versions.`
+    `${counts.carModels} models, ${counts.carVersions} versions; ` +
+    `updated the years of ${counts.updatedVersions} existing versions.`
 )
 
 process.exit(0)

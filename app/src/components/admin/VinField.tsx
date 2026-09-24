@@ -203,7 +203,11 @@ export function VinField(props: VinFieldProps): React.JSX.Element {
         appendRows(suggestion.path, suggestion.value)
         continue
       }
-      dispatchFields({ path: suggestion.path, type: 'UPDATE', value: suggestion.value })
+      dispatchFields({
+        path: suggestion.path,
+        type: 'UPDATE',
+        value: suggestion.value,
+      })
     }
 
     setSuggestions(null)
@@ -248,13 +252,20 @@ export function VinField(props: VinFieldProps): React.JSX.Element {
           }}
           type="button"
         >
-          {pick(busy ? ui.vinPanel.decoding : ui.vinPanel.decode, i18n.language)}
+          {pick(
+            busy ? ui.vinPanel.decoding : ui.vinPanel.decode,
+            i18n.language
+          )}
         </button>
       </div>
 
       <div className="vin-panel__notes">
-        <p className="vin-panel__note">{pick(ui.vinPanel.intro, i18n.language)}</p>
-        <p className="vin-panel__note">{pick(ui.vinPanel.scope, i18n.language)}</p>
+        <p className="vin-panel__note">
+          {pick(ui.vinPanel.intro, i18n.language)}
+        </p>
+        <p className="vin-panel__note">
+          {pick(ui.vinPanel.scope, i18n.language)}
+        </p>
       </div>
 
       {error ? (
@@ -310,10 +321,11 @@ export function VinField(props: VinFieldProps): React.JSX.Element {
                     {pick(suggestion.label, i18n.language)}
                   </span>
                   <span className="vin-panel__suggestion-now">
-                    {`${pick(ui.vinPanel.current, i18n.language)}: ${now === undefined || now === null || now === ''
-                      ? pick(ui.vinPanel.empty, i18n.language)
-                      : String(now)
-                      }`}
+                    {`${pick(ui.vinPanel.current, i18n.language)}: ${
+                      now === undefined || now === null || now === ''
+                        ? pick(ui.vinPanel.empty, i18n.language)
+                        : String(now)
+                    }`}
                   </span>
                   <span className="vin-panel__suggestion-value">{shown}</span>
                   <span
