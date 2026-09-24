@@ -81,6 +81,24 @@ describe('parseCoordinatesFromMapsUrl', () => {
     ).toEqual({ latitude: 20.115238, longitude: -98.747789 })
   })
 
+  it('reads a path pair next to a broken escape', () => {
+    // A stray `%` makes the whole link undecodable, so the fallback has to
+    // scan the raw text instead of giving up.
+    expect(
+      parseCoordinatesFromMapsUrl(
+        'https://www.google.com/maps/search/20.115238,+-98.747789?g_ep=%E0%A4%A'
+      )
+    ).toEqual({ latitude: 20.115238, longitude: -98.747789 })
+  })
+
+  it('falls back to the map centre when the path pair is out of range', () => {
+    expect(
+      parseCoordinatesFromMapsUrl(
+        'https://www.google.com/maps/search/200.5,+-98.747789/@20.6597,-103.3496,17z'
+      )
+    ).toEqual({ latitude: 20.6597, longitude: -103.3496 })
+  })
+
   it('returns null for a link without coordinates', () => {
     expect(
       parseCoordinatesFromMapsUrl(
