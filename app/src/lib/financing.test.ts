@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import type { Financing } from '../types/car'
+import type { Financing, Reserve } from '../types/car'
 
 import {
   calculateMonthlyPayment,
   resolveFinancingDefaults,
+  resolveReserveDefaults,
   sliderPercentage,
 } from './financing'
 
@@ -41,6 +42,40 @@ describe('resolveFinancingDefaults', () => {
     const financing: Financing = { availableLoanTerms: [] }
     const d = resolveFinancingDefaults(financing)
     expect(d.availableTerms).toEqual([6, 12, 24, 36, 48, 60])
+  })
+})
+
+describe('resolveReserveDefaults', () => {
+  it('returns fallback copy and no amount when reserve is undefined', () => {
+    expect(resolveReserveDefaults(undefined)).toEqual({
+      amount: undefined,
+      description: 'Reserva este vehículo con un depósito inicial.',
+      title: 'Aparta este auto',
+    })
+  })
+
+  it('trims configured copy and accepts a positive amount', () => {
+    const reserve: Reserve = {
+      amount: 5000,
+      description: '  Separa tu auto hoy.  ',
+      title: '  Reserva  ',
+    }
+
+    expect(resolveReserveDefaults(reserve)).toEqual({
+      amount: 5000,
+      description: 'Separa tu auto hoy.',
+      title: 'Reserva',
+    })
+  })
+
+  it('falls back for blank copy and a non-positive amount', () => {
+    const reserve: Reserve = { amount: 0, description: ' ', title: ' ' }
+
+    expect(resolveReserveDefaults(reserve)).toEqual({
+      amount: undefined,
+      description: 'Reserva este vehículo con un depósito inicial.',
+      title: 'Aparta este auto',
+    })
   })
 })
 

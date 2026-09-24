@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import type { SearchSuggestion } from '../types/car'
 
@@ -66,6 +66,11 @@ describe('editDistance', () => {
   it('counts a deletion', () => {
     expect(editDistance('corola', 'corolla')).toBe(1)
   })
+
+  it('returns the other word length when either word is empty', () => {
+    expect(editDistance('', 'mazda')).toBe(5)
+    expect(editDistance('mazda', '')).toBe(5)
+  })
 })
 
 describe('tokenize', () => {
@@ -85,6 +90,43 @@ describe('correctSearchTerms', () => {
 
   it('fixes a missing doubled letter', () => {
     expect(correctSearchTerms('nisan', VOCABULARY)).toEqual(['Nissan'])
+  })
+
+  it('indexes multiple words with the same phonetic key', () => {
+    expect(correctSearchTerms('casa', ['Casa', 'Caza'])).toEqual(['Casa'])
+  })
+
+  it('keeps an exact token when its display value disappears', () => {
+    const get = Map.prototype.get
+    vi.spyOn(Map.prototype, 'get').mockImplementation(
+      function (this: Map<unknown, unknown>, key) {
+        return key === 'mazda' ? undefined : get.call(this, key)
+      }
+    )
+
+    expect(correctSearchTerms('mazda', ['Mazda'])).toEqual(['mazda'])
+  })
+
+  it('keeps a phonetic token when its display value disappears', () => {
+    const get = Map.prototype.get
+    vi.spyOn(Map.prototype, 'get').mockImplementation(
+      function (this: Map<unknown, unknown>, key) {
+        return key === 'mazda' ? undefined : get.call(this, key)
+      }
+    )
+
+    expect(correctSearchTerms('masda', ['Mazda'])).toEqual(['masda'])
+  })
+
+  it('keeps an edited token when its display value disappears', () => {
+    const get = Map.prototype.get
+    vi.spyOn(Map.prototype, 'get').mockImplementation(
+      function (this: Map<unknown, unknown>, key) {
+        return key === 'toyota' ? undefined : get.call(this, key)
+      }
+    )
+
+    expect(correctSearchTerms('toyata', ['Toyota'])).toEqual(['toyata'])
   })
 
   it('fixes a typo through edit distance', () => {
