@@ -11,20 +11,22 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 While the project is pre-1.0, `feat` bumps the minor version and `fix` bumps the
 patch version.
 
+## 0.2.1 (2026-09-24)
+
+### Refactors
+- Update deployment workflow to ensure proper release order and clarity in comments ([55b9ef8](https://github.com/AbrahamSM96/cms-catalog-cars/commit/55b9ef82b8a9a832c65cfe36abbaa6b6f9afe44a))
+
 ## 0.2.0 (2026-09-24)
 
 ### Features
-
 - Add CI and deploy workflows for automated testing and deployment ([a5c1c7f](https://github.com/AbrahamSM96/cms-catalog-cars/commit/a5c1c7f8fa380739aff1623ed0bbda7cc0a9ea33))
 
 ### Refactors
-
 - Reorganize imports across multiple components for consistency ([dd552f8](https://github.com/AbrahamSM96/cms-catalog-cars/commit/dd552f832d1dbb35ca755a4a084e9fb2756abdaf))
 
 ## 0.1.0 (2026-09-24)
 
 ### Features
-
 - Add /docs directory to .gitignore to exclude documentation files from version control ([f88ae90](https://github.com/AbrahamSM96/cms-catalog-cars/commit/f88ae90483f0c1e9b3c0c7fa80b1d088e7a410c4))
 - Implement fuzzy search for car suggestions in search bar ([52998b6](https://github.com/AbrahamSM96/cms-catalog-cars/commit/52998b69c7876345d37f8ae5a7d737465c3196be))
 - Implement custom error and not found screens with enhanced user experience ([c20dcc4](https://github.com/AbrahamSM96/cms-catalog-cars/commit/c20dcc4b51270e25fccf726fa617290864b7877c))
@@ -79,11 +81,9 @@ patch version.
 - Add .env.example for environment variable configuration; update .gitignore to exclude all .env files ([c9034d9](https://github.com/AbrahamSM96/cms-catalog-cars/commit/c9034d91b4d6ceef1d7d4511b640a02c489ad221))
 
 ### Bug Fixes
-
 - Specify return type for cleanup function in ImageGallery component ([c17ded8](https://github.com/AbrahamSM96/cms-catalog-cars/commit/c17ded84950a18ad780eb1abb913d44d0b5e4371))
 
 ### Refactors
-
 - Update logo contrast handling to use tone classification ([0380e95](https://github.com/AbrahamSM96/cms-catalog-cars/commit/0380e950e0b7adb1f3733c8213c83932c1f32376))
 - Update spacing and padding across various components for improved layout consistency ([e229cf3](https://github.com/AbrahamSM96/cms-catalog-cars/commit/e229cf38d3def7b072d3c90cd9908e8424e22b5b))
 
@@ -94,7 +94,6 @@ from this era predate the convention, so some entries are grouped loosely and
 `Other` holds the ones with no type prefix at all.
 
 ### Features
-
 - Add /docs directory to .gitignore to exclude documentation files from version control ([f88ae90](https://github.com/AbrahamSM96/cms-catalog-cars/commit/f88ae90483f0c1e9b3c0c7fa80b1d088e7a410c4))
 - Implement fuzzy search for car suggestions in search bar ([52998b6](https://github.com/AbrahamSM96/cms-catalog-cars/commit/52998b69c7876345d37f8ae5a7d737465c3196be))
 - Implement custom error and not found screens with enhanced user experience ([c20dcc4](https://github.com/AbrahamSM96/cms-catalog-cars/commit/c20dcc4b51270e25fccf726fa617290864b7877c))
@@ -149,16 +148,13 @@ from this era predate the convention, so some entries are grouped loosely and
 - Add .env.example for environment variable configuration; update .gitignore to exclude all .env files ([c9034d9](https://github.com/AbrahamSM96/cms-catalog-cars/commit/c9034d91b4d6ceef1d7d4511b640a02c489ad221))
 
 ### Bug Fixes
-
 - Specify return type for cleanup function in ImageGallery component ([c17ded8](https://github.com/AbrahamSM96/cms-catalog-cars/commit/c17ded84950a18ad780eb1abb913d44d0b5e4371))
 
 ### Refactors
-
 - Update logo contrast handling to use tone classification ([0380e95](https://github.com/AbrahamSM96/cms-catalog-cars/commit/0380e950e0b7adb1f3733c8213c83932c1f32376))
 - Update spacing and padding across various components for improved layout consistency ([e229cf3](https://github.com/AbrahamSM96/cms-catalog-cars/commit/e229cf38d3def7b072d3c90cd9908e8424e22b5b))
 
 ### Chores
-
 - Update eslint configuration and dependencies ([b900854](https://github.com/AbrahamSM96/cms-catalog-cars/commit/b90085412cf5175a5b3b6e569e7943cc90d23218))
 - Update package.json with new scripts and dependency versions ([233d8c3](https://github.com/AbrahamSM96/cms-catalog-cars/commit/233d8c3eb373c2ce82c324f4a344a17ea2c31c1e))
 - Update ESLint configuration and add testing libraries ([d1b5324](https://github.com/AbrahamSM96/cms-catalog-cars/commit/d1b53243e69a1a29d6c7e75ecf1cd13f7cae1806))
@@ -167,7 +163,6 @@ from this era predate the convention, so some entries are grouped loosely and
 - Update package.json with new linting and formatting scripts; upgrade dependencies including Next.js and Payload CMS ([97a22b9](https://github.com/AbrahamSM96/cms-catalog-cars/commit/97a22b94b2b7543aadec3c8e154af55d62feb95e))
 
 ### Other
-
 - Add ViewOnSiteButton component and integrate with Cars collection for live preview ([51f983c](https://github.com/AbrahamSM96/cms-catalog-cars/commit/51f983cbdcc3db711cd6156996f02586225bb945))
 - Add migration to update cars table with reserve fields ([955138b](https://github.com/AbrahamSM96/cms-catalog-cars/commit/955138b92cca9dad2116abb7285916e8390e9196))
 - Disable image cropping and focal point in Media upload configuration ([fd70aca](https://github.com/AbrahamSM96/cms-catalog-cars/commit/fd70acabe5e7f2a5e9a3db46f2d960aa4689f115))
