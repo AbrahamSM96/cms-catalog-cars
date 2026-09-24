@@ -219,6 +219,15 @@ export const Dealerships: CollectionConfig = {
             },
             {
               admin: {
+                description: dealerships.fields.googleMapsUrl.description,
+                placeholder: 'https://maps.app.goo.gl/...',
+              },
+              label: common.googleMapsUrl,
+              name: 'googleMapsUrl',
+              type: 'text',
+            },
+            {
+              admin: {
                 description: dealerships.fields.coordinates.description,
               },
               fields: [
@@ -253,15 +262,6 @@ export const Dealerships: CollectionConfig = {
               label: dealerships.fields.coordinates.label,
               name: 'coordinates',
               type: 'group',
-            },
-            {
-              admin: {
-                description: dealerships.fields.googleMapsUrl.description,
-                placeholder: 'https://maps.app.goo.gl/...',
-              },
-              label: common.googleMapsUrl,
-              name: 'googleMapsUrl',
-              type: 'text',
             },
           ],
           label: dealerships.tabs.location.label,

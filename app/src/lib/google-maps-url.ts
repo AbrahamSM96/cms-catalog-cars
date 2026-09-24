@@ -38,6 +38,12 @@ const PIN = /!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/
 // The map centre, e.g. `/@20.6597,-103.3496,17z`.
 const CENTER = /@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/
 
+// A pair written straight into the path, e.g. `/maps/search/20.1152,+-98.7477`.
+// This is what a short link resolves to when the place was shared as a plain
+// coordinate rather than as a business, and the `+` is a space Google escaped.
+const PATH_PAIR =
+  /\/maps\/(?:dir|place|search)\/(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/
+
 /**
  * Build a coordinate pair, rejecting values outside the valid ranges so a
  * zoom level or a timestamp never lands in the fields.
@@ -58,6 +64,20 @@ function toCoordinates(
     longitude <= 180
 
   return valid ? { latitude, longitude } : null
+}
+
+/**
+ * Undo the escaping Google uses inside a path segment, so `20.1,+-98.7` and
+ * `20.1,%20-98.7` read as the plain pair they stand for.
+ *
+ * @param url - The link or page text to scan.
+ */
+function decodePlus(url: string): string {
+  try {
+    return decodeURIComponent(url).replaceAll('+', ' ')
+  } catch {
+    return url.replaceAll('+', ' ')
+  }
 }
 
 /**
@@ -106,6 +126,12 @@ export function parseCoordinatesFromMapsUrl(url: string): Coordinates | null {
     }
   } catch {
     // Not a URL on its own — the regexes below still work on raw text.
+  }
+
+  const path = PATH_PAIR.exec(decodePlus(url))
+  if (path) {
+    const found = toCoordinates(Number(path[1]), Number(path[2]))
+    if (found) return found
   }
 
   const center = CENTER.exec(url)

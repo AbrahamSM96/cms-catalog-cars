@@ -63,6 +63,24 @@ describe('parseCoordinatesFromMapsUrl', () => {
     ).toEqual({ latitude: 20.6597, longitude: -103.3496 })
   })
 
+  it('reads a pair written into the path', () => {
+    // What a short link resolves to when the place was shared as a plain
+    // coordinate: the pair sits in the path and the space is escaped as `+`.
+    expect(
+      parseCoordinatesFromMapsUrl(
+        'https://www.google.com/maps/search/20.115238,+-98.747789?entry=tts'
+      )
+    ).toEqual({ latitude: 20.115238, longitude: -98.747789 })
+  })
+
+  it('reads a path pair escaped as %20', () => {
+    expect(
+      parseCoordinatesFromMapsUrl(
+        'https://www.google.com/maps/place/20.115238,%20-98.747789'
+      )
+    ).toEqual({ latitude: 20.115238, longitude: -98.747789 })
+  })
+
   it('returns null for a link without coordinates', () => {
     expect(
       parseCoordinatesFromMapsUrl(
