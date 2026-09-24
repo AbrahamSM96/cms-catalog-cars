@@ -4,8 +4,10 @@
 # un POST, dispara un deploy de la rama configurada en ese servicio. Este
 # workflow solo hace ese POST, así no hay que entrar a Render.
 #
-# Antes de tocar Render corre `ci.yml` (linter + tests). Si algo falla ahí, el
-# job de deploy ni siquiera arranca: no hay forma de publicar en rojo.
+# El orden es: `ci.yml` (linter + tests) → `release.yml` (changelog, versión,
+# tag y GitHub Release) → POST a Render. Si CI falla, no hay release ni deploy:
+# no hay forma de publicar en rojo. Si no hay nada que versionar, release pasa
+# de largo en verde y el deploy sigue.
 #
 # ---------------------------------------------------------------------------
 # Numeración de sitios
@@ -57,9 +59,20 @@ jobs:
     name: CI
     uses: ./.github/workflows/ci.yml
 
+  # Changelog + versión + tag + GitHub Release. Va ANTES del POST a Render para
+  # que el commit `chore(release)` ya esté en `main` cuando Render clone.
+  # Si no hay commits publicables desde el último tag, termina en verde sin
+  # crear nada y el deploy continúa igual.
+  release:
+    name: Release
+    needs: ci
+    uses: ./.github/workflows/release.yml
+    permissions:
+      contents: write
+
   deploy:
     name: Deploy ${{ matrix.id }}
-    needs: ci
+    needs: release
     runs-on: ubuntu-latest
     timeout-minutes: 5
 

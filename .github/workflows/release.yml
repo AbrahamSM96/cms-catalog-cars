@@ -1,20 +1,24 @@
-# Changelog, versión, tag y GitHub Release — todo en el push a `main`.
+# Changelog, versión, tag y GitHub Release — se corre al desplegar.
 #
-# En cada push a `main` este job:
+# Cuando `deploy.yml` lo invoca (después de que CI pasa y antes de tocar
+# Render), este job:
 #   1. Calcula la versión siguiente leyendo los commits desde el último tag.
 #   2. Reescribe CHANGELOG.md completo con git-cliff.
 #   3. Sube la versión en package.json.
 #   4. Commitea eso a `main` como `chore(release): vX.Y.Z [skip ci]`.
 #   5. Crea el tag vX.Y.Z y el GitHub Release con las notas de esa versión.
 #
-# No hay pull request de por medio: el changelog queda en `main` en el mismo
-# push. Ver CONTRIBUTING.md para el formato de commit que alimenta todo esto.
+# Como corre ANTES del POST a Render, el commit de release ya está en `main`
+# cuando Render clona: lo que queda en producción es exactamente el tag.
+#
+# Ya NO se dispara en cada push a `main`: un push es solo código, un deploy es
+# una versión publicada, y solo eso merece tag. Ver CONTRIBUTING.md para el
+# formato de commit que alimenta todo esto.
 #
 # Dos cosas que hay que saber:
 # - Si desde el último tag solo hay commits `chore`/`ci`/`style`/`test`, el job
-#   no publica nada y termina en verde. Es lo esperado.
-# - El commit que hace el bot lleva `[skip ci]`, así que no se dispara a sí
-#   mismo. El `if` del job es un segundo seguro por si alguien lo quita.
+#   no publica nada y termina en verde. El deploy sigue igual. Es lo esperado.
+# - El commit que hace el bot lleva `[skip ci]`, así que no dispara CI de nuevo.
 #
 # Si `main` tiene branch protection, hay que permitir que GITHUB_TOKEN empuje
 # (bypass para GitHub Actions) o el paso de push falla.
@@ -22,13 +26,12 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
-  # Permite dispararlo a mano desde la pestaña Actions.
+  # Lo llama `deploy.yml`.
+  workflow_call:
+  # Permite dispararlo a mano desde la pestaña Actions, sin desplegar.
   workflow_dispatch:
 
-# Dos pushes seguidos no deben generar dos releases encimados: el segundo
+# Dos deploys seguidos no deben generar dos releases encimados: el segundo
 # espera a que termine el primero para ver los tags ya actualizados.
 concurrency:
   group: release
@@ -39,7 +42,6 @@ permissions:
 
 jobs:
   release:
-    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
