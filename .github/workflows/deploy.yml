@@ -1,0 +1,95 @@
+# Deploy manual a Render desde la pestaña Actions.
+#
+# Render expone un "Deploy Hook" por servicio: una URL secreta que, al recibir
+# un POST, dispara un deploy de la rama configurada en ese servicio. Este
+# workflow solo hace ese POST, así no hay que entrar a Render.
+#
+# Antes de tocar Render corre `ci.yml` (linter + tests). Si algo falla ahí, el
+# job de deploy ni siquiera arranca: no hay forma de publicar en rojo.
+#
+# ---------------------------------------------------------------------------
+# Numeración de sitios
+# ---------------------------------------------------------------------------
+# Los sitios se identifican por número (site-1, site-2, ...), no por el nombre
+# de la agencia: los nombres reales todavía no están definidos y cambiarlos
+# después obligaría a renombrar secrets. Cuando estén, se documenta el mapeo
+# número → agencia en un archivo aparte y este workflow no se toca.
+#
+# ---------------------------------------------------------------------------
+# Cómo agregar un sitio
+# ---------------------------------------------------------------------------
+#   1. Añade una entrada a `matrix.include` (id + secret).
+#   2. Añade el número a `options` del input `site`.
+#   3. Crea en GitHub el secret RENDER_DEPLOY_HOOK_SITE_N con la URL del hook:
+#      Render → el servicio → Settings → Deploy Hook → Copy.
+#      GitHub → repo → Settings → Secrets and variables → Actions → New secret.
+#
+# Cómo lanzarlo:
+#   Actions → Deploy → Run workflow → elegir el sitio.
+#
+# El hook responde al instante con un id de deploy; no espera a que termine.
+# El avance se ve en el dashboard de Render.
+
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      site:
+        description: Which site do you want to deploy?
+        type: choice
+        required: true
+        default: all
+        options:
+          - all
+          - site-1
+          - site-2
+
+# Dos deploys encimados de la misma selección no sirven de nada: el segundo
+# espera en vez de disparar hooks duplicados.
+concurrency:
+  group: deploy-${{ inputs.site }}
+  cancel-in-progress: false
+
+jobs:
+  # Mismo job que corre en cada push y PR, reutilizado tal cual.
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    name: Deploy ${{ matrix.id }}
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    strategy:
+      # Que un sitio falle no debe impedir el deploy de los demás.
+      fail-fast: false
+      matrix:
+        include:
+          - id: site-1
+            secret: SITE_1
+          - id: site-2
+            secret: SITE_2
+
+    steps:
+      # Con `all` corren todos; con un número concreto, el resto de los jobs de
+      # la matriz terminan aquí en verde sin hacer nada.
+      - name: Skip
+        if: inputs.site != 'all' && inputs.site != matrix.id
+        run: echo "${{ matrix.id }} not selected — skipping."
+
+      - name: Trigger Render deploy
+        if: inputs.site == 'all' || inputs.site == matrix.id
+        env:
+          HOOK: ${{ secrets[format('RENDER_DEPLOY_HOOK_{0}', matrix.secret)] }}
+          SITE: ${{ matrix.id }}
+          SECRET_NAME: RENDER_DEPLOY_HOOK_${{ matrix.secret }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "Missing secret $SECRET_NAME" >&2
+            exit 1
+          fi
+          curl --fail-with-body --silent --show-error --request POST "$HOOK"
+          echo "$SITE deploy triggered."

@@ -1,0 +1,62 @@
+# Linter + tests. Es la puerta de entrada de todo: corre en cada push a `main`,
+# en cada pull request y como paso previo del deploy.
+#
+# `bun run lint`  → oxlint + eslint + tsc (typescript-7, --noEmit)
+# `bun run test`  → vitest con cobertura (umbral 100% en lib/, utils/, access.ts)
+#
+# Los tests son unitarios: no tocan Postgres ni R2, así que aquí no hace falta
+# ningún secret ni levantar servicios.
+#
+# `workflow_call` es lo que permite que `deploy.yml` reutilice este mismo job
+# en vez de duplicar los pasos. Si cambias algo aquí, el deploy lo hereda solo.
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_call:
+
+# En una PR con varios pushes seguidos solo interesa el último: los anteriores
+# se cancelan. En `main` no se cancela nada (cada commit debe quedar validado).
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  quality:
+    name: Lint and tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      # Caché de los paquetes descargados por bun. La clave cuelga de bun.lock:
+      # si el lock no cambia, la instalación es prácticamente instantánea.
+      - name: Cache bun install cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      # --frozen-lockfile falla si package.json y bun.lock no coinciden, en vez
+      # de "arreglarlo" silenciosamente con versiones distintas a las locales.
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Format check
+        run: bun run format:check
+
+      - name: Tests
+        run: bun run test
