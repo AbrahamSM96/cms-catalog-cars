@@ -1118,6 +1118,13 @@ export const ui = {
     photoCountSingular: msg('{count} photo', '{count} foto'),
     uploadNote: msg('upload up to 20 on Facebook', 'sube hasta 20 en Facebook'),
   },
+  previewButton: {
+    label: msg('View on site', 'Ver en el sitio'),
+    title: msg(
+      'Open this car on the public site in a new tab',
+      'Abrir este auto en el sitio público en una pestaña nueva'
+    ),
+  },
   vinPanel: {
     apply: msg('Apply selected', 'Aplicar seleccionados'),
     confidence: {
@@ -1162,6 +1169,10 @@ export const ui = {
     scope: msg(
       'Works best on cars built or sold in the US — other markets often return nothing.',
       'Funciona mejor con autos fabricados o vendidos en EE. UU.; en otros mercados suele no encontrar nada.'
+    ),
+    selectedCount: msg(
+      '{chosen} of {total} selected',
+      '{chosen} de {total} seleccionados'
     ),
     suggestionsHeading: msg('Suggested data', 'Datos sugeridos'),
   },

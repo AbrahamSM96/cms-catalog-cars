@@ -12,11 +12,11 @@ import {
 import { reduceFieldsToValues } from 'payload/shared'
 import { useState } from 'react'
 
+import { fill, pick } from '../../i18n/locales'
 import type { Translated } from '../../i18n/locales'
-
-import { pick } from '../../i18n/locales'
-import { publishSuggestions } from './vin-suggestions'
 import { ui } from '../../i18n/labels'
+
+import { publishSuggestions } from './vin-suggestions'
 
 /**
  * Confidence the server attached to a proposed value.
@@ -82,7 +82,7 @@ const REASON_MESSAGES: Record<DecodeReason, Translated> = {
 const BADGE_COLORS: Record<Confidence, string> = {
   exact: 'var(--theme-success-500)',
   guess: 'var(--theme-warning-500)',
-  inferred: 'var(--theme-elevation-400)',
+  inferred: 'var(--theme-elevation-600)',
 }
 
 /**
@@ -92,8 +92,9 @@ const BADGE_COLORS: Record<Confidence, string> = {
  * Nothing is written until the editor applies it, and nothing is saved until
  * they save the document — the decode is a suggestion, not an import.
  *
- * The row layout lives in `vin.css`; the suggestion list below it is still
- * inline, since it only renders after a decode.
+ * All of the layout lives in `vin.css` — the input row and the suggestion
+ * list both. The only inline style left is the confidence badge's colour,
+ * which is data, not layout.
  *
  * @param props - The Payload field component props.
  */
@@ -257,126 +258,71 @@ export function VinField(props: VinFieldProps): React.JSX.Element {
       </div>
 
       {error ? (
-        <p
-          style={{
-            color: 'var(--theme-error-500)',
-            fontSize: '0.82rem',
-            margin: '0.25rem 0',
-          }}
-        >
+        <p className="vin-panel__message vin-panel__message--error">
           {pick(error, i18n.language)}
         </p>
       ) : null}
 
       {duplicate ? (
-        <p
-          style={{
-            color: 'var(--theme-warning-500)',
-            fontSize: '0.82rem',
-            margin: '0.25rem 0',
-          }}
-        >
+        <p className="vin-panel__message vin-panel__message--warning">
           {`${pick(ui.vinPanel.duplicate, i18n.language)} (${duplicate})`}
         </p>
       ) : null}
 
       {suggestions !== null && suggestions.length === 0 ? (
-        <p
-          style={{
-            color: 'var(--theme-elevation-500)',
-            fontSize: '0.82rem',
-            margin: '0.25rem 0',
-          }}
-        >
+        <p className="vin-panel__message vin-panel__message--muted">
           {pick(ui.vinPanel.noSuggestions, i18n.language)}
         </p>
       ) : null}
 
       {suggestions !== null && suggestions.length > 0 ? (
-        <div
-          style={{
-            background: 'var(--theme-elevation-0)',
-            border: '1px solid var(--theme-elevation-150)',
-            borderRadius: '8px',
-            marginTop: '0.75rem',
-            padding: '0.85rem',
-          }}
-        >
-          <strong
-            style={{
-              color: 'var(--theme-elevation-800)',
-              display: 'block',
-              fontSize: '0.85rem',
-              marginBottom: '0.6rem',
-            }}
-          >
-            {pick(ui.vinPanel.suggestionsHeading, i18n.language)}
-          </strong>
+        <div className="vin-panel__suggestions">
+          <div className="vin-panel__suggestions-header">
+            <strong className="vin-panel__suggestions-heading">
+              {pick(ui.vinPanel.suggestionsHeading, i18n.language)}
+            </strong>
+            <span className="vin-panel__suggestions-count">
+              {fill(pick(ui.vinPanel.selectedCount, i18n.language), {
+                chosen: String(suggestions.length - skipped.size),
+                total: String(suggestions.length),
+              })}
+            </span>
+          </div>
 
-          <div
-            style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}
-          >
+          <div className="vin-panel__suggestion-list">
             {suggestions.map((suggestion) => {
               const now = current[suggestion.path]
               const shown = suggestion.display ?? String(suggestion.value)
 
               return (
                 <label
+                  className="vin-panel__suggestion"
+                  data-skipped={skipped.has(suggestion.path)}
                   key={suggestion.path}
-                  style={{
-                    alignItems: 'center',
-                    background: 'var(--theme-elevation-50)',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    gap: '0.7rem',
-                    padding: '0.4rem 0.6rem',
-                  }}
                 >
                   <input
                     checked={!skipped.has(suggestion.path)}
+                    className="vin-panel__suggestion-check"
                     onChange={(): void => toggle(suggestion.path)}
                     type="checkbox"
                   />
-                  <span
-                    style={{
-                      color: 'var(--theme-elevation-500)',
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                      minWidth: '120px',
-                    }}
-                  >
+                  <span className="vin-panel__suggestion-label">
                     {pick(suggestion.label, i18n.language)}
                   </span>
-                  <span
-                    style={{
-                      color: 'var(--theme-elevation-400)',
-                      fontSize: '0.75rem',
-                      minWidth: '90px',
-                    }}
-                  >
-                    {`${pick(ui.vinPanel.current, i18n.language)}: ${
-                      now === undefined || now === null || now === ''
-                        ? pick(ui.vinPanel.empty, i18n.language)
-                        : String(now)
-                    }`}
+                  <span className="vin-panel__suggestion-now">
+                    {`${pick(ui.vinPanel.current, i18n.language)}: ${now === undefined || now === null || now === ''
+                      ? pick(ui.vinPanel.empty, i18n.language)
+                      : String(now)
+                      }`}
                   </span>
+                  <span className="vin-panel__suggestion-value">{shown}</span>
                   <span
-                    style={{
-                      color: 'var(--theme-elevation-900)',
-                      flex: 1,
-                      fontSize: '0.85rem',
-                    }}
-                  >
-                    {shown}
-                  </span>
-                  <span
-                    style={{
-                      color: BADGE_COLORS[suggestion.confidence],
-                      fontSize: '0.7rem',
-                      fontWeight: 600,
-                      textTransform: 'uppercase',
-                    }}
+                    className="vin-panel__suggestion-badge"
+                    style={
+                      {
+                        '--badge-color': BADGE_COLORS[suggestion.confidence],
+                      } as React.CSSProperties
+                    }
                   >
                     {pick(
                       ui.vinPanel.confidence[suggestion.confidence],
@@ -389,18 +335,9 @@ export function VinField(props: VinFieldProps): React.JSX.Element {
           </div>
 
           <button
+            className="vin-panel__apply"
+            disabled={skipped.size === suggestions.length}
             onClick={apply}
-            style={{
-              background: 'var(--theme-success-500)',
-              border: 'none',
-              borderRadius: '6px',
-              color: '#fff',
-              cursor: 'pointer',
-              fontSize: '0.8rem',
-              fontWeight: 600,
-              marginTop: '0.75rem',
-              padding: '0.45rem 1rem',
-            }}
             type="button"
           >
             {pick(ui.vinPanel.apply, i18n.language)}

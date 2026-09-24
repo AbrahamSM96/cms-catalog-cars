@@ -11,6 +11,7 @@ import '@/components/admin/theme.css'
 import '@/components/admin/dashboard.css'
 import '@/components/admin/leads.css'
 import '@/components/admin/login.css'
+import '@/components/admin/preview-button.css'
 import '@/components/admin/vin.css'
 
 /**

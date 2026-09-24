@@ -1,4 +1,8 @@
-import type { CollectionConfig, TextFieldSingleValidation } from 'payload'
+import type {
+  CollectionConfig,
+  GeneratePreviewURL,
+  TextFieldSingleValidation,
+} from 'payload'
 
 import { adminsOnly, editorsAndAdmins } from '../access'
 import {
@@ -17,6 +21,7 @@ import { decodeVinEndpoint } from '../endpoints/decodeVin'
 import { isValidVin } from '../lib/vin/vin'
 import { pick } from '../i18n/locales'
 import { renameCarMedia } from '../hooks/renameCarMedia'
+import { slugify } from '../lib/slugify'
 
 /**
  * Reject a VIN the decoder could never read.
@@ -55,6 +60,32 @@ const validateVersion: TextFieldSingleValidation = (value, options) => {
   return pick(cars.errors.versionRequired, req.i18n.language)
 }
 
+/**
+ * URL of the public detail page for a saved car, used by the admin's preview
+ * button so an editor can jump from the document to the live listing.
+ *
+ * The slug is rebuilt here instead of calling `buildCarSlug`: that helper wants
+ * a populated `Car`, and the document the admin hands over carries `brand` as a
+ * bare relationship id. The trailing id is what `parseCarSlug` reads on the
+ * route, so a link keeps working even when the brand cannot be resolved — the
+ * rest of the slug only exists to make the URL readable.
+ *
+ * @param doc - The car document as the admin panel holds it.
+ * @param options - The Payload preview options.
+ * @param options.req - The Payload request, used to look up the brand name.
+ */
+const previewUrl: GeneratePreviewURL = async (doc, { req }) => {
+  if (!doc?.id) return null
+
+  const brandName = await resolveBrandName(doc.brand, req.payload)
+  const slug = [brandName, doc.model, doc.version, doc.year, doc.id]
+    .map((part) => slugify(part as number | string | undefined))
+    .filter(Boolean)
+    .join('-')
+
+  return `/catalogo/${slug}`
+}
+
 export const Cars: CollectionConfig = {
   access: {
     create: editorsAndAdmins,
@@ -66,8 +97,15 @@ export const Cars: CollectionConfig = {
     update: editorsAndAdmins,
   },
   admin: {
+    components: {
+      edit: {
+        // Labelled accent pill instead of the stock unlabelled icon.
+        PreviewButton: '/components/admin/ViewOnSiteButton#ViewOnSiteButton',
+      },
+    },
     defaultColumns: ['title', 'brand', 'year', 'status'],
     group: groups.content,
+    preview: previewUrl,
     useAsTitle: 'title',
   },
   endpoints: [decodeVinEndpoint],

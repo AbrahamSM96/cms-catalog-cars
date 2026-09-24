@@ -6,6 +6,7 @@ import { VersionField as VersionField_260eccbdcaaca8bb2414704f15c2c63c } from '.
 import { PriceDescription as PriceDescription_e927004baf2140bdc99b11d9c2546deb } from '../../src/components/admin/PriceDescription'
 import { MileageDescription as MileageDescription_d2f80931d2eb00356f71cb7769008757 } from '../../src/components/admin/MileageDescription'
 import { FacebookMarketplacePanel as FacebookMarketplacePanel_2b49c450657cc330f870bc3e189e4f11 } from '../../src/components/admin/FacebookMarketplacePanel'
+import { ViewOnSiteButton as ViewOnSiteButton_3def3d841b33f06d930ea3e8df5f6cbf } from '../../src/components/admin/ViewOnSiteButton'
 import { TimeField as TimeField_aee11c7403bceb4ec618466b171ffa52 } from '../../src/components/admin/TimeField'
 import { LeadsSummary as LeadsSummary_4280afe82fa366bb4ad919c50cb30248 } from '../../src/components/admin/LeadsSummary'
 import { AdminIcon as AdminIcon_7be396d0766c6c490887ef074dd0ced4 } from '../../src/components/admin/AdminIcon'
@@ -24,6 +25,7 @@ export const importMap = {
   "/components/admin/PriceDescription#PriceDescription": PriceDescription_e927004baf2140bdc99b11d9c2546deb,
   "/components/admin/MileageDescription#MileageDescription": MileageDescription_d2f80931d2eb00356f71cb7769008757,
   "/components/admin/FacebookMarketplacePanel#FacebookMarketplacePanel": FacebookMarketplacePanel_2b49c450657cc330f870bc3e189e4f11,
+  "/components/admin/ViewOnSiteButton#ViewOnSiteButton": ViewOnSiteButton_3def3d841b33f06d930ea3e8df5f6cbf,
   "/components/admin/TimeField#TimeField": TimeField_aee11c7403bceb4ec618466b171ffa52,
   "/components/admin/LeadsSummary#LeadsSummary": LeadsSummary_4280afe82fa366bb4ad919c50cb30248,
   "/components/admin/AdminIcon#AdminIcon": AdminIcon_7be396d0766c6c490887ef074dd0ced4,

@@ -9,11 +9,14 @@
  *
  * Below 40rem the pair stacks and the button goes full width with a 44px touch
  * target. Every colour is a Payload theme token, so light and dark both work.
+ *
+ * The suggestion list that appears after a decode is styled here too, on its
+ * own width: it holds decoded strings far longer than a VIN, and the input's
+ * column is too narrow for them.
  */
 
 .vin-panel {
   margin-bottom: var(--spacing-field);
-  max-width: 34rem;
 }
 
 .vin-panel__row {
@@ -21,6 +24,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  max-width: 34rem;
 }
 
 .vin-panel__field {
@@ -81,6 +85,7 @@
   flex-direction: column;
   gap: 0.2rem;
   margin: 0.5rem 0 0;
+  max-width: 34rem;
 }
 
 .vin-panel__note {
@@ -88,6 +93,195 @@
   font-size: 0.78rem;
   line-height: 1.5;
   margin: 0;
+}
+
+.vin-panel__message {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0.5rem 0 0;
+  max-width: 34rem;
+}
+
+.vin-panel__message--error {
+  color: var(--theme-error-500);
+}
+
+.vin-panel__message--warning {
+  color: var(--theme-warning-500);
+}
+
+.vin-panel__message--muted {
+  color: var(--theme-elevation-500);
+}
+
+/*
+ * The suggestion list is wider than the VIN input above it: a decoded version
+ * string runs to ten words, and inside a 34rem column it wrapped one word per
+ * line. It gets its own width, capped so the rows stay readable on a wide
+ * screen instead of stretching the value column across the whole form.
+ *
+ * The four columns are read in this order: what we are proposing, then what is
+ * there now, then which field it lands in, then how much to trust it. So the
+ * proposed value carries the size and the contrast, the field name sits a step
+ * below it, and the current value — usually "empty" on a new car — is the
+ * quietest thing in the row.
+ */
+.vin-panel__suggestions {
+  background: var(--theme-elevation-0);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: 10px;
+  margin-top: 1rem;
+  max-width: 64rem;
+  padding: 1.25rem;
+}
+
+.vin-panel__suggestions-header {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.vin-panel__suggestions-heading {
+  color: var(--theme-elevation-1000);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.vin-panel__suggestions-count {
+  color: var(--theme-elevation-500);
+  font-size: 0.875rem;
+}
+
+.vin-panel__suggestion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+/*
+ * Stacked below 48rem, one row per proposal above it. Grid rather than
+ * flexbox, so every row's field name and current value line up in the same
+ * column however long the proposed value is.
+ */
+.vin-panel__suggestion {
+  align-items: start;
+  background: var(--theme-elevation-50);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  column-gap: 1rem;
+  cursor: pointer;
+  display: grid;
+  grid-template-areas:
+    'check label badge'
+    'check value value'
+    'check now now';
+  grid-template-columns: auto 1fr auto;
+  padding: 0.75rem 0.875rem;
+  row-gap: 0.25rem;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.vin-panel__suggestion:hover {
+  background: var(--theme-elevation-100);
+  border-color: var(--theme-elevation-200);
+}
+
+.vin-panel__suggestion:focus-within {
+  border-color: var(--theme-elevation-400);
+}
+
+/* A proposal that will not be applied reads as switched off, not as a row. */
+.vin-panel__suggestion[data-skipped='true'] {
+  opacity: 0.5;
+}
+
+.vin-panel__suggestion-check {
+  block-size: 1.05rem;
+  grid-area: check;
+  inline-size: 1.05rem;
+  margin: 0.15rem 0 0;
+}
+
+.vin-panel__suggestion-label {
+  color: var(--theme-elevation-600);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  grid-area: label;
+  line-height: 1.4;
+}
+
+.vin-panel__suggestion-now {
+  color: var(--theme-elevation-450);
+  font-size: 0.8125rem;
+  grid-area: now;
+  line-height: 1.4;
+}
+
+.vin-panel__suggestion-value {
+  color: var(--theme-elevation-1000);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  grid-area: value;
+  line-height: 1.5;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/*
+ * A chip, not loose text: the confidence is a property of the row, and at this
+ * size bare coloured words competed with the value beside them. The tint is
+ * the badge colour at low alpha, so one custom property drives both.
+ */
+.vin-panel__suggestion-badge {
+  background: color-mix(in srgb, var(--badge-color) 14%, transparent);
+  border-radius: 999px;
+  color: var(--badge-color, var(--theme-elevation-500));
+  font-size: 0.6875rem;
+  font-weight: 600;
+  grid-area: badge;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  padding: 0.2rem 0.5rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.vin-panel__apply {
+  align-items: center;
+  background: var(--theme-success-500);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 0.875rem;
+  font-weight: 600;
+  justify-content: center;
+  margin-top: 1rem;
+  min-height: 44px;
+  padding: 0 1.4rem;
+  transition: opacity 0.15s ease;
+}
+
+.vin-panel__apply:hover {
+  opacity: 0.9;
+}
+
+.vin-panel__apply:focus-visible {
+  outline: 2px solid var(--theme-success-500);
+  outline-offset: 2px;
+}
+
+.vin-panel__apply:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 @media (min-width: 40rem) {
@@ -100,5 +294,39 @@
   .vin-panel__decode {
     /* Matches the 40px height of a Payload text input. */
     min-height: 40px;
+  }
+}
+
+@media (min-width: 48rem) {
+  .vin-panel__suggestion {
+    align-items: center;
+    grid-template-areas: 'check label now value badge';
+    grid-template-columns: auto 9rem 8rem 1fr auto;
+    row-gap: 0;
+  }
+
+  .vin-panel__suggestion-check {
+    margin: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vin-panel__apply,
+  .vin-panel__decode,
+  .vin-panel__suggestion {
+    transition: none;
+  }
+}
+
+@media (min-width: 48rem) {
+  .vin-panel__suggestion {
+    align-items: center;
+    grid-template-areas: 'check label now value badge';
+    grid-template-columns: auto 8rem 7.5rem 1fr auto;
+    row-gap: 0;
+  }
+
+  .vin-panel__suggestion-check {
+    margin: 0;
   }
 }
