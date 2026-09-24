@@ -41,7 +41,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     description: site.seo.description,
-    ...(site.faviconUrl ? { icons: { icon: site.faviconUrl } } : {}),
+    // El favicon vive en `public/`, NO en `app/favicon.ico`: la convención de
+    // archivo de Next hace `icons.icon.unshift(favicon)` de forma
+    // incondicional, así que el icono estático quedaba delante del que se
+    // configura desde el admin y el navegador se quedaba con el equivocado.
+    // Desde `public/` no se emite ningún tag automático y este es el único
+    // `<link rel="icon">` de la página.
+    icons: { icon: site.faviconUrl ?? '/favicon.ico' },
     keywords: site.seo.keywords,
     metadataBase: new URL(SITE_URL),
     openGraph: {
