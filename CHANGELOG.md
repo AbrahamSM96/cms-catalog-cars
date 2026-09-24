@@ -11,6 +11,15 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 While the project is pre-1.0, `feat` bumps the minor version and `fix` bumps the
 patch version.
 
+## 0.3.0 (2026-09-24)
+
+### Features
+- Add googleMapsUrl field to Dealerships and enhance coordinate parsing from Google Maps URLs ([508df73](https://github.com/AbrahamSM96/cms-catalog-cars/commit/508df735e37d7effc8321c75b96211897accd977))
+
+### Bug Fixes
+- Exclude CHANGELOG.md from ignore patterns in oxfmtrc configuration ([b58d3f1](https://github.com/AbrahamSM96/cms-catalog-cars/commit/b58d3f129713aff8af6cc56087dd5c429fc0e3ca))
+- Update favicon handling to ensure correct icon display and add favicon file ([c73fd0a](https://github.com/AbrahamSM96/cms-catalog-cars/commit/c73fd0a9f4d099e8336ea8db765554001344a7ef))
+
 ## 0.2.1 (2026-09-24)
 
 ### Refactors
