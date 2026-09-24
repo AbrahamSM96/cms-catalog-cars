@@ -59,287 +59,306 @@ export type SupportedTimezones =
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
   | 'Pacific/Auckland'
-  | 'Pacific/Fiji';
+  | 'Pacific/Fiji'
 
 export interface Config {
   auth: {
-    users: UserAuthOperations;
-  };
-  blocks: {};
+    users: UserAuthOperations
+  }
+  blocks: {}
   collections: {
-    brands: Brand;
-    'car-models': CarModel;
-    'car-versions': CarVersion;
-    cars: Car;
-    cities: City;
-    colors: Color;
-    dealerships: Dealership;
-    leads: Lead;
-    media: Media;
-    users: User;
-    'vin-decodes': VinDecode;
-    'payload-kv': PayloadKv;
-    'payload-locked-documents': PayloadLockedDocument;
-    'payload-preferences': PayloadPreference;
-    'payload-migrations': PayloadMigration;
-  };
-  collectionsJoins: {};
+    brands: Brand
+    'car-models': CarModel
+    'car-versions': CarVersion
+    cars: Car
+    cities: City
+    colors: Color
+    dealerships: Dealership
+    leads: Lead
+    media: Media
+    users: User
+    'vin-decodes': VinDecode
+    'payload-kv': PayloadKv
+    'payload-locked-documents': PayloadLockedDocument
+    'payload-preferences': PayloadPreference
+    'payload-migrations': PayloadMigration
+  }
+  collectionsJoins: {}
   collectionsSelect: {
-    brands: BrandsSelect<false> | BrandsSelect<true>;
-    'car-models': CarModelsSelect<false> | CarModelsSelect<true>;
-    'car-versions': CarVersionsSelect<false> | CarVersionsSelect<true>;
-    cars: CarsSelect<false> | CarsSelect<true>;
-    cities: CitiesSelect<false> | CitiesSelect<true>;
-    colors: ColorsSelect<false> | ColorsSelect<true>;
-    dealerships: DealershipsSelect<false> | DealershipsSelect<true>;
-    leads: LeadsSelect<false> | LeadsSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
-    users: UsersSelect<false> | UsersSelect<true>;
-    'vin-decodes': VinDecodesSelect<false> | VinDecodesSelect<true>;
-    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
-    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
-    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
-    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
-  };
+    brands: BrandsSelect<false> | BrandsSelect<true>
+    'car-models': CarModelsSelect<false> | CarModelsSelect<true>
+    'car-versions': CarVersionsSelect<false> | CarVersionsSelect<true>
+    cars: CarsSelect<false> | CarsSelect<true>
+    cities: CitiesSelect<false> | CitiesSelect<true>
+    colors: ColorsSelect<false> | ColorsSelect<true>
+    dealerships: DealershipsSelect<false> | DealershipsSelect<true>
+    leads: LeadsSelect<false> | LeadsSelect<true>
+    media: MediaSelect<false> | MediaSelect<true>
+    users: UsersSelect<false> | UsersSelect<true>
+    'vin-decodes': VinDecodesSelect<false> | VinDecodesSelect<true>
+    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>
+    'payload-locked-documents':
+      | PayloadLockedDocumentsSelect<false>
+      | PayloadLockedDocumentsSelect<true>
+    'payload-preferences':
+      | PayloadPreferencesSelect<false>
+      | PayloadPreferencesSelect<true>
+    'payload-migrations':
+      | PayloadMigrationsSelect<false>
+      | PayloadMigrationsSelect<true>
+  }
   db: {
-    defaultIDType: number;
-  };
-  fallbackLocale: null;
+    defaultIDType: number
+  }
+  fallbackLocale: null
   globals: {
-    homepage: Homepage;
-    contact: Contact;
-    'site-settings': SiteSetting;
-  };
+    homepage: Homepage
+    contact: Contact
+    'site-settings': SiteSetting
+  }
   globalsSelect: {
-    homepage: HomepageSelect<false> | HomepageSelect<true>;
-    contact: ContactSelect<false> | ContactSelect<true>;
-    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
-  };
-  locale: null;
+    homepage: HomepageSelect<false> | HomepageSelect<true>
+    contact: ContactSelect<false> | ContactSelect<true>
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>
+  }
+  locale: null
   widgets: {
-    collections: CollectionsWidget;
-  };
-  user: User;
+    collections: CollectionsWidget
+  }
+  user: User
   jobs: {
-    tasks: unknown;
-    workflows: unknown;
-  };
+    tasks: unknown
+    workflows: unknown
+  }
 }
 export interface UserAuthOperations {
   forgotPassword: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   login: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   registerFirstUser: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
   unlock: {
-    email: string;
-    password: string;
-  };
+    email: string
+    password: string
+  }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "brands".
  */
 export interface Brand {
-  id: number;
-  name: string;
+  id: number
+  name: string
   /**
    * URL-friendly version of the brand name
    */
-  slug: string;
-  updatedAt: string;
-  createdAt: string;
+  slug: string
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "car-models".
  */
 export interface CarModel {
-  id: number;
+  id: number
   /**
    * Brand this model belongs to
    */
-  brand: number | Brand;
-  name: string;
-  updatedAt: string;
-  createdAt: string;
+  brand: number | Brand
+  name: string
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "car-versions".
  */
 export interface CarVersion {
-  id: number;
+  id: number
   /**
    * Model this version belongs to
    */
-  model: number | CarModel;
-  description: string;
+  model: number | CarModel
+  description: string
   /**
    * Vehicle key (unique identifier for the version)
    */
-  clave: string;
+  clave: string
   /**
    * Years this version was sold
    */
-  years: number[];
-  updatedAt: string;
-  createdAt: string;
+  years: number[]
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "cars".
  */
 export interface Car {
-  id: number;
-  title?: string | null;
+  id: number
+  title?: string | null
   /**
    * The 17-character serial number, printed on the windshield and on the door jamb. Decode it to fill in the technical data.
    */
-  vin?: string | null;
-  brand: number | Brand;
-  model: string;
-  year: number;
-  version?: string | null;
-  transmission: 'automatic' | 'manual';
+  vin?: string | null
+  brand: number | Brand
+  model: string
+  year: number
+  version?: string | null
+  transmission: 'automatic' | 'manual'
   /**
    * Fuel type
    */
-  fuelType?: ('gasoline' | 'diesel' | 'electric' | 'hybrid' | 'plug-in-hybrid') | null;
+  fuelType?:
+    | ('gasoline' | 'diesel' | 'electric' | 'hybrid' | 'plug-in-hybrid')
+    | null
   /**
    * Current availability status of the vehicle
    */
-  status: 'available' | 'reserved' | 'sold';
-  featured?: boolean | null;
-  description?: string | null;
+  status: 'available' | 'reserved' | 'sold'
+  featured?: boolean | null
+  description?: string | null
   /**
    * Image shown in the preview
    */
-  featuredImage?: (number | null) | Media;
+  featuredImage?: (number | null) | Media
   /**
    * Exterior photos of the vehicle (body, front, sides)
    */
-  exteriorImages?: (number | Media)[] | null;
+  exteriorImages?: (number | Media)[] | null
   /**
    * Interior photos of the vehicle (cabin, seats, dashboard)
    */
-  interiorImages?: (number | Media)[] | null;
+  interiorImages?: (number | Media)[] | null
   /**
    * Enter price in dollars (e.g., 25000)
    */
-  price: number;
+  price: number
   /**
    * Does the price include/invoice VAT? (shown as Yes/No)
    */
-  hasVAT?: boolean | null;
+  hasVAT?: boolean | null
   /**
    * Turn it off for cash-only cars; hides the calculator on the vehicle detail page.
    */
-  showFinancing?: boolean | null;
+  showFinancing?: boolean | null
   financing?: {
     /**
      * Minimum down payment percentage (e.g. 20%)
      */
-    minDownPaymentPercentage?: number | null;
+    minDownPaymentPercentage?: number | null
     /**
      * Maximum down payment percentage (e.g. 80%)
      */
-    maxDownPaymentPercentage?: number | null;
+    maxDownPaymentPercentage?: number | null
     /**
      * Default suggested down payment percentage
      */
-    defaultDownPaymentPercentage?: number | null;
+    defaultDownPaymentPercentage?: number | null
     /**
      * List of terms in months you offer (e.g. 6, 12, 24, 36, 48, 60)
      */
     availableLoanTerms?:
       | {
-          months: number;
-          id?: string | null;
+          months: number
+          id?: string | null
         }[]
-      | null;
+      | null
     /**
      * Default suggested term in months (must be in the available list)
      */
-    defaultLoanTerm?: number | null;
+    defaultLoanTerm?: number | null
     /**
      * Annual interest rate (%)
      */
-    interestRate?: number | null;
-  };
+    interestRate?: number | null
+  }
   /**
    * Shows the "Reserve it" tab on the vehicle detail page.
    */
-  showReserve?: boolean | null;
+  showReserve?: boolean | null
   reserve?: {
     /**
      * Deposit required to hold the vehicle (MXN). Leave empty to show only the text.
      */
-    amount?: number | null;
+    amount?: number | null
     /**
      * Headline of the "Reserve it" tab.
      */
-    title?: string | null;
+    title?: string | null
     /**
      * Short paragraph shown under the title in the "Reserve it" tab.
      */
-    description?: string | null;
-  };
+    description?: string | null
+  }
   /**
    * Engine specification (e.g. L4 2.0t, V6 3.5L)
    */
-  engine?: string | null;
+  engine?: string | null
   /**
    * Horsepower (HP)
    */
-  horsepower?: number | null;
-  cylinders?: number | null;
+  horsepower?: number | null
+  cylinders?: number | null
   /**
    * Car or truck (Facebook Marketplace)
    */
-  vehicleType?: ('car' | 'truck') | null;
+  vehicleType?: ('car' | 'truck') | null
   /**
    * Body style (aligned with Facebook Marketplace)
    */
   bodyType?:
-    ('coupe' | 'truck' | 'sedan' | 'hatchback' | 'suv' | 'convertible' | 'wagon' | 'minivan' | 'small-car') | null;
+    | (
+        | 'coupe'
+        | 'truck'
+        | 'sedan'
+        | 'hatchback'
+        | 'suv'
+        | 'convertible'
+        | 'wagon'
+        | 'minivan'
+        | 'small-car'
+      )
+    | null
   /**
    * Number of doors (e.g. 4)
    */
-  doors?: number | null;
-  passengers?: number | null;
+  doors?: number | null
+  passengers?: number | null
   /**
    * Enter mileage in kilometers (e.g., 150000)
    */
-  mileage?: number | null;
+  mileage?: number | null
   /**
    * Overall vehicle condition (Facebook Marketplace)
    */
-  condition?: ('excellent' | 'very-good' | 'good' | 'fair' | 'poor') | null;
+  condition?: ('excellent' | 'very-good' | 'good' | 'fair' | 'poor') | null
   /**
    * Body color. Not on the list? Add it in the Colors collection.
    */
-  exteriorColor?: (number | null) | Color;
+  exteriorColor?: (number | null) | Color
   /**
    * Upholstery color. Not on the list? Add it in the Colors collection.
    */
-  interiorColor?: (number | null) | Color;
+  interiorColor?: (number | null) | Color
   /**
    * Equipment and special features of the vehicle
    */
   features?:
     | {
-        feature: string;
-        id?: string | null;
+        feature: string
+        id?: string | null
       }[]
-    | null;
+    | null
   /**
    * Vehicle warranty and inspection
    */
@@ -347,64 +366,64 @@ export interface Car {
     /**
      * Number of inspected points (e.g. 150 → "+150 points")
      */
-    inspectionPoints?: number | null;
-    ownerHistory?: ('single' | 'two' | 'multiple') | null;
+    inspectionPoints?: number | null
+    ownerHistory?: ('single' | 'two' | 'multiple') | null
     /**
      * Includes duplicate keys? (Yes/No)
      */
-    duplicateKeys?: boolean | null;
+    duplicateKeys?: boolean | null
     /**
      * Includes license plates? (Yes/No)
      */
-    plates?: boolean | null;
+    plates?: boolean | null
     /**
      * Includes manuals? (Yes/No)
      */
-    manuals?: boolean | null;
+    manuals?: boolean | null
     /**
      * Received reconditioning/detailing? (Yes/No)
      */
-    conditioning?: boolean | null;
-  };
+    conditioning?: boolean | null
+  }
   /**
    * Dealership where the car is. Its city decides which page the car is listed on and which map shows on the detail page, so it has to be right.
    */
-  dealership?: (number | null) | Dealership;
-  updatedAt: string;
-  createdAt: string;
+  dealership?: (number | null) | Dealership
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
-  id: number;
+  id: number
   /**
    * Optional. If left empty, the site generates a descriptive alt text automatically: car photos use brand, model, version, year and city; slides use the caption or a default text. Fill it in only if you want a specific text.
    */
-  alt?: string | null;
-  prefix?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+  alt?: string | null
+  prefix?: string | null
+  updatedAt: string
+  createdAt: string
+  url?: string | null
+  thumbnailURL?: string | null
+  filename?: string | null
+  mimeType?: string | null
+  filesize?: number | null
+  width?: number | null
+  height?: number | null
+  focalX?: number | null
+  focalY?: number | null
   sizes?: {
     og?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
+      url?: string | null
+      width?: number | null
+      height?: number | null
+      mimeType?: string | null
+      filesize?: number | null
+      filename?: string | null
+    }
+  }
 }
 /**
  * Color catalog (exterior and interior). Add as many as you need.
@@ -413,136 +432,136 @@ export interface Media {
  * via the `definition` "colors".
  */
 export interface Color {
-  id: number;
+  id: number
   /**
    * Color name in Spanish, as shown on the site (e.g. Negro, Blanco, Gris Oxford)
    */
-  name: string;
+  name: string
   /**
    * Hex code for the visual swatch (e.g. #000000)
    */
-  hex?: string | null;
-  updatedAt: string;
-  createdAt: string;
+  hex?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "dealerships".
  */
 export interface Dealership {
-  id: number;
-  name: string;
+  id: number
+  name: string
   /**
    * Image shown on the location card.
    */
-  image?: (number | null) | Media;
-  phone?: string | null;
+  image?: (number | null) | Media
+  phone?: string | null
   /**
    * Digits only, including country code (e.g. 5233...). Optional.
    */
-  whatsapp?: string | null;
+  whatsapp?: string | null
   address: {
-    line1?: string | null;
-    neighborhood?: string | null;
-    postalCode?: string | null;
+    line1?: string | null
+    neighborhood?: string | null
+    postalCode?: string | null
     /**
      * City this dealership is in. Pick it from the list — its own page (/seminuevos/<city>) lists every car stored here, and the state on the site comes from the city too.
      */
-    city: number | City;
-    country?: string | null;
-  };
+    city: number | City
+    country?: string | null
+  }
   /**
-   * Filled in on save from the Google Maps link below — leave them empty and paste the link. To set them by hand use DECIMAL degrees (e.g. 20.6597 and -103.3496), not degrees-minutes-seconds: right-click the place in Google Maps → click the coordinates to copy them.
+   * For the 'Get directions' button. Paste the link from Google Maps' Share button — the coordinates below are read from it on save.
+   */
+  googleMapsUrl?: string | null
+  /**
+   * Filled in on save from the Google Maps link above — leave them empty and paste the link. To set them by hand use DECIMAL degrees (e.g. 20.6597 and -103.3496), not degrees-minutes-seconds: right-click the place in Google Maps → click the coordinates to copy them.
    */
   coordinates?: {
-    latitude?: number | null;
-    longitude?: number | null;
-  };
-  /**
-   * For the 'Get directions' button. Paste the link from Google Maps' Share button — the coordinates above are read from it on save.
-   */
-  googleMapsUrl?: string | null;
+    latitude?: number | null
+    longitude?: number | null
+  }
   hours?: {
     monday?: {
-      closed?: boolean | null;
+      closed?: boolean | null
       /**
        * 24h format
        */
-      open?: string | null;
+      open?: string | null
       /**
        * 24h format
        */
-      close?: string | null;
-    };
+      close?: string | null
+    }
     tuesday?: {
-      closed?: boolean | null;
+      closed?: boolean | null
       /**
        * 24h format
        */
-      open?: string | null;
+      open?: string | null
       /**
        * 24h format
        */
-      close?: string | null;
-    };
+      close?: string | null
+    }
     wednesday?: {
-      closed?: boolean | null;
+      closed?: boolean | null
       /**
        * 24h format
        */
-      open?: string | null;
+      open?: string | null
       /**
        * 24h format
        */
-      close?: string | null;
-    };
+      close?: string | null
+    }
     thursday?: {
-      closed?: boolean | null;
+      closed?: boolean | null
       /**
        * 24h format
        */
-      open?: string | null;
+      open?: string | null
       /**
        * 24h format
        */
-      close?: string | null;
-    };
+      close?: string | null
+    }
     friday?: {
-      closed?: boolean | null;
+      closed?: boolean | null
       /**
        * 24h format
        */
-      open?: string | null;
+      open?: string | null
       /**
        * 24h format
        */
-      close?: string | null;
-    };
+      close?: string | null
+    }
     saturday?: {
-      closed?: boolean | null;
+      closed?: boolean | null
       /**
        * 24h format
        */
-      open?: string | null;
+      open?: string | null
       /**
        * 24h format
        */
-      close?: string | null;
-    };
+      close?: string | null
+    }
     sunday?: {
-      closed?: boolean | null;
+      closed?: boolean | null
       /**
        * 24h format
        */
-      open?: string | null;
+      open?: string | null
       /**
        * 24h format
        */
-      close?: string | null;
-    };
-  };
-  updatedAt: string;
-  createdAt: string;
+      close?: string | null
+    }
+  }
+  updatedAt: string
+  createdAt: string
 }
 /**
  * Cities where you have a dealership. Each one gets its own landing page (/seminuevos/<slug>), so the name and slug are what search engines index.
@@ -551,25 +570,25 @@ export interface Dealership {
  * via the `definition` "cities".
  */
 export interface City {
-  id: number;
+  id: number
   /**
    * City name as it should read on the site (e.g. Pachuca)
    */
-  name: string;
+  name: string
   /**
    * State this city belongs to (e.g. Hidalgo)
    */
-  state: string;
+  state: string
   /**
    * URL segment for this city. Generated from the name; change it only if you know what you are doing — editing it breaks the links already indexed.
    */
-  slug: string;
+  slug: string
   /**
    * One or two paragraphs shown on that city’s page. Write something specific about selling there — it is what keeps the page from looking like a copy of the others.
    */
-  intro?: string | null;
-  updatedAt: string;
-  createdAt: string;
+  intro?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * Every contact the site produced: who asked, about which car, and where they came from. Records are created automatically when a visitor taps WhatsApp, calls, or sends the contact form — nothing here is typed by hand except the status and the notes.
@@ -578,79 +597,79 @@ export interface City {
  * via the `definition` "leads".
  */
 export interface Lead {
-  id: number;
+  id: number
   /**
    * Car the visitor was looking at. Empty when the contact came from the navbar, the footer or the contact page, where no car is in context.
    */
-  car?: (number | null) | Car;
+  car?: (number | null) | Car
   /**
    * Where this lead stands. Keeping it current is what turns the list into a report — an untouched list only tells you how many people wrote, never how many bought.
    */
-  status: 'new' | 'contacted' | 'sold' | 'lost';
+  status: 'new' | 'contacted' | 'sold' | 'lost'
   /**
    * How the visitor chose to get in touch.
    */
-  source: 'whatsapp' | 'phone' | 'form';
+  source: 'whatsapp' | 'phone' | 'form'
   /**
    * Which button on the site was tapped.
    */
-  placement: 'car-detail' | 'navbar' | 'footer' | 'contact-page';
+  placement: 'car-detail' | 'navbar' | 'footer' | 'contact-page'
   /**
    * Your own notes about this lead — what was agreed, when to follow up.
    */
-  notes?: string | null;
+  notes?: string | null
   /**
    * Where the link was published (e.g. facebook, instagram).
    */
-  utmSource?: string | null;
+  utmSource?: string | null
   /**
    * Kind of traffic (e.g. cpc, social, email).
    */
-  utmMedium?: string | null;
+  utmMedium?: string | null
   /**
    * Campaign named in the link (e.g. seminuevos-octubre).
    */
-  utmCampaign?: string | null;
+  utmCampaign?: string | null
   /**
    * Specific ad or link variant inside the campaign.
    */
-  utmContent?: string | null;
+  utmContent?: string | null
   /**
    * First page of the visit. Tells you which page earned the contact, which is not always the page the contact was sent from.
    */
-  landingPath?: string | null;
+  landingPath?: string | null
   /**
    * Click identifier Facebook appends to the URL. Only present when the visit came from a Facebook or Instagram ad.
    */
-  fbclid?: string | null;
-  updatedAt: string;
-  createdAt: string;
+  fbclid?: string | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
-  roles?: ('admin' | 'editor' | 'user')[] | null;
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
+  id: number
+  roles?: ('admin' | 'editor' | 'user')[] | null
+  updatedAt: string
+  createdAt: string
+  email: string
+  resetPasswordToken?: string | null
+  resetPasswordExpiration?: string | null
+  salt?: string | null
+  hash?: string | null
+  loginAttempts?: number | null
+  lockUntil?: string | null
   sessions?:
     | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
+        id: string
+        createdAt?: string | null
+        expiresAt: string
       }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
+    | null
+  password?: string | null
+  collection: 'users'
 }
 /**
  * Decoded VINs kept so the same model, year and plant is never looked up twice. Filled in automatically.
@@ -659,522 +678,522 @@ export interface User {
  * via the `definition` "vin-decodes".
  */
 export interface VinDecode {
-  id: number;
+  id: number
   /**
    * Positions 1-8, 10 and 11 of the VIN: every unit of the same model, year and plant shares them.
    */
-  squish: string;
+  squish: string
   /**
    * One of the VINs this entry was built from.
    */
-  sampleVin?: string | null;
-  fetchedAt?: string | null;
+  sampleVin?: string | null
+  fetchedAt?: string | null
   decoded?:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
+    | null
   /**
    * The provider's untouched response, kept so new fields can be read from it without another lookup.
    */
   raw?:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
+    | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: number;
-  key: string;
+  id: number
+  key: string
   data:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
+    | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number;
+  id: number
   document?:
     | ({
-        relationTo: 'brands';
-        value: number | Brand;
+        relationTo: 'brands'
+        value: number | Brand
       } | null)
     | ({
-        relationTo: 'car-models';
-        value: number | CarModel;
+        relationTo: 'car-models'
+        value: number | CarModel
       } | null)
     | ({
-        relationTo: 'car-versions';
-        value: number | CarVersion;
+        relationTo: 'car-versions'
+        value: number | CarVersion
       } | null)
     | ({
-        relationTo: 'cars';
-        value: number | Car;
+        relationTo: 'cars'
+        value: number | Car
       } | null)
     | ({
-        relationTo: 'cities';
-        value: number | City;
+        relationTo: 'cities'
+        value: number | City
       } | null)
     | ({
-        relationTo: 'colors';
-        value: number | Color;
+        relationTo: 'colors'
+        value: number | Color
       } | null)
     | ({
-        relationTo: 'dealerships';
-        value: number | Dealership;
+        relationTo: 'dealerships'
+        value: number | Dealership
       } | null)
     | ({
-        relationTo: 'leads';
-        value: number | Lead;
+        relationTo: 'leads'
+        value: number | Lead
       } | null)
     | ({
-        relationTo: 'media';
-        value: number | Media;
+        relationTo: 'media'
+        value: number | Media
       } | null)
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'users'
+        value: number | User
       } | null)
     | ({
-        relationTo: 'vin-decodes';
-        value: number | VinDecode;
-      } | null);
-  globalSlug?: string | null;
+        relationTo: 'vin-decodes'
+        value: number | VinDecode
+      } | null)
+  globalSlug?: string | null
   user: {
-    relationTo: 'users';
-    value: number | User;
-  };
-  updatedAt: string;
-  createdAt: string;
+    relationTo: 'users'
+    value: number | User
+  }
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number;
+  id: number
   user: {
-    relationTo: 'users';
-    value: number | User;
-  };
-  key?: string | null;
+    relationTo: 'users'
+    value: number | User
+  }
+  key?: string | null
   value?:
     | {
-        [k: string]: unknown;
+        [k: string]: unknown
       }
     | unknown[]
     | string
     | number
     | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
+    | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number;
-  name?: string | null;
-  batch?: number | null;
-  updatedAt: string;
-  createdAt: string;
+  id: number
+  name?: string | null
+  batch?: number | null
+  updatedAt: string
+  createdAt: string
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "brands_select".
  */
 export interface BrandsSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  slug?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "car-models_select".
  */
 export interface CarModelsSelect<T extends boolean = true> {
-  brand?: T;
-  name?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  brand?: T
+  name?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "car-versions_select".
  */
 export interface CarVersionsSelect<T extends boolean = true> {
-  model?: T;
-  description?: T;
-  clave?: T;
-  years?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  model?: T
+  description?: T
+  clave?: T
+  years?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "cars_select".
  */
 export interface CarsSelect<T extends boolean = true> {
-  title?: T;
-  vin?: T;
-  brand?: T;
-  model?: T;
-  year?: T;
-  version?: T;
-  transmission?: T;
-  fuelType?: T;
-  status?: T;
-  featured?: T;
-  description?: T;
-  featuredImage?: T;
-  exteriorImages?: T;
-  interiorImages?: T;
-  price?: T;
-  hasVAT?: T;
-  showFinancing?: T;
+  title?: T
+  vin?: T
+  brand?: T
+  model?: T
+  year?: T
+  version?: T
+  transmission?: T
+  fuelType?: T
+  status?: T
+  featured?: T
+  description?: T
+  featuredImage?: T
+  exteriorImages?: T
+  interiorImages?: T
+  price?: T
+  hasVAT?: T
+  showFinancing?: T
   financing?:
     | T
     | {
-        minDownPaymentPercentage?: T;
-        maxDownPaymentPercentage?: T;
-        defaultDownPaymentPercentage?: T;
+        minDownPaymentPercentage?: T
+        maxDownPaymentPercentage?: T
+        defaultDownPaymentPercentage?: T
         availableLoanTerms?:
           | T
           | {
-              months?: T;
-              id?: T;
-            };
-        defaultLoanTerm?: T;
-        interestRate?: T;
-      };
-  showReserve?: T;
+              months?: T
+              id?: T
+            }
+        defaultLoanTerm?: T
+        interestRate?: T
+      }
+  showReserve?: T
   reserve?:
     | T
     | {
-        amount?: T;
-        title?: T;
-        description?: T;
-      };
-  engine?: T;
-  horsepower?: T;
-  cylinders?: T;
-  vehicleType?: T;
-  bodyType?: T;
-  doors?: T;
-  passengers?: T;
-  mileage?: T;
-  condition?: T;
-  exteriorColor?: T;
-  interiorColor?: T;
+        amount?: T
+        title?: T
+        description?: T
+      }
+  engine?: T
+  horsepower?: T
+  cylinders?: T
+  vehicleType?: T
+  bodyType?: T
+  doors?: T
+  passengers?: T
+  mileage?: T
+  condition?: T
+  exteriorColor?: T
+  interiorColor?: T
   features?:
     | T
     | {
-        feature?: T;
-        id?: T;
-      };
+        feature?: T
+        id?: T
+      }
   history?:
     | T
     | {
-        inspectionPoints?: T;
-        ownerHistory?: T;
-        duplicateKeys?: T;
-        plates?: T;
-        manuals?: T;
-        conditioning?: T;
-      };
-  dealership?: T;
-  updatedAt?: T;
-  createdAt?: T;
+        inspectionPoints?: T
+        ownerHistory?: T
+        duplicateKeys?: T
+        plates?: T
+        manuals?: T
+        conditioning?: T
+      }
+  dealership?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "cities_select".
  */
 export interface CitiesSelect<T extends boolean = true> {
-  name?: T;
-  state?: T;
-  slug?: T;
-  intro?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  state?: T
+  slug?: T
+  intro?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "colors_select".
  */
 export interface ColorsSelect<T extends boolean = true> {
-  name?: T;
-  hex?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  hex?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "dealerships_select".
  */
 export interface DealershipsSelect<T extends boolean = true> {
-  name?: T;
-  image?: T;
-  phone?: T;
-  whatsapp?: T;
+  name?: T
+  image?: T
+  phone?: T
+  whatsapp?: T
   address?:
     | T
     | {
-        line1?: T;
-        neighborhood?: T;
-        postalCode?: T;
-        city?: T;
-        country?: T;
-      };
+        line1?: T
+        neighborhood?: T
+        postalCode?: T
+        city?: T
+        country?: T
+      }
+  googleMapsUrl?: T
   coordinates?:
     | T
     | {
-        latitude?: T;
-        longitude?: T;
-      };
-  googleMapsUrl?: T;
+        latitude?: T
+        longitude?: T
+      }
   hours?:
     | T
     | {
         monday?:
           | T
           | {
-              closed?: T;
-              open?: T;
-              close?: T;
-            };
+              closed?: T
+              open?: T
+              close?: T
+            }
         tuesday?:
           | T
           | {
-              closed?: T;
-              open?: T;
-              close?: T;
-            };
+              closed?: T
+              open?: T
+              close?: T
+            }
         wednesday?:
           | T
           | {
-              closed?: T;
-              open?: T;
-              close?: T;
-            };
+              closed?: T
+              open?: T
+              close?: T
+            }
         thursday?:
           | T
           | {
-              closed?: T;
-              open?: T;
-              close?: T;
-            };
+              closed?: T
+              open?: T
+              close?: T
+            }
         friday?:
           | T
           | {
-              closed?: T;
-              open?: T;
-              close?: T;
-            };
+              closed?: T
+              open?: T
+              close?: T
+            }
         saturday?:
           | T
           | {
-              closed?: T;
-              open?: T;
-              close?: T;
-            };
+              closed?: T
+              open?: T
+              close?: T
+            }
         sunday?:
           | T
           | {
-              closed?: T;
-              open?: T;
-              close?: T;
-            };
-      };
-  updatedAt?: T;
-  createdAt?: T;
+              closed?: T
+              open?: T
+              close?: T
+            }
+      }
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "leads_select".
  */
 export interface LeadsSelect<T extends boolean = true> {
-  car?: T;
-  status?: T;
-  source?: T;
-  placement?: T;
-  notes?: T;
-  utmSource?: T;
-  utmMedium?: T;
-  utmCampaign?: T;
-  utmContent?: T;
-  landingPath?: T;
-  fbclid?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  car?: T
+  status?: T
+  source?: T
+  placement?: T
+  notes?: T
+  utmSource?: T
+  utmMedium?: T
+  utmCampaign?: T
+  utmContent?: T
+  landingPath?: T
+  fbclid?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  prefix?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
+  alt?: T
+  prefix?: T
+  updatedAt?: T
+  createdAt?: T
+  url?: T
+  thumbnailURL?: T
+  filename?: T
+  mimeType?: T
+  filesize?: T
+  width?: T
+  height?: T
+  focalX?: T
+  focalY?: T
   sizes?:
     | T
     | {
         og?:
           | T
           | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-      };
+              url?: T
+              width?: T
+              height?: T
+              mimeType?: T
+              filesize?: T
+              filename?: T
+            }
+      }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
-  roles?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
+  roles?: T
+  updatedAt?: T
+  createdAt?: T
+  email?: T
+  resetPasswordToken?: T
+  resetPasswordExpiration?: T
+  salt?: T
+  hash?: T
+  loginAttempts?: T
+  lockUntil?: T
   sessions?:
     | T
     | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
+        id?: T
+        createdAt?: T
+        expiresAt?: T
+      }
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "vin-decodes_select".
  */
 export interface VinDecodesSelect<T extends boolean = true> {
-  squish?: T;
-  sampleVin?: T;
-  fetchedAt?: T;
-  decoded?: T;
-  raw?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  squish?: T
+  sampleVin?: T
+  fetchedAt?: T
+  decoded?: T
+  raw?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
-  key?: T;
-  data?: T;
+  key?: T
+  data?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents_select".
  */
 export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
-  document?: T;
-  globalSlug?: T;
-  user?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  document?: T
+  globalSlug?: T
+  user?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences_select".
  */
 export interface PayloadPreferencesSelect<T extends boolean = true> {
-  user?: T;
-  key?: T;
-  value?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  user?: T
+  key?: T
+  value?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-migrations_select".
  */
 export interface PayloadMigrationsSelect<T extends boolean = true> {
-  name?: T;
-  batch?: T;
-  updatedAt?: T;
-  createdAt?: T;
+  name?: T
+  batch?: T
+  updatedAt?: T
+  createdAt?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "homepage".
  */
 export interface Homepage {
-  id: number;
+  id: number
   /**
    * Main carousel (header) images. Shown in list order.
    */
   heroSlides?:
     | {
-        image: number | Media;
+        image: number | Media
         /**
          * Optional text shown over the image. Also used as the slide alt text (SEO) when the image has none of its own.
          */
-        caption?: string | null;
-        id?: string | null;
+        caption?: string | null
+        id?: string | null
       }[]
-    | null;
+    | null
   /**
    * Title and copy for the main header.
    */
   hero?: {
-    badge?: string | null;
-    heading?: string | null;
+    badge?: string | null
+    heading?: string | null
     /**
      * Part of the title highlighted in red.
      */
-    headingHighlight?: string | null;
-    subheading?: string | null;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+    headingHighlight?: string | null
+    subheading?: string | null
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * Contact details shown in the footer and on the contact page.
@@ -1183,36 +1202,36 @@ export interface Homepage {
  * via the `definition` "contact".
  */
 export interface Contact {
-  id: number;
-  phone?: string | null;
+  id: number
+  phone?: string | null
   /**
    * Digits only, including country code (e.g. 5255...). Used for the WhatsApp link.
    */
-  whatsapp?: string | null;
-  email?: string | null;
+  whatsapp?: string | null
+  email?: string | null
   address?: {
-    line1?: string | null;
-    city?: string | null;
-    state?: string | null;
-    postalCode?: string | null;
-    country?: string | null;
-    googleMapsUrl?: string | null;
-  };
+    line1?: string | null
+    city?: string | null
+    state?: string | null
+    postalCode?: string | null
+    country?: string | null
+    googleMapsUrl?: string | null
+  }
   /**
    * General opening hours shown on the contact page (optional).
    */
-  hoursNote?: string | null;
+  hoursNote?: string | null
   /**
    * Full links (https://...). Leave empty what you do not use.
    */
   social?: {
-    facebook?: string | null;
-    instagram?: string | null;
-    tiktok?: string | null;
-    youtube?: string | null;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+    facebook?: string | null
+    instagram?: string | null
+    tiktok?: string | null
+    youtube?: string | null
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * Site identity: brand, SEO, favicon, share image and colors.
@@ -1221,22 +1240,22 @@ export interface Contact {
  * via the `definition` "site-settings".
  */
 export interface SiteSetting {
-  id: number;
+  id: number
   /**
    * Brand name and copy shown on the site.
    */
   brand: {
-    name: string;
-    tagline?: string | null;
+    name: string
+    tagline?: string | null
     /**
      * Short description used in the footer.
      */
-    description?: string | null;
+    description?: string | null
     /**
      * Shows the brand name next to the logo in the top bar and footer. Turn it off if your logo already includes the name.
      */
-    showName?: boolean | null;
-  };
+    showName?: boolean | null
+  }
   /**
    * Text seen by search engines (Google) and social networks when the site is shared.
    */
@@ -1244,29 +1263,29 @@ export interface SiteSetting {
     /**
      * Default title, also used on the home page.
      */
-    titleDefault?: string | null;
+    titleDefault?: string | null
     /**
      * Template for inner pages. Use %s where the page title goes.
      */
-    titleTemplate?: string | null;
+    titleTemplate?: string | null
     /**
      * Long description (meta description).
      */
-    description?: string | null;
+    description?: string | null
     /**
      * Short description for social media (Open Graph).
      */
-    ogDescription?: string | null;
+    ogDescription?: string | null
     /**
      * Keywords (one per row).
      */
     keywords?:
       | {
-          value: string;
-          id?: string | null;
+          value: string
+          id?: string | null
         }[]
-      | null;
-  };
+      | null
+  }
   /**
    * Brand images. The logo shows in the top bar and footer; the favicon is the browser tab icon; the share image appears when the link is pasted on social media.
    */
@@ -1274,29 +1293,29 @@ export interface SiteSetting {
     /**
      * Brand logo (SVG, PNG or WebP). Displayed at 36 px tall, so use a file with a transparent background. If left empty the default icon is used.
      */
-    logo?: (number | null) | Media;
+    logo?: (number | null) | Media
     /**
      * Browser tab icon (PNG or ICO).
      */
-    favicon?: (number | null) | Media;
+    favicon?: (number | null) | Media
     /**
      * Image shown when the site is shared (1200×630 recommended).
      */
-    ogImage?: (number | null) | Media;
-  };
+    ogImage?: (number | null) | Media
+  }
   /**
    * Brand colors. Applied to buttons, highlights and the loading bar.
    */
   theme?: {
-    accent?: string | null;
-    accentStrong?: string | null;
+    accent?: string | null
+    accentStrong?: string | null
     /**
      * Main neutral color (text, dark surfaces).
      */
-    primary?: string | null;
-  };
-  updatedAt?: string | null;
-  createdAt?: string | null;
+    primary?: string | null
+  }
+  updatedAt?: string | null
+  createdAt?: string | null
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1306,52 +1325,52 @@ export interface HomepageSelect<T extends boolean = true> {
   heroSlides?:
     | T
     | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
+        image?: T
+        caption?: T
+        id?: T
+      }
   hero?:
     | T
     | {
-        badge?: T;
-        heading?: T;
-        headingHighlight?: T;
-        subheading?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+        badge?: T
+        heading?: T
+        headingHighlight?: T
+        subheading?: T
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact_select".
  */
 export interface ContactSelect<T extends boolean = true> {
-  phone?: T;
-  whatsapp?: T;
-  email?: T;
+  phone?: T
+  whatsapp?: T
+  email?: T
   address?:
     | T
     | {
-        line1?: T;
-        city?: T;
-        state?: T;
-        postalCode?: T;
-        country?: T;
-        googleMapsUrl?: T;
-      };
-  hoursNote?: T;
+        line1?: T
+        city?: T
+        state?: T
+        postalCode?: T
+        country?: T
+        googleMapsUrl?: T
+      }
+  hoursNote?: T
   social?:
     | T
     | {
-        facebook?: T;
-        instagram?: T;
-        tiktok?: T;
-        youtube?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+        facebook?: T
+        instagram?: T
+        tiktok?: T
+        youtube?: T
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1361,42 +1380,42 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   brand?:
     | T
     | {
-        name?: T;
-        tagline?: T;
-        description?: T;
-        showName?: T;
-      };
+        name?: T
+        tagline?: T
+        description?: T
+        showName?: T
+      }
   seo?:
     | T
     | {
-        titleDefault?: T;
-        titleTemplate?: T;
-        description?: T;
-        ogDescription?: T;
+        titleDefault?: T
+        titleTemplate?: T
+        description?: T
+        ogDescription?: T
         keywords?:
           | T
           | {
-              value?: T;
-              id?: T;
-            };
-      };
+              value?: T
+              id?: T
+            }
+      }
   media?:
     | T
     | {
-        logo?: T;
-        favicon?: T;
-        ogImage?: T;
-      };
+        logo?: T
+        favicon?: T
+        ogImage?: T
+      }
   theme?:
     | T
     | {
-        accent?: T;
-        accentStrong?: T;
-        primary?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
+        accent?: T
+        accentStrong?: T
+        primary?: T
+      }
+  updatedAt?: T
+  createdAt?: T
+  globalType?: T
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1404,18 +1423,17 @@ export interface SiteSettingsSelect<T extends boolean = true> {
  */
 export interface CollectionsWidget {
   data?: {
-    [k: string]: unknown;
-  };
-  width: 'full';
+    [k: string]: unknown
+  }
+  width: 'full'
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auth".
  */
 export interface Auth {
-  [k: string]: unknown;
+  [k: string]: unknown
 }
-
 
 declare module 'payload' {
   export interface GeneratedTypes extends Config {}
