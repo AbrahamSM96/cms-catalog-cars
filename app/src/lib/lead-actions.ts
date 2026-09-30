@@ -2,6 +2,8 @@
 
 import { getPayload } from 'payload'
 
+import { pickAttribution } from '@/lib/attribution'
+import { readAttributionCookie } from '@/lib/attribution-server'
 import { buildLeadData, type LeadInput } from '@/lib/leads'
 import config from '@payload-config'
 
@@ -21,11 +23,16 @@ import config from '@payload-config'
  * @param props - The click and what is known about the visit.
  */
 export async function recordLead(props: LeadInput): Promise<void> {
-  const { attribution, carId, placement, source } = props
+  const { carId, placement, source } = props
 
   const payload = await getPayload({ config })
 
   try {
+    const attribution = pickAttribution({
+      client: props.attribution,
+      cookie: await readAttributionCookie(),
+    })
+
     await payload.create({
       collection: 'leads',
       data: buildLeadData({ attribution, carId, placement, source }),

@@ -4,8 +4,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   captureAttribution,
+  deserializeAttribution,
+  hasCampaignParams,
+  mergeAttribution,
   parseAttribution,
   readAttribution,
+  serializeAttribution,
 } from '@/lib/attribution'
 
 const KEY = 'attribution'
@@ -80,6 +84,76 @@ describe('parseAttribution', () => {
   })
 })
 
+describe('cookie attribution', () => {
+  const attribution = {
+    landingPath: '/seminuevos',
+    utmMedium: 'social',
+    utmSource: 'tiktok',
+  }
+
+  it('round-trips serialised attribution', () => {
+    expect(deserializeAttribution(serializeAttribution(attribution))).toEqual(
+      attribution
+    )
+  })
+
+  it('returns null for a corrupt cookie', () => {
+    expect(deserializeAttribution('%7Bnot-json')).toBeNull()
+  })
+
+  it('accepts attribution JSON without encoding', () => {
+    expect(deserializeAttribution(JSON.stringify(attribution))).toEqual(
+      attribution
+    )
+  })
+
+  it('accepts a percent-encoded cookie value', () => {
+    expect(
+      deserializeAttribution(encodeURIComponent(JSON.stringify(attribution)))
+    ).toEqual(attribution)
+  })
+
+  it('accepts plain JSON containing an invalid URI sequence', () => {
+    expect(deserializeAttribution('{"landingPath":"/%"}')).toEqual({
+      landingPath: '/%',
+    })
+  })
+})
+
+describe('hasCampaignParams', () => {
+  it.each([
+    ['?utm_source=tiktok', true],
+    ['?fbclid=x', true],
+    ['?foo=bar', false],
+    ['', false],
+  ])('checks %s', (search, expected) => {
+    expect(hasCampaignParams(search)).toBe(expected)
+  })
+})
+
+describe('mergeAttribution', () => {
+  const next = { landingPath: '/catalogo', utmSource: 'tiktok' }
+
+  it('stores attribution when no record exists', () => {
+    expect(mergeAttribution({ next, stored: null })).toEqual(next)
+  })
+
+  it('keeps stored attribution with an origin', () => {
+    expect(
+      mergeAttribution({
+        next,
+        stored: { landingPath: '/', utmSource: 'facebook' },
+      })
+    ).toBeNull()
+  })
+
+  it('replaces stored attribution without an origin', () => {
+    expect(mergeAttribution({ next, stored: { landingPath: '/' } })).toEqual(
+      next
+    )
+  })
+})
+
 // ---------------------------------------------------------------------------
 // readAttribution
 // ---------------------------------------------------------------------------
@@ -114,11 +188,14 @@ describe('readAttribution', () => {
   })
 
   it('returns null when reading storage throws', () => {
-    vi.spyOn(window.sessionStorage, 'getItem').mockImplementation(() => {
-      throw new Error('storage denied')
+    vi.stubGlobal('window', {
+      get sessionStorage(): Storage {
+        throw new Error('storage denied')
+      },
     })
 
     expect(readAttribution()).toBeNull()
+    vi.unstubAllGlobals()
   })
 })
 

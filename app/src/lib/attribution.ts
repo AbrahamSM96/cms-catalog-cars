@@ -13,8 +13,11 @@
  * June credited to that ad.
  */
 
+/** Llave de la cookie que guarda el `Attribution` serializado. */
+export const ATTRIBUTION_COOKIE = 'attribution'
+
 /** Session storage key holding the serialised `Attribution`. */
-const STORAGE_KEY = 'attribution'
+const STORAGE_KEY = ATTRIBUTION_COOKIE
 
 /**
  * Longest value kept from a query parameter.
@@ -54,8 +57,119 @@ function param(params: URLSearchParams, name: string): string | undefined {
  *
  * @param attribution - The record to inspect.
  */
-function hasOrigin(attribution: Attribution): boolean {
+export function hasOrigin(attribution: Attribution): boolean {
   return Boolean(attribution.fbclid ?? attribution.utmSource)
+}
+
+/**
+ * Indica si el query string contiene al menos un parámetro de campaña.
+ *
+ * @param search - Query string, con o sin el `?` inicial.
+ */
+export function hasCampaignParams(search: string): boolean {
+  const params = new URLSearchParams(search)
+
+  return [
+    'fbclid',
+    'utm_campaign',
+    'utm_content',
+    'utm_medium',
+    'utm_source',
+  ].some((name): boolean => params.has(name))
+}
+
+/**
+ * Serializa la atribución para guardarla en una cookie o en `sessionStorage`.
+ *
+ * Deliberadamente JSON pelón, sin `encodeURIComponent`: el escape de la cookie
+ * lo hace Next al armar `Set-Cookie`, y codificar aquí encima dejaba el valor
+ * doble-codificado (`%257B`), que `deserializeAttribution` ya no puede leer.
+ *
+ * @param attribution - Registro de atribución que se serializará.
+ */
+export function serializeAttribution(attribution: Attribution): string {
+  return JSON.stringify(attribution)
+}
+
+/**
+ * Lee atribución desde JSON codificado o crudo sin lanzar errores.
+ *
+ * @param raw - Valor de atribución almacenado.
+ */
+export function deserializeAttribution(
+  raw: string | null | undefined
+): Attribution | null {
+  if (!raw) return null
+
+  try {
+    let decoded = raw
+
+    try {
+      decoded = decodeURIComponent(raw)
+    } catch {
+      decoded = raw
+    }
+
+    const parsed: unknown = JSON.parse(decoded)
+    if (
+      typeof parsed !== 'object' ||
+      parsed === null ||
+      !('landingPath' in parsed) ||
+      typeof parsed.landingPath !== 'string'
+    ) {
+      return null
+    }
+
+    return parsed as Attribution
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Elige el registro de atribución que debe permanecer almacenado.
+ *
+ * @param props - Registros de atribución existente y entrante.
+ * @param props.next - Atribución de la URL de entrada actual.
+ * @param props.stored - Atribución ya almacenada para la visita.
+ */
+export function mergeAttribution(props: {
+  next: Attribution
+  stored: Attribution | null
+}): Attribution | null {
+  const { next, stored } = props
+
+  if (stored && (hasOrigin(stored) || !hasOrigin(next))) return null
+
+  return next
+}
+
+/**
+ * Elige la atribución entre la cookie del servidor y el respaldo del cliente.
+ *
+ * @param props - Candidatos de atribución del servidor y cliente.
+ * @param props.client - Atribución leída del almacenamiento de sesión.
+ * @param props.cookie - Atribución leída de la cookie del servidor.
+ */
+export function pickAttribution(props: {
+  client: Attribution | null | undefined
+  cookie: Attribution | null
+}): Attribution | null {
+  const { client, cookie } = props
+
+  // La cookie gana cuando nombra una campaña: la escribió el servidor, así que
+  // existe aunque el visitante venga en un webview sin `sessionStorage`.
+  let chosen: Attribution | null | undefined = null
+  if (cookie && hasOrigin(cookie)) chosen = cookie
+  else if (client && hasOrigin(client)) chosen = client
+  else chosen = cookie ?? client ?? null
+
+  const other = chosen === cookie ? client : cookie
+
+  if (!chosen) return null
+  if (chosen.landingPath || !other?.landingPath) return chosen
+
+  return { ...chosen, landingPath: other.landingPath }
 }
 
 /**
@@ -91,13 +205,7 @@ export function parseAttribution(props: {
  */
 export function readAttribution(): Attribution | null {
   try {
-    const raw = window.sessionStorage.getItem(STORAGE_KEY)
-    if (!raw) return null
-
-    const parsed: unknown = JSON.parse(raw)
-    if (typeof parsed !== 'object' || parsed === null) return null
-
-    return parsed as Attribution
+    return deserializeAttribution(window.sessionStorage.getItem(STORAGE_KEY))
   } catch {
     // Corrupt JSON, or a browser that denies storage access outright.
     return null
@@ -123,11 +231,12 @@ export function captureAttribution(props: {
   const { pathname, search } = props
   const next = parseAttribution({ pathname, search })
   const stored = readAttribution()
+  const merged = mergeAttribution({ next, stored })
 
-  if (stored && (hasOrigin(stored) || !hasOrigin(next))) return
+  if (!merged) return
 
   try {
-    window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+    window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(merged))
   } catch {
     // Private windows and hardened browser settings make writes throw. A lead
     // without an origin is worth less; a crash on page load is worth nothing.
