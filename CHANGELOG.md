@@ -11,6 +11,11 @@ Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 While the project is pre-1.0, `feat` bumps the minor version and `fix` bumps the
 patch version.
 
+## 0.4.0 (2026-09-30)
+
+### Features
+- Implement attribution handling with cookie support and enhance tests ([0bceb1c](https://github.com/AbrahamSM96/cms-catalog-cars/commit/0bceb1c95ab2a23b64f3c683a913e31a0a21df4f))
+
 ## 0.3.0 (2026-09-24)
 
 ### Features
